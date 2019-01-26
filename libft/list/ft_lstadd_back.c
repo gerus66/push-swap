@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/29 15:35:40 by mbartole          #+#    #+#             */
-/*   Updated: 2019/01/26 13:54:54 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/01/26 14:48:09 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	ft_lstadd_back(t_list **alst, t_list *new)
 {
 	t_list	*end_list;
 
+	if (!alst || !new)
+		return ;
 	if (*alst == NULL)
 	{
 		*alst = new;
