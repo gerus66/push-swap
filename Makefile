@@ -1,9 +1,9 @@
 NAME1 = checker
 NAME2 = push_swap
-SRC1 = $(filter-out $(NAME2).c, $(wildcard *.c))
+SRC1 = $(filter-out $(NAME2).c generator.c, $(wildcard *.c))
 OBJ1 = ${SRC1:.c=.o}
 #HDR1 = $(NAME1).h
-SRC2 = $(filter-out $(NAME1).c, $(wildcard *.c))
+SRC2 = $(filter-out $(NAME1).c generator.c, $(wildcard *.c))
 OBJ2 = ${SRC2:.c=.o}
 HDR = swap.h
 FLAGS = -Wextra -Wall -Werror
