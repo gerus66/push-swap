@@ -6,232 +6,307 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/04 15:06:15 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/11 23:38:20 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-#define I_MAX 2147483647
-#define I_MIN -2147483648
+#define ABS(x) ((x) < 0 ? -(x) : (x))
 
-//#define INT_CONT(x) (*((int *)(x)->cont))
-
-static	int	clean(char *msg)
+static void init_razn(t_list **razn, int *sorted, t_list *in, int count)
 {
-	ft_putstr(msg);
-	return (0);
-}
+	int	i;
+	int	j;
+	int	tmp;
 
-static int	check_stacks(t_list *st, t_list *tmp)
-{
-	int	fl;
-	ssize_t	prev;
-
-	if (!st || !st->next || tmp)
-		return (0);
-	fl = 1;
-	prev = *((ssize_t *)st->cont);
-	st = st->next;
-	while (st)
+	j = 0;
+	while (in)
 	{
-		if (*((ssize_t *)st->cont) < prev)
-			return (0);
-		else if (*((ssize_t *)st->cont) == prev)
-			exit(clean(ERR_M));//TODO
-		prev = *((ssize_t *)st->cont);
-		st = st->next;
+		i = -1;
+		while (++i < count)
+			if (ICONT(in) == sorted[i])
+			{
+				ft_memcpy(in->cont, (void *)&i, sizeof(int));
+				break ;
+			}
+		tmp = j - i;
+		if (tmp < -count / 2)
+			tmp += count;
+		else if (tmp > count / 2)
+			tmp -= count;
+		ft_lstadd_back(razn, ft_lstnew((void *)&tmp, sizeof(int)));
+		in = in->next;
+		j++;
 	}
-	return (1);
 }
 
-//TODO to define
-/*static int	lst_cmp(t_list *l1, t_list *l2)
+static void	init_stacks(t_list **in, t_list **razn, int count, char **argv)
 {
-	return ((*(ssize_t *)(l1->cont) - *(ssize_t *)(l2->cont)));
+	t_avltree *tr;
+	t_list	*tmpl;
+	int		tmp;
+	int		i;
+	int		sorted_ar[count];
+	
+	tr = NULL;
+	i = count + 1;
+	while (--i > 0)
+	{
+		tmp = atoi_check(argv[i]);
+		ft_lstadd(in, ft_lstnew((void *)&tmp, sizeof(int)));
+		ft_tree_insert(&tr, atoi_check(argv[i]), NULL, 0);
+	}
+	tmpl = NULL;
+	tree_to_lst(tr, &tmpl);
+	//TODO free tree
+	lst_to_array(tmpl, sorted_ar, count);
+	ft_lstdel(&tmpl, NULL);
+	init_razn(razn, sorted_ar, *in, count);
+}
+
+/*static int	find_shift(t_list **st, int count)
+{
+	int	shifts[count];
+	int	i;
+	int	max;
+	int	i_max;
+	t_list *cp;
+
+	i = -1;
+	while (++i < count)
+		shifts[i] = 0;
+	cp = *st;
+	while (cp)
+	{
+		shifts[ICONT(cp) + count / 2]++;
+		cp = cp->next;
+	}
+	i = -1;
+	max = 0;
+	i_max = 0;
+	while (++i < count)
+		if (shifts[i] > max || (shifts[i] == max && ABS(i - count / 2) < ABS(i_max - count / 2)))
+		{
+			max = shifts[i];
+			i_max = i;
+		}
+	i = i_max - count / 2;
+	cp = *st;
+	count /= 2;
+	while (cp)
+	{
+		max = ICONT(cp) - i;
+		ICONT(cp) = (-count <= max && max <= count) ? max : max - 2 * count ;
+		cp = cp->next;
+	}
+	return (i);
 }*/
 
-static int	middle_of_three(int a, int b, int c)
+static int	*positive_seq(int *razn, int start, int count)
 {
-	if ((a > b && b > c) || (c > b && b > a))
-		return (b);
-	if ((b > a && a > c) || (c > a && a > b))
-		return (a);
-	return (c);
-}
-
-static int	find_pivot(int *st, int size)
-{
-	int	i_max;
-	int	i_min;
+	int	*standing;
 	int	i;
-	int	new[size - 2];
-
-	if (size == 1)
-		return (st[0]);
-	if (size == 2)
-	//{
-	//	if (max_pivot)
-			return (st[0] > st[1] ? st[0] : st[1]);
-	//	else
-	//		return (st[0] > st[1] ? st[1] : st[0]);
-//	}
-	if (size == 3)
-		return (middle_of_three(st[0], st[1], st[2]));
-	i_min = 0;
-	i_max = i_min;
-	i = -1;
-	while (++i < size)
+	int	last;
+	int	prev;
+	int	fl;
+	
+	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
+		return (NULL);
+	standing[start] = 1;
+	last = razn[start];
+	prev = count;//
+	i = start;//
+	fl = 0;
+	while (++i < count)
 	{
-		if (st[i] < st[i_min])
-			i_min = i;
-		if (st[i] > st[i_max])
-			i_max = i;
-	}
-	i = 0;
-	int j = 0;
-	while (i < size)
-	{
-		if (i != i_min && i != i_max)
-			new[j++] = st[i];
-		i++;
-	}
-	return (find_pivot(new, size - 2));
-}
-
-static void	list_to_array(t_list *st, int *ar, int count)
-{
-	int	i;
-
-	i = -1;
-	while (st && ++i < count)
-	{
-		ar[i] = ICONT(st);
-		st = st->next;
-	}
-}
-
-static void	sort_three(t_list **st)
-{
-	st++;
-}
-
-//static void	sort_two(t_list *st)
-
-static void	stacks_paral(t_list **a, t_list **b)
-{
-	if ()
-}
-
-static void	stacks_magic(t_list **a, t_list **b, t_list **comm, int count)
-{
-	int ar[count];
-	int	p;
-	int	i;
-//	int	len_act;
-//	int	len_other;
-
-	print_stacks(*a, *b);//--
-	printf("count = %d, first /%c/\n", count, first);//--
-/*	if (count == 2)
-	{
-		if ((ICONT(*a) > ICONT((*a)->next) && first == 'a') || (ICONT(*a) < ICONT((*a)->next) && first == 'b'))
-			swap_stack(a);
-		if (first == 'b')
-			while (count--)
+		if (razn[i] <= last && razn[i] >= 0 
+				&& razn[i] >= razn[start] - start - (count - i - 1))//
+		{
+			fl++;
+			standing[i] = 1;
+			prev = last;
+			last = razn[i];
+		}
+		else if (razn[i] > last && razn[i] <= prev)
+		{
+			if (fl == 0)
 			{
-				push_stack(a, b);
-				ft_lstadd_back(comm, ft_lstnew("pa", 3));
+				start = i;
+				fl++;
 			}
-		return ;
+			prev = razn[i];
+			standing[i] = -1;
+			last++;//
+		}
+		else
+		{
+			last++;
+			prev++;
+		}
 	}
-	if (count == 3)//TODO
+	return (standing);
+}
+
+static int	*negative_seq(int *razn, int start, int count)
+{
+	int	*standing;
+	int	i;
+	int	last;
+	int	prev;
+	int	fl;
+	
+	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
+		return (NULL);
+	standing[start] = 1;
+	last = razn[start];
+	prev = 0;
+	i = start;//
+	fl = 0;
+	while (++i < count)
 	{
-		sort_three(a);//TODO
-		return ;
-	}*/
-	list_to_array(*a, ar, count);
-	p = find_pivot(ar, count);
-	printf("pivot = %d\n", p);//--
+		if (razn[i] <= last && 
+				razn[i] >= razn[start] - start - (count - i - 1))
+		{
+			fl++;
+			standing[i] = 1;
+			prev = last;
+			last = razn[i];
+		}
+		else if (razn[i] > last && razn[i] <= prev)
+		{
+			if (fl == 0)
+			{
+				start = i;
+				fl++;
+			}
+			prev = razn[i];
+			standing[i] = -1;
+			last++;//
+		}
+		else
+		{
+			last++;
+			prev++;
+		}
+	}
+	return (standing);
+}
+
+static int	stand_count(int *ar, int count)
+{
+	int	stand;
+	int	i;
+
+	stand = 0;
+	i = -1;
+	while (++i < count)
+		if (ar[i])
+			stand++;
+	return (stand);
+}
+
+static void add_array(int *ar, int *add, int count)
+{
+	int	i = -1;
+
+	while (++i < count)
+		if (add[i])
+			ar[i] = 1;
+}
+
+static int	*choise_standing(t_list *razn, int count)
+{
+	int	razn_ar[count];
+	int	*standing;
+	int	*standing_tmp;
+	int	i;
+	int stand;
+	int	stand_tmp;
+	int	fill[count];
+
+	i = -1;
+	while (++i < count)
+		fill[i] = 0;
+	lst_to_array(razn, razn_ar, count);
+	standing = NULL;
+	stand = 0;
+	i = -1;
+	while (++i < count - stand)
+		if (!fill[i])
+		{
+			standing_tmp = (razn_ar[i] <= 0) ? negative_seq(razn_ar, i, count) :
+				positive_seq(razn_ar, i, count);
+			stand_tmp = stand_count(standing_tmp, count);
+			add_array(fill, standing_tmp, count);
+		//	printf("i = %d, stand_tmp = %d\n", i, stand_tmp);
+			if (stand_tmp > stand)
+			{
+				free(standing);
+				standing = standing_tmp;
+				stand = stand_tmp;
+			}
+		}
+/*	i = -1;
+	while (++i < count)
+		printf("/%d/", standing[i]);*/
+	printf("\nstand = %d\n", stand);
+	return (standing);
+}
+
+static void	push_b(int *standing, t_list **comm, int count)
+{
+	int	i;
+
 	i = -1;
 	while (++i < count)
 	{
-//		printf("/%d/\n", ICONT(*a));//--
-		if (ICONT(*a) < p)
-		{
-			push_stack(a, b);
+		if (standing[i] == 0)
 			ft_lstadd_back(comm, ft_lstnew("pb", 3));
-			stacks_paral(t_list **a, t_list **b);
-		}
-		else
+		else if (standing[i] == -1)
 		{
-			rotate_stack(a);
+			ft_lstadd_back(comm, ft_lstnew("rra", 3));
+			ft_lstadd_back(comm, ft_lstnew("sa", 3));
+			ft_lstadd_back(comm, ft_lstnew("ra", 3));
 			ft_lstadd_back(comm, ft_lstnew("ra", 3));
 		}
-		print_stacks(*a, *b);//--
-	}
-	printf("len of a: %d || len of b: %d\n", len_act, len_other);//--
-	stacks_magic(a, b, comm, len_act, 'a');
-	stacks_magic(b, a, comm, len_other, 'b');
-}
-
-static void	print_comm(t_list *comm)
-{
-	while (comm)
-	{
-		ft_putstr((char *)comm->cont);
-		if ((comm = comm->next))
-			ft_putchar('\n');
-	}
-}
-
-
-int		atoi_check(char *s)
-{
-	ssize_t	res;
-	char	sign;
-
-	res = 0;
-	sign = (*s == '-' ? -1 : 1);
-	if (*s == '-' || *s == '+')
-		s++;
-	while (*s)
-	{
-		if (*s >= '0' && *s <= '9')
-			res = res * 10 + *s - 48;
 		else
-			exit(clean(ERR_M));//TODO
-		s++;
+			ft_lstadd_back(comm, ft_lstnew("ra", 3));
 	}
-	res *= sign;
-	if (res > I_MAX || res < I_MIN)
-		exit(clean(ERR_M));//TODO
-	return ((int)res);
 }
 
 int			main(int argc, char **argv)
 {
 	t_list	*a;
 	t_list	*b;
+	t_list	*razn;
+	int		*standing;
+//	int		i;
 	t_list	*comm;
-	int		tmp;
-//	int		int_st[argc - 1];
-	int		i;
 
-	if (argc < 3)
-		return (0);
-	i = argc - 1;
-	while (--i >= 0)
-	{
-		tmp = atoi_check(argv[i + 1]);
-//		int_st[i] = atoi_check(argv[i + 1]);
-		ft_lstadd(&a, ft_lstnew((void *)&tmp, sizeof(int)));
-	}
-//	printf("pivot value %d\n", find_pivot(int_st, argc - 1, 0));//
-	b = NULL;
 	comm = NULL;
-//	print_stacks(a, b);
-	check_stacks(a, b);
-	stacks_magic(&a, &b, &comm, argc - 1, 'a');
-	print_comm(comm);
+//	printf("argc = %d\n", argc);
+	if (argc < 3)
+		return (clean("Error\n"));
+	a = NULL;
+	b = NULL;
+	razn = NULL;
+	init_stacks(&a, &razn, argc - 1, argv);
+//	print_stacks(a, razn);
+//	printf(">>>%d\n", find_shift(&razn, argc - 1));
+//	print_stacks(a, razn);
+	standing = choise_standing(razn, argc - 1);
+//	i = -1;
+//	while (++i < argc - 1)
+//		printf("/%d/", standing[i]);
+	push_b(standing, &comm, argc - 1);
+	comm_stacks(&a, &b, comm);
+	print_stacks(a, b);
+	printf("comm: %d\n", ft_lstlen(comm));
+//	b = NULL;
+//	comm = NULL;
+//	check_stacks(a, b);
+//	stacks_magic(&a, &b, &comm, argc - 1, 'a');
+//	print_comm(comm);
+	return (0);
 }
