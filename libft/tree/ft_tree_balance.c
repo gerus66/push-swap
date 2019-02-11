@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/07 11:35:42 by mbartole          #+#    #+#             */
-/*   Updated: 2019/01/26 13:46:29 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/07 17:00:10 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ static void	rot_left(t_avltree **r)
 	*r = tmp;
 	recalc_h((*r)->left);
 	recalc_h(*r);
-	ft_tree_print(*r, 3);
 }
 
 static void	rot_right(t_avltree **r)
@@ -46,7 +45,6 @@ static void	rot_right(t_avltree **r)
 	*r = tmp;
 	recalc_h((*r)->right);
 	recalc_h(*r);
-	ft_tree_print(*r, 3);
 }
 
 void		ft_tree_balance(t_avltree **r)
