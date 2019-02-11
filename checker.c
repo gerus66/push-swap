@@ -6,17 +6,11 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/01/31 16:36:48 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/11 15:24:36 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
-
-static int	clean(char *msg)//TODO free all
-{
-	ft_putstr(msg);
-	return (0);
-}
 
 static void	check_stack(t_list *st, int count)
 {
@@ -41,6 +35,42 @@ static void	check_stack(t_list *st, int count)
 	if (count == 0)
 		exit(clean("OK\n"));//TODO
 }
+
+/*
+void	comm_stacks(t_list **a, t_list **b, t_list *comm)
+{
+	char	*line;
+	int		fl;
+
+	print_stacks(*a, *b);
+	while (comm)
+	{
+		fl = 0;
+		line = (char *)comm->cont;
+		if ((!ft_strcmp(line, "sa") || !ft_strcmp(line, "ss")) && (fl = 1))
+			swap_stack(a);
+		if ((!ft_strcmp(line, "sb") || !ft_strcmp(line, "ss")) && (fl = 1))
+			swap_stack(b);
+		if ((!ft_strcmp(line, "ra") || !ft_strcmp(line, "rr")) && (fl = 1))
+			rotate_stack(a);
+		if ((!ft_strcmp(line, "rb") || !ft_strcmp(line, "rr")) && (fl = 1))
+			rotate_stack(b);
+		if ((!ft_strcmp(line, "rra") || !ft_strcmp(line, "rrr")) && (fl = 1))
+			r_rotate_stack(a);
+		if ((!ft_strcmp(line, "rrb") || !ft_strcmp(line, "rrr")) && (fl = 1))
+			r_rotate_stack(b);
+		if (!ft_strcmp(line, "pa") && (fl = 1))
+			push_stack(b, a);
+		else if (!ft_strcmp(line, "pb") && (fl = 1))
+			push_stack(a, b);
+		if (!fl)
+			exit(clean(ERR_M));//TODO
+	//	free(line);
+		print_stacks(*a, *b);
+		comm = comm->next;
+	//	check_stack(*a, count);
+	}
+}*/
 
 static void	handle_stacks(t_list **a, t_list **b, int count)
 {
