@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/13 03:43:57 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/19 14:23:35 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static void init_razn(t_list **razn, int *sorted, t_list *in, int count)
 	int	j;
 	int	tmp;
 
+//	printf("count %d\n", count);
 	j = 0;
 	while (in)
 	{
@@ -54,30 +55,49 @@ static void init_razn(t_list **razn, int *sorted, t_list *in, int count)
 	}
 }
 
-static void	init_stacks(t_list **in, t_list **razn, int count, char **argv)
+static void	init_stacks(t_list **in, t_list **razn, int *count, char **argv)
 {
 	t_avltree *tr;
 	t_list	*tmpl;
 	int		tmp;
 	int		i;
-	int		sorted_ar[count];
+	int		*sorted_ar;
+	char	**ar;
+//	int		new_count;
 
+//	printf("init_stacks\n");
 	tr = NULL;
-	i = count + 1;
-	while (--i > 0)
+//	i = count + 1;
+	i = 0;
+	while (++i <= *count)
 	{
-		tmp = atoi_check(argv[i]);
-		ft_lstadd(in, ft_lstnew((void *)&tmp, sizeof(int)));
-		ft_tree_insert(&tr, atoi_check(argv[i]), NULL, 0);
+		ar = ft_strsplit(argv[i], ' ');
+		while (*ar)
+		{
+		//	tmp = atoi_check(argv[i]);
+			tmp = atoi_check(*ar);
+			ft_lstadd_back(in, ft_lstnew((void *)&tmp, sizeof(int)));
+			ft_tree_insert(&tr, atoi_check(*ar), NULL, 0);
+			ar++;
+		}
 	}
 	tmpl = NULL;
 	tree_to_lst(tr, &tmpl);
 	//TODO free tree
-	lst_to_array(tmpl, sorted_ar, count);
+	*count = ft_lstlen(*in);
+//	printf("count %d\n", *count);
+	sorted_ar = (int *)ft_memalloc(sizeof(int) * *count);
+//	printf("count %d\n", *count);
+	lst_to_array(tmpl, sorted_ar, *count);
+//	printf("count %d\n", *count);
 	ft_lstdel(&tmpl, NULL);
+//	printf("count %d\n", *count);
 //	print_stacks(*in, NULL);
 	if (razn)
-		init_razn(razn, sorted_ar, *in, count);
+//	{
+//		printf("count %d\n", *count);
+		init_razn(razn, sorted_ar, *in, *count);
+//	}
 }
 
 static int	*positive_seq(int *razn, int start, int count)
@@ -313,6 +333,7 @@ static void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
 	while (comm)
 	{
 		rot_b = get_rot_b(to_push, *b);
+	//	printf("rot_b----|%d|----\n", rot_b);
 		if (rot_b > 0 && !ft_strcmp(CCONT(comm), "ra"))
 		{
 			ft_memcpy(comm->cont, (void *)"rr", sizeof(char *));
@@ -334,7 +355,9 @@ static void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
 				comm = tmp;
 				rot_b = rot_b > 0 ? rot_b - 1 : rot_b + 1;
 				one_comm_stacks(a, b, comm);
+				prev = comm;
 				comm = comm->next;
+	//			printf("________eval_rot_b______%d\n", rot_b);
 			}
 		}
 		one_comm_stacks(a, b, comm);
@@ -514,20 +537,23 @@ int			main(int argc, char **argv)
 	t_list	*razn;
 	t_list	*to_push;
 	int		*standing;
+	int		len;
 	//	int		i;
 	t_list	*comm;
 
 	comm = NULL;
-	if (argc < 3)
+	if (argc < 2)
 		return (clean("Error\n"));
 	a = NULL;
 	b = NULL;
 	razn = NULL;
-	init_stacks(&aaa, NULL, argc - 1, argv);
-	init_stacks(&a, &razn, argc - 1, argv);
-	standing = choise_standing(razn, argc - 1);
-	to_push = push_b(standing, &comm, argc - 1, a);
-//	print_stacks(a, b);//
+	len = argc - 1;
+	init_stacks(&aaa, NULL, &len, argv);
+	len = argc - 1;
+	init_stacks(&a, &razn, &len, argv);
+	standing = choise_standing(razn, len);
+	to_push = push_b(standing, &comm, len, a);
+//	print_stacks(aaa, b);//
 //	print_comm(comm);//
 //	printf("=========================\n");
 	improve_comm(&comm);
