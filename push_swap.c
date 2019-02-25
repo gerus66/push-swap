@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/19 14:23:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/25 20:05:44 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,18 +63,14 @@ static void	init_stacks(t_list **in, t_list **razn, int *count, char **argv)
 	int		i;
 	int		*sorted_ar;
 	char	**ar;
-//	int		new_count;
 
-//	printf("init_stacks\n");
 	tr = NULL;
-//	i = count + 1;
 	i = 0;
 	while (++i <= *count)
 	{
 		ar = ft_strsplit(argv[i], ' ');
 		while (*ar)
 		{
-		//	tmp = atoi_check(argv[i]);
 			tmp = atoi_check(*ar);
 			ft_lstadd_back(in, ft_lstnew((void *)&tmp, sizeof(int)));
 			ft_tree_insert(&tr, atoi_check(*ar), NULL, 0);
@@ -85,19 +81,11 @@ static void	init_stacks(t_list **in, t_list **razn, int *count, char **argv)
 	tree_to_lst(tr, &tmpl);
 	//TODO free tree
 	*count = ft_lstlen(*in);
-//	printf("count %d\n", *count);
 	sorted_ar = (int *)ft_memalloc(sizeof(int) * *count);
-//	printf("count %d\n", *count);
 	lst_to_array(tmpl, sorted_ar, *count);
-//	printf("count %d\n", *count);
 	ft_lstdel(&tmpl, NULL);
-//	printf("count %d\n", *count);
-//	print_stacks(*in, NULL);
 	if (razn)
-//	{
-//		printf("count %d\n", *count);
 		init_razn(razn, sorted_ar, *in, *count);
-//	}
 }
 
 static int	*positive_seq(int *razn, int start, int count)
