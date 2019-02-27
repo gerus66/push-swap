@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/26 04:39:40 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/27 12:58:22 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,26 @@ void    do_all_comm(t_list **a, t_list **b, t_list *comm);
 */
 
 //void    lst_to_array(t_list *st, int *ar, int count);
-//void    print_comm(t_list *comm);
+void    print_comm(t_list *comm);
+int     last_elem(t_list *stack);
+void    do_push(t_list **a, t_list **b, t_list *comm);
+void    do_all_push(t_list **a, t_list **b, t_list *comm);
 
 /*
 ** utils for checker
 */
 
 //t_list	*atoi_stack(t_list *stack);//TODO
-//void	print_stacks(t_list *a, t_list *b);
+void	print_stacks(t_list *a, t_list *b);
 
 /*
 ** choose magic sequence
 */
 
-void        choose_sequence(int *razn, int **standing, int count, char fl);
+//void        choose_sequence(int *razn, int **standing, int count, char fl);
+void    choose_sequence(int count, t_list *stack, int **standing);
 
-
-
+t_list  *push_to_b(int *standing, t_list **a, t_list **b, int count);
 
 //void    tree_to_lst(t_avltree *root, t_list **lst);
 //int     atoi_check(char *s);

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:19:56 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/26 05:00:29 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/27 12:59:05 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,34 +28,6 @@ void	lst_to_array(t_list *st, int *ar, int count)
 		ar[i] = ICONT(st);
 		st = st->next;
 	}
-}
-
-void	print_comm(t_list *comm)
-{
-	t_list	*tmp;
-
-	tmp = comm;
-	while (comm)
-	{
-//		printf("%s ", (char *)comm->cont);
-		comm = comm->next;
-	}
-	printf("\ncount: %d\n", ft_lstlen(tmp));
-}
-
-void		print_stacks(t_list *a, t_list *b)
-{
-	while (a || b)
-	{
-		printf("%6d %6d\n", (a ? ICONT(a) : 0),
-				(b ? ICONT(b) : 0));
-		if (a)
-			a = a->next;
-		if (b)
-			b = b->next;
-	}
-	printf("%6c %6c\n", '_', '_');
-	printf("%6c %6c\n\n", 'a', 'b');
 }
 
 static void init_razn(int *razn, int *sorted, t_list *in, int count)
@@ -116,110 +88,12 @@ static int	*get_magic_sequence(t_list *in, char fl)
 	ft_lstdel(&tmpl, NULL);
 	razn = (int *)ft_memalloc(sizeof(int) * count);
 	init_razn(razn, sorted_ar, in, count);
-	choose_sequence(razn, &standing, count, fl);
-	return (standing);
-}
-
-static void	delete_ra(t_list **comm)
-{
-	t_list	*tmp;
-	t_list	*del;
-
-	if (!(*comm))
-		return ;
-	tmp = *comm;
-	while (tmp->next && tmp->next->next)
-		tmp = tmp->next;
-	if (ft_strcmp(CCONT(tmp->next), "ra"))
-		return ;
-	del = tmp->next;
-	tmp->next = NULL;
-	ft_lstdelone(&del, NULL);
-	delete_ra(comm);
-}
-
-static char	need_improve(t_list	*cur)
-{
-	if (cur && cur->next &&
-		((!ft_strcmp(CCONT(cur), "ra") && !ft_strcmp(CCONT(cur->next), "rra")) ||
-		 (!ft_strcmp(CCONT(cur), "rra") && !ft_strcmp(CCONT(cur->next), "ra")) ||
-		 (!ft_strcmp(CCONT(cur), "rb") && !ft_strcmp(CCONT(cur->next), "rrb")) ||
-		 (!ft_strcmp(CCONT(cur), "rrb") && !ft_strcmp(CCONT(cur->next), "rb"))))
-		return (1);
-	return (0);
-}
-
-static void	improve_comm(t_list **comm)
-{
-	t_list	*tmp;
-	t_list	*cur;
-
-	if (need_improve(*comm))
-	{
-		tmp = *comm;
-		*comm = (*comm)->next;
-		ft_lstdelone(&tmp, NULL);
-		tmp = *comm;
-		*comm = (*comm)->next;
-		ft_lstdelone(&tmp, NULL);
-		improve_comm(comm);
-	}
-	cur = *comm;
-	while (cur && cur->next && cur->next->next)
-	{
-		if (need_improve(cur->next))
-		{
-			tmp = cur->next;
-			cur->next = cur->next->next;
-			ft_lstdelone(&tmp, NULL);
-			tmp = cur->next;
-			cur->next = cur->next->next;
-			ft_lstdelone(&tmp, NULL);
-		}
-		cur = cur->next;
-	}
-}
-
-static t_list	*push_to_b(int *standing, t_list **a, t_list **b, int count)
-{
-	int		i;
-	t_list	*comm;
-	t_list	*cp;
-
-	comm = NULL;
-	i = -1;
+	choose_sequence(count, in, &standing);
+	int i = -1;
 	while (++i < count)
-	{
-		if (standing[i] == 0)
-			ft_lstadd_back(&comm, ft_lstnew("pb", 3));
-		else if (standing[i] == -1)
-		{
-			ft_lstadd_back(&comm, ft_lstnew("rra", 4));
-			ft_lstadd_back(&comm, ft_lstnew("sa", 3));
-			ft_lstadd_back(&comm, ft_lstnew("ra", 3));
-			ft_lstadd_back(&comm, ft_lstnew("ra", 3));
-			printf("|");
-		}
-		else
-		{
-			ft_lstadd_back(&comm, ft_lstnew("ra", 3));
-			printf("|");
-		}
-	}
-	print_comm(comm);
-	delete_ra(&comm);
-	print_comm(comm);
-	improve_comm(&comm);
-	print_comm(comm);
-	do_all_comm(a, b, comm);
-	return (comm);
-}
-
-static int		last_elem(t_list *stack)
-{
-	while (stack->next)
-		stack = stack->next;
-	return (ICONT(stack));
+		printf(" %d ", standing[i]);
+//	choose_sequence(razn, &standing, count, fl);
+	return (standing);
 }
 
 static void		add_comm(t_list **comm, t_list *add)
@@ -257,7 +131,7 @@ static t_list	*push_last(t_list **a, t_list **b)
 		cp = cp->next;
 		count++;
 	}
-	printf("count: %d\n", count);
+	printf("LAST: %d\n", count);
 	if (count < len / 2)
 		while (count--)
 			ft_lstadd_back(&comm, ft_lstnew("ra", 3));
@@ -298,7 +172,7 @@ static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 		if (i == count)
 				break ;
 		first = ICONT(cp);
-		printf("|");
+//		printf("|");
 //		printf("first to push: %d\n", first);
 		cp = *a;
 		cccount = 0;
@@ -331,7 +205,13 @@ static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 				ft_lstadd_back(&comm, ft_lstnew("rra", 4));
 		}
 		ft_lstadd_back(&comm, ft_lstnew("pa", 3));
-		do_all_comm(a, b, comm);
+		cp = comm;
+		while (cp)
+		{
+			if (!seq[i+1] )
+			do_all_push(a, b, comm);
+		}
+//		do_all_comm(a, b, comm);
 //		print_comm(comm);
 //		print_stacks(*a, *b);
 		add_comm(&all_comm, comm);
@@ -339,23 +219,10 @@ static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 	}
 	if (!count)
 		return (push_last(a, b));
-	print_comm(all_comm);
+//	print_comm(all_comm);
 //	printf("rotated!\n\n");
 	return (all_comm);
 }
-/*
-static t_list	*sort_three(t_list **a, t_list **b)
-{
-	t_list	*comm;
-	t_list	*tmp;
-
-	comm = NULL;
-	tmp = *b;
-	if ((ICONT(tmp->next) > ICONT(tmp) && ICONT(tmp->next) > ICONT(tmp->next->next)) ||
-		(ICONT(tmp->next) < ICONT(tmp) && ICONT(tmp->next) < ICONT(tmp->next->next)    ))
-	do_all_comm(a, b, comm);
-	return (comm);
-}*/
 
 int	main(int argc, char **argv)
 {
@@ -375,8 +242,8 @@ int	main(int argc, char **argv)
 	comm = NULL;
 	add_comm(&comm, push_to_b(seq, &a, &b, len));
 //	print_stacks(a, b); //
-	print_comm(comm);
-	printf("in cycle:\n");
+//	print_comm(comm);
+//	printf("in cycle:\n");
 	while (b)
 	{
 	seq = get_magic_sequence(b, 0);

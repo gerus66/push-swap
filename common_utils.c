@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/26 04:39:44 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/27 12:01:52 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,11 @@ void	do_all_comm(t_list **a, t_list **b, t_list *comm)
 		do_one_comm(a, b, comm);
 		comm = comm->next;
 	}
+}
+
+int		last_elem(t_list *stack)
+{
+	while (stack->next)
+		stack = stack->next;
+	return (ICONT(stack));
 }

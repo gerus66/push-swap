@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/26 00:18:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/27 08:27:58 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_list		*atoi_stack(t_list *stack)
 		return (NULL);
 	return (ft_lstnew((void *)&res, sizeof(ssize_t)));
 }
-
+/*
 void		print_stacks(t_list *a, t_list *b)
 {
 	while (a || b)
@@ -56,7 +56,7 @@ void		print_stacks(t_list *a, t_list *b)
 	}
 	printf("%6c %6c\n", '_', '_');
 	printf("%6c %6c\n\n", 'a', 'b');
-}
+}*/
 
 static void	check_stack(t_list *st, int count)
 {
