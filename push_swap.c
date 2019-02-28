@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 17:26:21 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:31:28 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,9 +255,6 @@ int			main(int argc, char **argv)
 	razn_ar = get_diff(a);
 	choose_sequence(razn_ar, &standing, len, 1);
 	to_push = push_b(standing, a, &comm, len);
-	//	print_stacks(aaa, b);//
-	//	print_comm(comm);//
-	//	printf("=========================\n");
 	//	print_stacks(a, b);//
 	//	print_comm(comm);//
 	//	printf("=========================\n");
@@ -273,9 +270,6 @@ int			main(int argc, char **argv)
 	//	print_stacks(a, b);//
 	//	print_comm(comm);//
 	//	printf("=========================\n");
-	//		b = NULL;
-	//		comm_stacks(&aaa, &b, comm);
-	//		print_stacks(aaa, b);
 	print_comm(comm);//
 	return (0);
 }

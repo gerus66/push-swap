@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 14:27:16 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:30:32 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,4 +152,5 @@ void		choose_sequence(int *razn, int **standing, int count, char fl)
 				stand = stand_tmp;
 			}
 		}
+	free(razn);
 }
