@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/25 20:05:44 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 14:41:06 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,157 +86,6 @@ static void	init_stacks(t_list **in, t_list **razn, int *count, char **argv)
 	ft_lstdel(&tmpl, NULL);
 	if (razn)
 		init_razn(razn, sorted_ar, *in, *count);
-}
-
-static int	*positive_seq(int *razn, int start, int count)
-{
-	int	*standing;
-	int	i;
-	int	last;
-	int	prev;
-	int	fl;
-
-	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
-		return (NULL);
-	standing[start] = 1;
-	last = razn[start];
-	prev = count;//
-	i = start;//
-	fl = 0;
-	while (++i < count)
-	{
-		if (razn[i] <= last && razn[i] >= 0 
-				&& razn[i] >= razn[start] - start - (count - i - 1))//
-		{
-			fl++;
-			standing[i] = 1;
-			prev = last;
-			last = razn[i];
-		}
-		else if (razn[i] > last && razn[i] <= prev)
-		{
-			if (fl == 0)
-			{
-				start = i;
-				fl++;
-			}
-			prev = razn[i];
-			standing[i] = -1;
-			last++;//
-		}
-		else
-		{
-			last++;
-			prev++;
-		}
-	}
-	return (standing);
-}
-
-static int	*negative_seq(int *razn, int start, int count)
-{
-	int	*standing;
-	int	i;
-	int	last;
-	int	prev;
-	int	fl;
-
-	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
-		return (NULL);
-	standing[start] = 1;
-	last = razn[start];
-	prev = 0;
-	i = start;//
-	fl = 0;
-	while (++i < count)
-	{
-		if (razn[i] <= last && 
-				razn[i] >= razn[start] - start - (count - i - 1))
-		{
-			fl++;
-			standing[i] = 1;
-			prev = last;
-			last = razn[i];
-		}
-		else if (razn[i] > last && razn[i] <= prev)
-		{
-			if (fl == 0)
-			{
-				start = i;
-				fl++;
-			}
-			prev = razn[i];
-			standing[i] = -1;
-			last++;//
-		}
-		else
-		{
-			last++;
-			prev++;
-		}
-	}
-	return (standing);
-}
-
-static int	stand_count(int *ar, int count)
-{
-	int	stand;
-	int	i;
-
-	stand = 0;
-	i = -1;
-	while (++i < count)
-		if (ar[i])
-			stand++;
-	return (stand);
-}
-
-static void add_array(int *ar, int *add, int count)
-{
-	int	i = -1;
-
-	while (++i < count)
-		if (add[i])
-			ar[i] = 1;
-}
-
-static int	*choise_standing(t_list *razn, int count)
-{
-	int	razn_ar[count];
-	int	*standing;
-	int	*standing_tmp;
-	int	i;
-	int stand;
-	int	stand_tmp;
-	int	fill[count];
-
-	i = -1;
-	while (++i < count)
-		fill[i] = 0;
-	lst_to_array(razn, razn_ar, count);
-	standing = NULL;
-	stand = 0;
-	i = -1;
-	while (++i < count - stand)
-		if (!fill[i])
-		{
-			standing_tmp = (razn_ar[i] <= 0) ? negative_seq(razn_ar, i, count) :
-				positive_seq(razn_ar, i, count);
-			stand_tmp = stand_count(standing_tmp, count);
-			add_array(fill, standing_tmp, count);
-			//	printf("i = %d, stand_tmp = %d\n", i, stand_tmp);
-			if (stand_tmp > stand)
-			{
-				free(standing);
-				standing = standing_tmp;
-				stand = stand_tmp;
-			}
-		}
-	/*	i = -1;
-		while (++i < count)
-		printf("/%d/", standing[i]);*/
-//	printf("\nstand = %d\n", stand);
-	return (standing);
 }
 
 static void	delete_ra(t_list **comm)
@@ -526,6 +375,7 @@ int			main(int argc, char **argv)
 	t_list	*to_push;
 	int		*standing;
 	int		len;
+	int		*razn_ar;
 	//	int		i;
 	t_list	*comm;
 
@@ -539,7 +389,10 @@ int			main(int argc, char **argv)
 	init_stacks(&aaa, NULL, &len, argv);
 	len = argc - 1;
 	init_stacks(&a, &razn, &len, argv);
-	standing = choise_standing(razn, len);
+	razn_ar = (int *)malloc(sizeof(int) * len);
+	lst_to_array(razn, razn_ar, len);
+	choose_sequence(razn_ar, &standing, len, 1);
+//	standing = choise_standing(razn, len);
 	to_push = push_b(standing, &comm, len, a);
 //	print_stacks(aaa, b);//
 //	print_comm(comm);//
