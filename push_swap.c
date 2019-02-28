@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/01 01:51:03 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/01 02:34:37 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,6 +385,8 @@ static int	argv_to_list(t_list **in, char **argv, int count)
 	int		i;
 	char	**ar;
 	int		tmp;
+	int		*sorted;
+	t_list	*cp;
 
 	i = 0;
 	while (++i <= count)
@@ -397,6 +399,20 @@ static int	argv_to_list(t_list **in, char **argv, int count)
 			ar++;
 		}
 	}
+	tmp = ft_lstlen(*in);
+	sorted = get_diff(*in, 0);
+	cp = *in;
+	while (cp)
+	{
+		i = -1;
+		while (++i < tmp)
+			if (ICONT(cp) == sorted[i])
+			{
+				ft_memcpy(cp->cont, (void *)&i, sizeof(int));
+				break ;
+			}
+		cp = cp->next;
+	}
 	return (ft_lstlen(*in));
 }
 
@@ -406,7 +422,6 @@ int			main(int argc, char **argv)
 	t_list	*b;
 	int		*standing;
 	int		len;
-//	int		*razn_ar;
 	t_list	*comm;
 
 	comm = NULL;
@@ -415,36 +430,16 @@ int			main(int argc, char **argv)
 	a = NULL;
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
-//	razn_ar = get_diff(a);
-	choose_sequence(get_diff(a), &standing, len, 0);
+	print_stacks(a, b);
+	choose_sequence(get_diff(a, 1), &standing, len, 0);
 	push_b(standing, a, &comm, len);
 	do_all_comm(&a, &b, comm);
-//	print_stacks(a, b);
 	while (ft_lstlen(b) > 3)
 	{
-//		printf("len of B: %d\n", ft_lstlen(b));
-	//	razn_ar = get_diff(b);
-		choose_sequence(get_diff(b), &standing, ft_lstlen(b), 0);
-//	print_stacks(a, b);
+		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
 		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
-//		print_stacks(a, b);
 	}
-//	printf("end of cycle\n");
 	print_stacks(a, b);//
-	//	print_comm(comm);//
-	//	printf("=========================\n");
-	//	clever_push_b(comm, &a, &b, to_push);
-	//	print_stacks(a, b);//
-	//	print_comm(comm);//
-	//	printf("=========================\n");
-//	rotate_all(&a, &b, comm);
-	//	print_stacks(a, b);//
-	//	print_comm(comm);//
-	//	printf("=========================\n");
-//	push_a(&a, &b, comm);
-	//	print_stacks(a, b);//
-	//	print_comm(comm);//
-	//	printf("=========================\n");
 	print_comm(comm);//
 	return (0);
 }
