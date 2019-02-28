@@ -6,12 +6,12 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/27 14:10:43 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/27 17:56:47 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
-/*
+
 static int	*positive_seq(int *razn, int start, int count, char fll)
 {
 	int	*standing;
@@ -124,7 +124,7 @@ static void add_array(int *ar, int *add, int count)
 			ar[i] = 1;
 }
 
-void		choose_sequence(int *razn, int **standing, int count, char fl)
+void		old_choose_sequence(int *razn, int **standing, int count, char fl)
 {
 	int	*standing_tmp;
 	int	i;
@@ -153,7 +153,7 @@ void		choose_sequence(int *razn, int **standing, int count, char fl)
 			}
 		}
 	printf("select >>  %d << numbers\n", stand);
-}*/
+}
 # define START -5
 # define TERM -6
 
@@ -192,8 +192,8 @@ int	count_of_magic(int *array)
 	if (!array)
 		return (0);
 	count = 0;
-	i = 0;
-	while (array[i] != TERM)
+	i = -1;
+	while (array[++i] != TERM)
 		if (array[i] == 1)
 			count++;
 	return (count);
@@ -203,8 +203,8 @@ void	print_ar(int *seq, char *mes)
 {
 	int j = -1;
 	while (seq[++j] != TERM)
-		printf("/ %d /", seq[j]);
-	printf("/ %d / %s\n", seq[j], mes);
+		printf(" %d", seq[j]);
+	printf(" %d / %s\n", seq[j], mes);
 }
 
 
@@ -219,70 +219,121 @@ int	*req_seq(t_list *stack, int *seq, int prev, char fl_break)
 	i = 0;
 	while (seq[i] != START && seq[i] != TERM)
 		i++;
-	printf("i = %d fl_break = %d prev = %d cont = %d\n", i, fl_break, 
-			prev, ICONT(stack));
+//	printf("i = %d fl_break = %d prev = %d cont = %d\n", i, fl_break, 
+//			prev, ICONT(stack));
 	if (seq[i] == TERM)
 	{
-		printf("1st!\n");
-		print_ar(seq, "seq");
+	//	printf("desicion: \n");
+//		print_ar(seq, "seq");
 		first = 0;
 		last = 0;
-		i = -1;
+		i = 0;
 		while (++i)
 		{
-			if (seq[i] == 1)
+			if (seq[i - 1] == 1 && !first)
 				first = ICONT(stack);
-			if (seq[i] == TERM)
-				while (--i >= 0)
-					if (seq[i] == 1)
-						last = ICONT(stack);
+			if (seq[i - 1] == 1)
+				last = ICONT(stack);
+			if (seq[i - 1] == TERM)
+				break ;
 			stack = stack->next;
 		}
-		if (last < first || (last > first && !fl_break))
+	//	printf("first: %d, last: %d, stack: %d      count: %d\n",
+//				first, last, ICONT(stack), count_of_magic(seq));
+		if (count_of_magic(seq) > 2 &&
+				(last < first || (last > first && !fl_break)))
+		{
+	//		print_ar(seq, "!");
+	//		printf("+++++++good!   %d\n", count_of_magic(seq));
 			return (seq);
+		}
+		free(seq);
+//		printf("------no:(\n");
 		return (NULL);
 	}
 	else if (i == 0 || ICONT(stack) > prev)
 	{
-		printf("2nd!\n");
+	//	printf("2nd!\n");
+	//	print_ar(seq, "seq");
 		copy = copy_array(seq);
 		seq[i] = 0;
 		seq[i + 1] = !seq[i + 1] ? START : TERM;
 		copy[i] = 1;
 		copy[i + 1] = !copy[i + 1] ? START : TERM;
-	//	print_ar(seq, "seq");
 	//	print_ar(copy, "copy");
-		seq = req_seq(stack->next, seq, prev, fl_break);
-		copy = req_seq(stack->next, copy, ICONT(stack), fl_break);
-		first = count_of_magic(seq);
-		last = count_of_magic(copy);
-		if (first > last)
-			return (seq);
-		else if (last > first)
-			return (copy);
+		if ((seq = req_seq(stack->next, seq, prev, 0)))
+			first = count_of_magic(seq);
 		else
+			first = 0;
+		if ((copy = req_seq(stack->next, copy, ICONT(stack), 1)))
+			last = count_of_magic(copy);
+		else
+			first = 0;
+	//	printf("         first: %d, last: %d",first, last);
+		if (!first && !last)
+		{
+	//		printf(" - NULL\n");
+			free(seq);
+			free(copy);
 			return (NULL);
+		}
+		else if (first >= last)
+		{
+	//	printf("         first: %d, last: %d",first, last);
+	//		printf(" - choose first\n");
+			free(copy);
+			return (seq);
+		}
+		else
+		{
+	//	printf("         first: %d, last: %d",first, last);
+	//		printf(" - choose last\n");
+			free(seq);
+			return (copy);
+		}
 	}
 	else if (!fl_break)
 	{
-		printf("3rd!\n");
+	//	printf("3rd!\n");
+	//	print_ar(seq, "seq");
 		copy = copy_array(seq);
-		fl_break = 1;
+	//	fl_break = 1;
 		seq[i] = 0;
 		seq[i + 1] = !seq[i + 1] ? START : TERM;
 		copy[i] = 1;
 		copy[i + 1] = !copy[i + 1] ? START : TERM;
-		req_seq(stack->next, seq, prev, fl_break);
-		req_seq(stack->next, copy, ICONT(stack), fl_break);
-		first = count_of_magic(seq);
-		last = count_of_magic(copy);
-		if (first > last)
-			return (seq);
-		else if (last > first)
-			return (copy);
+		if (( seq = req_seq(stack->next, seq, prev, 0)))
+			first = count_of_magic(seq);
 		else
+			first = 0;
+		if ( (copy = req_seq(stack->next, copy, ICONT(stack), 1)))
+			last = count_of_magic(copy);
+		else
+			first = 0;
+	//	printf("         first: %d, last: %d",first, last);
+		if (!first && !last)
+		{
+//			printf(" - NULL\n");
+			free(seq);
+			free(copy);
 			return (NULL);
+		}
+		else if (first >= last)
+		{
+//		printf("         first: %d, last: %d",first, last);
+//			printf(" - choose first\n");
+			free(copy);
+			return (seq);
+		}
+		else
+		{
+//		printf("         first: %d, last: %d",first, last);
+//			printf(" - choose last\n");
+			free(seq);
+			return (copy);
+		}
 	}
+//	printf("..default\n");
 	seq[i] = 0;
 	seq[i + 1] = !seq[i + 1] ? START : TERM;
 	return (req_seq(stack->next, seq, prev, fl_break));
@@ -303,6 +354,8 @@ void	choose_sequence(int count, t_list *stack, int **standing)
 		cp = cp->next;
 	cp->next = stack;
 	res = req_seq(stack, magic, 0, 0);
+	printf("\nRESULT:   %d\n", count_of_magic(res));
+	print_ar(res, "!");
 	standing = &res;
 }
 

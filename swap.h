@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/27 12:58:22 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/27 16:34:41 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	print_stacks(t_list *a, t_list *b);
 ** choose magic sequence
 */
 
-//void        choose_sequence(int *razn, int **standing, int count, char fl);
+void        old_choose_sequence(int *razn, int **standing, int count, char fl);
 void    choose_sequence(int count, t_list *stack, int **standing);
 
 t_list  *push_to_b(int *standing, t_list **a, t_list **b, int count);

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:19:56 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/27 12:59:05 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/27 16:38:44 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,13 @@ static int	*get_magic_sequence(t_list *in, char fl)
 	razn = (int *)ft_memalloc(sizeof(int) * count);
 	init_razn(razn, sorted_ar, in, count);
 	choose_sequence(count, in, &standing);
+//	int i = -1;
+//	while (++i < count)
+//		printf(" %d ", standing[i]);
+	old_choose_sequence(razn, &standing, count, fl);
 	int i = -1;
 	while (++i < count)
 		printf(" %d ", standing[i]);
-//	choose_sequence(razn, &standing, count, fl);
 	return (standing);
 }
 
@@ -236,8 +239,8 @@ int	main(int argc, char **argv)
 		return (clean("Error\n"));
 	a = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
-//	print_stacks(a, NULL);
-	seq = get_magic_sequence(a, 1);
+	print_stacks(a, NULL);
+	seq = get_magic_sequence(a, 0);
 	b = NULL;
 	comm = NULL;
 	add_comm(&comm, push_to_b(seq, &a, &b, len));
