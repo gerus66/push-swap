@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 15:47:03 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:22:28 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ int		*get_diff(t_list *in);
 */
 
 void	choose_sequence(int *razn, int **standing, int count, char fl);
+
+/*
+** push to b (one time, the first)
+*/
+
+t_list	*push_b(int *standing, t_list *a, t_list **comm, int count);
 
 
 void	print_stacks(t_list *a, t_list *b);

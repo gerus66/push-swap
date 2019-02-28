@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 16:50:32 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 17:26:21 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,6 @@ static void	print_comm(t_list *comm)
 		comm = comm->next;
 	}
 //	printf("\ncount: %d\n", ft_lstlen(tmp));
-}
-
-static void	delete_ra(t_list **comm)
-{
-	t_list	*tmp;
-	t_list	*del;
-
-	if (!(*comm))
-		return ;
-	tmp = *comm;
-	while (tmp->next && tmp->next->next)
-		tmp = tmp->next;
-	if (ft_strcmp(CCONT(tmp->next), "ra"))
-		return ;
-	del = tmp->next;
-	tmp->next = NULL;
-	ft_lstdelone(&del, NULL);
-	delete_ra(comm);
 }
 
 static int	get_rot_b(t_list *to_push, t_list *b)
@@ -68,35 +50,6 @@ static int	get_rot_b(t_list *to_push, t_list *b)
 	if (!(b->next))
 		return (0);
 	return (rot <= len / 2 ? rot : rot - len);
-}
-
-static t_list	*push_b(int *standing, t_list **comm, int count, t_list *a)
-{
-	int	i;
-	t_list	*to_push;
-
-	to_push = NULL;
-	i = -1;
-	while (++i < count)
-	{
-		if (standing[i] == 0)
-		{
-			ft_lstadd_back(comm, ft_lstnew("pb", 3));
-			ft_lstadd_back(&to_push,ft_lstnew(a->cont, sizeof(int)));
-		}
-		else if (standing[i] == -1)
-		{
-			ft_lstadd_back(comm, ft_lstnew("rra", 4));
-			ft_lstadd_back(comm, ft_lstnew("sa", 3));
-			ft_lstadd_back(comm, ft_lstnew("ra", 3));
-			ft_lstadd_back(comm, ft_lstnew("ra", 3));
-		}
-		else
-			ft_lstadd_back(comm, ft_lstnew("ra", 3));
-		a = a->next;
-	}
-	delete_ra(comm);
-	return (to_push);
 }
 
 static void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
@@ -139,48 +92,6 @@ static void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
 		one_comm_stacks(a, b, comm);
 		prev = comm;
 		comm = comm->next;
-	}
-}
-
-static char	need_improve(t_list	*cur)
-{
-	if (cur && cur->next && 
-		((!ft_strcmp(CCONT(cur), "ra") && !ft_strcmp(CCONT(cur->next), "rra")) ||
-		(!ft_strcmp(CCONT(cur), "rra") && !ft_strcmp(CCONT(cur->next), "ra")) ||
-		(!ft_strcmp(CCONT(cur), "rb") && !ft_strcmp(CCONT(cur->next), "rrb")) ||
-		(!ft_strcmp(CCONT(cur), "rrb") && !ft_strcmp(CCONT(cur->next), "rb"))))
-		return (1);
-	return (0);
-}
-
-static void	improve_comm(t_list **comm)
-{
-	t_list	*tmp;
-	t_list	*cur;
-
-	if (need_improve(*comm))
-	{
-		tmp = *comm;
-		*comm = (*comm)->next;
-		ft_lstdelone(&tmp, NULL);
-		tmp = *comm;
-		*comm = (*comm)->next;
-		ft_lstdelone(&tmp, NULL);
-		improve_comm(comm);
-	}
-	cur = *comm;
-	while (cur && cur->next && cur->next->next)
-	{
-		if (need_improve(cur->next))
-		{
-			tmp = cur->next;
-			cur->next = cur->next->next;
-			ft_lstdelone(&tmp, NULL);
-			tmp = cur->next;
-			cur->next = cur->next->next;
-			ft_lstdelone(&tmp, NULL);
-		}
-		cur = cur->next;
 	}
 }
 
@@ -343,11 +254,10 @@ int			main(int argc, char **argv)
 	len = argv_to_list(&a, argv, argc - 1);
 	razn_ar = get_diff(a);
 	choose_sequence(razn_ar, &standing, len, 1);
-	to_push = push_b(standing, &comm, len, a);
+	to_push = push_b(standing, a, &comm, len);
 	//	print_stacks(aaa, b);//
 	//	print_comm(comm);//
 	//	printf("=========================\n");
-	improve_comm(&comm);
 	//	print_stacks(a, b);//
 	//	print_comm(comm);//
 	//	printf("=========================\n");
