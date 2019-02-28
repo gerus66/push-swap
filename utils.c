@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 15:40:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 22:14:26 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		atoi_check(char *s)
 	return ((int)res);
 }
 
-void	one_comm_stacks(t_list **a, t_list **b, t_list *comm)
+void	do_one_comm(t_list **a, t_list **b, t_list *comm)
 {
 	char	*line;
 	int		fl;
@@ -68,11 +68,11 @@ void	one_comm_stacks(t_list **a, t_list **b, t_list *comm)
 		exit(clean(ERR_M));//TODO
 }
 
-void	comm_stacks(t_list **a, t_list **b, t_list *comm)
+void	do_all_comm(t_list **a, t_list **b, t_list *comm)
 {
 	while (comm)
 	{
-		one_comm_stacks(a, b, comm);
+		do_one_comm(a, b, comm);
 		comm = comm->next;
 	}
 }

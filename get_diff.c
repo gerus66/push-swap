@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 16:51:38 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/01 01:50:24 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 		while (++i < count)
 			if (ICONT(in) == sorted[i])
 			{
-				ft_memcpy(in->cont, (void *)&i, sizeof(int));
+//				ft_memcpy(in->cont, (void *)&i, sizeof(int));
 				break ;
 			}
 		tmp = j - i;
@@ -62,6 +62,10 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 		j++;
 	}
 	free(sorted);
+//	i = -1;
+//	while (++i < count)
+//		printf(" %d", razn[i]);
+//	printf("\n");
 	return (razn);
 }
 

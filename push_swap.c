@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 19:01:45 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/01 01:51:03 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ static void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s\n", (char *)comm->cont);
+	//	printf("%s\n", (char *)comm->cont);
 		comm = comm->next;
 	}
-//	printf("\ncount: %d\n", ft_lstlen(tmp));
+	printf("\ncount: %d\n", ft_lstlen(tmp));
 }
-
+/*
 static int	get_rot_b(t_list *to_push, t_list *b)
 {
 	int rot;
@@ -50,7 +50,7 @@ static int	get_rot_b(t_list *to_push, t_list *b)
 	if (!(b->next))
 		return (0);
 	return (rot <= len / 2 ? rot : rot - len);
-}
+}*/
 /*
 static int	return_to_a(t_list **a, t_list **b, t_list *to_stand, t_list **comm, t_list **prev, int count)
 {
@@ -116,7 +116,7 @@ static t_list	*lst_copy(t_list *lst)
 	}
 	return (new);
 }*/
-
+/*
 static void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
 {
 	int	rot_b;
@@ -156,8 +156,8 @@ static void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
 		prev = comm;
 		comm = comm->next;
 	}
-}
-
+}*/
+/*
 static void	rot_to_comm(int rot_a, int rot_b, t_list *comm)
 {
 	int	i;
@@ -200,8 +200,8 @@ static void	rot_to_comm(int rot_a, int rot_b, t_list *comm)
 			rot_b = rot_b > 0 ? rot_b - 1 : rot_b + 1;
 		}
 	}
-}
-
+}*/
+/*
 static void	rotate_all(t_list **a, t_list **b, t_list *comm)
 {
 	t_list	*tmp;
@@ -245,12 +245,14 @@ static void	rotate_all(t_list **a, t_list **b, t_list *comm)
 	rot_b = rot_b < len / 2 ? rot_b : rot_b - len;
 	//	printf("rot a: %d rot b: %d\n", rot_a, rot_b);
 	len = ft_lstlen(comm);
+	printf("len of comm: %d\n", len);
 	rot_to_comm(rot_a, rot_b, comm);
+	printf("len of comm: %d\n", ft_lstlen(comm));
 	while (len--)
 		comm = comm->next;
-	comm_stacks(a, b, comm);
-}
-
+	do_all_comm(a, b, comm);
+}*/
+/*
 static void	push_a(t_list **a, t_list **b, t_list *comm)
 {
 	t_list	*tmp;
@@ -259,7 +261,7 @@ static void	push_a(t_list **a, t_list **b, t_list *comm)
 	{
 		tmp = ft_lstnew("pa", 3);
 		ft_lstadd_back(&comm, tmp);
-		one_comm_stacks(a, b, tmp);
+		do_one_comm(a, b, tmp);
 	}
 	while (*b)
 	{
@@ -268,15 +270,114 @@ static void	push_a(t_list **a, t_list **b, t_list *comm)
 		else
 			tmp = ft_lstnew("rra", 4);
 		ft_lstadd_back(&comm, tmp);
-		one_comm_stacks(a, b, tmp);
+		do_one_comm(a, b, tmp);
 	}
 	//	printf("/// %d ///\n", ICONT(*a));
 	while (ICONT(*a) != 0)
 	{
 		tmp = ft_lstnew("rra", 4);
 		ft_lstadd_back(&comm, tmp);
-		one_comm_stacks(a, b, tmp);
+		do_one_comm(a, b, tmp);
 	}
+}*/
+
+static void		add_comm(t_list **comm, t_list *add)
+{
+	t_list	*tmp;
+
+	if (!(*comm))
+		*comm = add;
+	else
+	{
+		tmp = *comm;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = add;
+	}
+}
+
+static int		last_elem(t_list *stack)
+{
+	while (stack->next)
+		stack = stack->next;
+	return (ICONT(stack));
+}
+
+static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
+{
+	t_list	*comm;
+	t_list	*all_comm;
+	t_list	*cp;
+	t_list	*cp2;
+	t_list	*cp3;
+	int		to_push;
+	int		i;
+	int		cccount;
+
+//	i = -1;
+//	while (++i <= count)
+//		printf(" %d", seq[i]);
+//	printf("\n");
+	i = 0;
+	all_comm = NULL;
+	while (i < count)
+	{
+		cp = *b;
+		comm = NULL;
+		while (!seq[i] && i < count)
+		{
+			cp = cp->next;
+			ft_lstadd_back(&comm, ft_lstnew("rb", 3));
+			i++;
+		}
+		if (i == count)
+			break ;
+		to_push = ICONT(cp);
+//		printf("|");
+//		printf("first to push: %d\n", to_push);
+		cp3 = *a;
+		cccount = 0;
+		int	prev = last_elem(cp3);
+		while (!((to_push < ICONT(cp3) && to_push > prev) ||
+					(to_push > ICONT(cp3) && to_push > prev && prev > ICONT(cp3)) ||
+					(to_push < ICONT(cp3) && ICONT(cp3) < prev)))
+		{
+//		printf("ping!\n");
+			cccount++;
+			prev = ICONT(cp3);
+			cp3 = cp3->next;
+		}
+		if (cccount < ft_lstlen(*a) / 2)
+		{
+			cp2 = comm;
+			while (cccount--)
+			{
+				if (cp2)
+				{
+					ft_memcpy(cp2->cont, (void *)"rr", sizeof(char *));
+					cp2 = cp2->next;
+				}
+				else
+					ft_lstadd_back(&comm, ft_lstnew("ra", 3));
+			}
+		}
+		else
+		{
+			cccount = ft_lstlen(*a) - cccount;
+			while (cccount--)
+				ft_lstadd_back(&comm, ft_lstnew("rra", 4));
+		}
+		ft_lstadd_back(&comm, ft_lstnew("pa", 3));
+		do_all_comm(a, b, comm);
+//		print_stacks(*a, *b);
+		add_comm(&all_comm, comm);
+		i++;
+	//	sleep(1);
+	}
+//	if (!count)
+//		return (push_last(a, b));
+//	print_comm(all_comm);
+	return (all_comm);
 }
 
 static int	argv_to_list(t_list **in, char **argv, int count)
@@ -303,10 +404,9 @@ int			main(int argc, char **argv)
 {
 	t_list	*a;
 	t_list	*b;
-	t_list	*to_push;
 	int		*standing;
 	int		len;
-	int		*razn_ar;
+//	int		*razn_ar;
 	t_list	*comm;
 
 	comm = NULL;
@@ -315,21 +415,33 @@ int			main(int argc, char **argv)
 	a = NULL;
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
-	razn_ar = get_diff(a);
-	choose_sequence(razn_ar, &standing, len, 0);
-	to_push = push_b(standing, a, &comm, len);
+//	razn_ar = get_diff(a);
+	choose_sequence(get_diff(a), &standing, len, 0);
+	push_b(standing, a, &comm, len);
+	do_all_comm(&a, &b, comm);
+//	print_stacks(a, b);
+	while (ft_lstlen(b) > 3)
+	{
+//		printf("len of B: %d\n", ft_lstlen(b));
+	//	razn_ar = get_diff(b);
+		choose_sequence(get_diff(b), &standing, ft_lstlen(b), 0);
+//	print_stacks(a, b);
+		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
+//		print_stacks(a, b);
+	}
+//	printf("end of cycle\n");
+	print_stacks(a, b);//
+	//	print_comm(comm);//
+	//	printf("=========================\n");
+	//	clever_push_b(comm, &a, &b, to_push);
 	//	print_stacks(a, b);//
 	//	print_comm(comm);//
 	//	printf("=========================\n");
-	clever_push_b(comm, &a, &b, to_push);
+//	rotate_all(&a, &b, comm);
 	//	print_stacks(a, b);//
 	//	print_comm(comm);//
 	//	printf("=========================\n");
-	rotate_all(&a, &b, comm);
-	//	print_stacks(a, b);//
-	//	print_comm(comm);//
-	//	printf("=========================\n");
-	push_a(&a, &b, comm);
+//	push_a(&a, &b, comm);
 	//	print_stacks(a, b);//
 	//	print_comm(comm);//
 	//	printf("=========================\n");
