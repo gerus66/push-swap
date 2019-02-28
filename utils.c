@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/12 23:00:53 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 15:40:35 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,6 @@ int clean(char *msg)
 {
 	ft_putstr(msg);
 	return (0);
-}
-
-void	lst_to_array(t_list *st, int *ar, int count)
-{
-	int	i;
-
-	i = -1;
-	while (st && ++i < count)
-	{
-		ar[i] = ICONT(st);
-		st = st->next;
-	}
-}
-
-
-void	tree_to_lst(t_avltree *root, t_list **lst)
-{
-	if (root == NULL)
-		return ;
-	tree_to_lst(root->left, lst);
-	ft_lstadd_back(lst, ft_lstnew((void *)&root->key, sizeof(int)));
-	tree_to_lst(root->right, lst);
 }
 
 int		atoi_check(char *s)

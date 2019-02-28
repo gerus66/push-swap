@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 14:33:46 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 15:47:03 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ void	rotate_stack(t_list **st);
 void	r_rotate_stack(t_list **st);
 
 /*
+** get sequence of diffs for current stack
+*/
+
+int		*get_diff(t_list *in);
+
+/*
 ** choose sorted sequence
 */
 
@@ -46,8 +52,7 @@ void	print_stacks(t_list *a, t_list *b);
 void    comm_stacks(t_list **a, t_list **b, t_list *comm);
 void    one_comm_stacks(t_list **a, t_list **b, t_list *comm);
 
-void    lst_to_array(t_list *st, int *ar, int count);
-void    tree_to_lst(t_avltree *root, t_list **lst);
+//void    lst_to_array(t_list *st, int *ar, int count);
 int     atoi_check(char *s);
 int		clean(char *msg);
 t_list	*atoi_stack(t_list *stack);

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 15:38:25 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 16:51:38 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,15 @@ static void	lst_to_array(t_list *st, int *ar, int count)
 	}
 }
 
-static void init_razn(t_list **razn, int *sorted, t_list *in, int count)
+static int	*init_razn(int *sorted, t_list *in, int count)
 {
 	int	i;
 	int	j;
 	int	tmp;
+	int	*razn;
 
+
+	razn = (int *)ft_memalloc(sizeof(int) * count);
 	j = 0;
 	while (in)
 	{
@@ -54,34 +57,34 @@ static void init_razn(t_list **razn, int *sorted, t_list *in, int count)
 			tmp += count;
 		else if (tmp > count / 2)
 			tmp -= count;
-		ft_lstadd_back(razn, ft_lstnew((void *)&tmp, sizeof(int)));
+		razn[j] = tmp;
 		in = in->next;
 		j++;
 	}
+	free(sorted);
+	return (razn);
 }
 
-int		*init_stacks(t_list *in, t_list **razn)
+int		*get_diff(t_list *in)
 {
 	t_avltree *tr;
-	t_list	*tmpl;
+	t_list	*cp;
 	int		*sorted_ar;
 	int		len;
 
 	len = ft_lstlen(in);
 	tr = NULL;
-	tmpl = in;
-	while (tmpl)	
+	cp = in;
+	while (cp)	
 	{
-		ft_tree_insert(&tr, ICONT(tmpl), NULL, 0);
-		tmpl = tmpl->next;
+		ft_tree_insert(&tr, ICONT(cp), NULL, 0);
+		cp = cp->next;
 	}
-	tmpl = NULL;
-	tree_to_lst(tr, &tmpl);
+	cp = NULL;
+	tree_to_lst(tr, &cp);
 	//TODO free tree
-	sorted_ar = (int *)ft_memalloc(sizeof(int) * len);
-	lst_to_array(tmpl, sorted_ar, len);
-	ft_lstdel(&tmpl, NULL);
-	init_razn(razn, sorted_ar, in, len);
-	lst_to_array(*razn, sorted_ar, len);
-	return (sorted_ar);
+	sorted_ar = (int *)malloc(sizeof(int) * len);
+	lst_to_array(cp, sorted_ar, len);
+	ft_lstdel(&cp, NULL);
+	return (init_razn(sorted_ar, in, len));
 }

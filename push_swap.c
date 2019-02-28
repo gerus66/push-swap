@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 14:41:06 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/02/28 16:50:32 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,67 +25,6 @@ static void	print_comm(t_list *comm)
 		comm = comm->next;
 	}
 //	printf("\ncount: %d\n", ft_lstlen(tmp));
-}
-
-static void init_razn(t_list **razn, int *sorted, t_list *in, int count)
-{
-	int	i;
-	int	j;
-	int	tmp;
-
-//	printf("count %d\n", count);
-	j = 0;
-	while (in)
-	{
-		i = -1;
-		while (++i < count)
-			if (ICONT(in) == sorted[i])
-			{
-				ft_memcpy(in->cont, (void *)&i, sizeof(int));
-				break ;
-			}
-		tmp = j - i;
-		if (tmp < -count / 2)
-			tmp += count;
-		else if (tmp > count / 2)
-			tmp -= count;
-		ft_lstadd_back(razn, ft_lstnew((void *)&tmp, sizeof(int)));
-		in = in->next;
-		j++;
-	}
-}
-
-static void	init_stacks(t_list **in, t_list **razn, int *count, char **argv)
-{
-	t_avltree *tr;
-	t_list	*tmpl;
-	int		tmp;
-	int		i;
-	int		*sorted_ar;
-	char	**ar;
-
-	tr = NULL;
-	i = 0;
-	while (++i <= *count)
-	{
-		ar = ft_strsplit(argv[i], ' ');
-		while (*ar)
-		{
-			tmp = atoi_check(*ar);
-			ft_lstadd_back(in, ft_lstnew((void *)&tmp, sizeof(int)));
-			ft_tree_insert(&tr, atoi_check(*ar), NULL, 0);
-			ar++;
-		}
-	}
-	tmpl = NULL;
-	tree_to_lst(tr, &tmpl);
-	//TODO free tree
-	*count = ft_lstlen(*in);
-	sorted_ar = (int *)ft_memalloc(sizeof(int) * *count);
-	lst_to_array(tmpl, sorted_ar, *count);
-	ft_lstdel(&tmpl, NULL);
-	if (razn)
-		init_razn(razn, sorted_ar, *in, *count);
 }
 
 static void	delete_ra(t_list **comm)
@@ -366,17 +305,34 @@ static void	push_a(t_list **a, t_list **b, t_list *comm)
 	}
 }
 
+static int	argv_to_list(t_list **in, char **argv, int count)
+{
+	int		i;
+	char	**ar;
+	int		tmp;
+
+	i = 0;
+	while (++i <= count)
+	{
+		ar = ft_strsplit(argv[i], ' ');
+		while (*ar)
+		{
+			tmp = atoi_check(*ar);
+			ft_lstadd_back(in, ft_lstnew((void *)&tmp, sizeof(int)));
+			ar++;
+		}
+	}
+	return (ft_lstlen(*in));
+}
+
 int			main(int argc, char **argv)
 {
 	t_list	*a;
-	t_list	*aaa;
 	t_list	*b;
-	t_list	*razn;
 	t_list	*to_push;
 	int		*standing;
 	int		len;
 	int		*razn_ar;
-	//	int		i;
 	t_list	*comm;
 
 	comm = NULL;
@@ -384,38 +340,32 @@ int			main(int argc, char **argv)
 		return (clean("Error\n"));
 	a = NULL;
 	b = NULL;
-	razn = NULL;
-	len = argc - 1;
-	init_stacks(&aaa, NULL, &len, argv);
-	len = argc - 1;
-	init_stacks(&a, &razn, &len, argv);
-	razn_ar = (int *)malloc(sizeof(int) * len);
-	lst_to_array(razn, razn_ar, len);
+	len = argv_to_list(&a, argv, argc - 1);
+	razn_ar = get_diff(a);
 	choose_sequence(razn_ar, &standing, len, 1);
-//	standing = choise_standing(razn, len);
 	to_push = push_b(standing, &comm, len, a);
-//	print_stacks(aaa, b);//
-//	print_comm(comm);//
-//	printf("=========================\n");
+	//	print_stacks(aaa, b);//
+	//	print_comm(comm);//
+	//	printf("=========================\n");
 	improve_comm(&comm);
-//	print_stacks(a, b);//
-//	print_comm(comm);//
-//	printf("=========================\n");
+	//	print_stacks(a, b);//
+	//	print_comm(comm);//
+	//	printf("=========================\n");
 	clever_push_b(comm, &a, &b, to_push);
-//	print_stacks(a, b);//
-//	print_comm(comm);//
-//	printf("=========================\n");
+	//	print_stacks(a, b);//
+	//	print_comm(comm);//
+	//	printf("=========================\n");
 	rotate_all(&a, &b, comm);
-//	print_stacks(a, b);//
-//	print_comm(comm);//
-//	printf("=========================\n");
+	//	print_stacks(a, b);//
+	//	print_comm(comm);//
+	//	printf("=========================\n");
 	push_a(&a, &b, comm);
-//	print_stacks(a, b);//
-//	print_comm(comm);//
-//	printf("=========================\n");
-//		b = NULL;
-//		comm_stacks(&aaa, &b, comm);
-//		print_stacks(aaa, b);
+	//	print_stacks(a, b);//
+	//	print_comm(comm);//
+	//	printf("=========================\n");
+	//		b = NULL;
+	//		comm_stacks(&aaa, &b, comm);
+	//		print_stacks(aaa, b);
 	print_comm(comm);//
 	return (0);
 }
