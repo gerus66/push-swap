@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 08:07:46 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 17:25:52 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/01 03:11:30 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,67 +71,58 @@ static void	improve_comm(t_list **comm)
 		cur = cur->next;
 	}
 }
+
 /*
+** add some chaos
+*/
+
 void	do_push(t_list **a, t_list **b, t_list *comm)
 {
-	int c = 1;
+//	int c = 1;
 
 	while (comm)
 	{
 		if (*b && (*b)->next)
 		{
-		if (!(ft_strcmp(CCONT(comm), "sa")) &&
-				ICONT(*b) > ICONT((*b)->next) && c++)
+		if (!(ft_strcmp(CCONT(comm), "sa")))
+//				ICONT(*b) > ICONT((*b)->next) && c++)
 			ft_memcpy(comm->cont, (void *)"ss", sizeof(char *));
-		else if (!(ft_strcmp(CCONT(comm), "ra")) && 
-					ICONT(*b) > last_elem(*b) && c++)
+		else if (!(ft_strcmp(CCONT(comm), "ra")))
+			//		ICONT(*b) > last_elem(*b) && c++)
 			ft_memcpy(comm->cont, (void *)"rr", sizeof(char *));
-		else if (!(ft_strcmp(CCONT(comm), "rra")) && 
-					ICONT(*b) > last_elem(*b) && c++)
+		else if (!(ft_strcmp(CCONT(comm), "rra")))
+				//	ICONT(*b) > last_elem(*b) && c++)
 			ft_memcpy(comm->cont, (void *)"rrr", sizeof(char *));
 		}
 		do_one_comm(a, b, comm);
 		comm = comm->next;
 	}
-	printf("%d times\n", c - 1);
+//	printf("%d times\n", c - 1);
 }
-*/
-t_list	*push_b(int *standing, t_list *a, t_list **comm, int count)
+
+void	push_b(int *standing, t_list **a, t_list **b, t_list **comm)
 {
 	int		i;
-	t_list	*to_push;
-//	t_list	*comm;
+	int		count;
 
-//	int counter = 0;
-
-	to_push = NULL;
+	count = ft_lstlen(*a);
 	i = -1;
 	while (++i < count)
 	{
 		if (standing[i] == 0)
-		{
 			ft_lstadd_back(comm, ft_lstnew("pb", 3));
-			ft_lstadd_back(&to_push,ft_lstnew(a->cont, sizeof(int)));
-		}
 		else if (standing[i] == -1)
 		{
 			ft_lstadd_back(comm, ft_lstnew("rra", 4));
 			ft_lstadd_back(comm, ft_lstnew("sa", 3));
 			ft_lstadd_back(comm, ft_lstnew("ra", 3));
 			ft_lstadd_back(comm, ft_lstnew("ra", 3));
-//			counter++;
 		}
 		else
-		{
 			ft_lstadd_back(comm, ft_lstnew("ra", 3));
-//			counter++;
-		}
-		a = a->next;
 	}
-//	printf("--------TO B:   ---%d---\n", counter);
 	delete_ra(comm);
 	improve_comm(comm);
-//	do_push(a, b, comm);
-//	do_all_comm(a, b, comm);
-	return (to_push);
+	do_push(a, b, *comm);
+//	do_all_comm(a, b, *comm);
 }
