@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/01 01:50:24 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/01 02:30:30 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 		i = -1;
 		while (++i < count)
 			if (ICONT(in) == sorted[i])
-			{
-//				ft_memcpy(in->cont, (void *)&i, sizeof(int));
 				break ;
-			}
 		tmp = j - i;
 		if (tmp < -count / 2)
 			tmp += count;
@@ -62,14 +59,10 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 		j++;
 	}
 	free(sorted);
-//	i = -1;
-//	while (++i < count)
-//		printf(" %d", razn[i]);
-//	printf("\n");
 	return (razn);
 }
 
-int		*get_diff(t_list *in)
+int		*get_diff(t_list *in, char fl)
 {
 	t_avltree *tr;
 	t_list	*cp;
@@ -90,5 +83,8 @@ int		*get_diff(t_list *in)
 	sorted_ar = (int *)malloc(sizeof(int) * len);
 	lst_to_array(cp, sorted_ar, len);
 	ft_lstdel(&cp, NULL);
-	return (init_razn(sorted_ar, in, len));
+	if (fl)
+		return (init_razn(sorted_ar, in, len));
+	else
+		return(sorted_ar);
 }

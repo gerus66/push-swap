@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 08:07:46 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/01 03:11:30 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/01 05:25:23 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	do_push(t_list **a, t_list **b, t_list *comm)
 		if (*b && (*b)->next)
 		{
 		if (!(ft_strcmp(CCONT(comm), "sa")))
-//				ICONT(*b) > ICONT((*b)->next) && c++)
+	//			ICONT(*b) > ICONT((*b)->next))
 			ft_memcpy(comm->cont, (void *)"ss", sizeof(char *));
 		else if (!(ft_strcmp(CCONT(comm), "ra")))
 			//		ICONT(*b) > last_elem(*b) && c++)

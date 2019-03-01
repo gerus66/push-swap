@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/28 22:14:26 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/01 03:04:30 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@ int clean(char *msg)
 {
 	ft_putstr(msg);
 	return (0);
+}
+
+int     last_elem(t_list *stack)
+{
+	while (stack->next)
+		stack = stack->next;
+	return (ICONT(stack));
 }
 
 int		atoi_check(char *s)
