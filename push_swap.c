@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/12 20:21:29 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/12 20:48:54 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s\n", (char *)comm->cont);
+		printf("%s ", (char *)comm->cont);
 		comm = comm->next;
 	}
-//	printf("\ncount: %d\n", ft_lstlen(tmp));
+	printf("\ncount: %d\n", ft_lstlen(tmp));
 }
 /*
 static int	return_to_a(t_list **a, t_list **b, t_list *to_stand, t_list **comm, t_list **prev, int count)
@@ -191,6 +191,7 @@ static void	push_a(t_list **a, t_list **b, t_list *comm)
 {
 	t_list	*tmp;
 
+	print_comm(comm);
 	printf("start push to A\n");
 	if (*b && ICONT(*b) > ICONT(*a))
 	{
@@ -425,9 +426,11 @@ int			main(int argc, char **argv)
 //		print_stacks(a, b);
 	}
 	add_comm(&comm, last(&b));
+	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
+	add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
 	push_a(&a, &b, comm);
 //	printf("RESULT:\n");
-//	print_stacks(a, b);//
+	print_stacks(a, b);//
 	print_comm(comm);//
 	return (0);
 }
