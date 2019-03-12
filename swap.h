@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/01 03:03:25 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/12 18:43:32 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,15 @@ void	choose_sequence(int *razn, int **standing, int count, char fl);
 ** push to b (one time, the first)
 */
 
-void	push_b(int *standing, t_list **a, t_list **b, t_list **comm);
+t_list	*push_b(int *standing, t_list **a, t_list **b, t_list **comm);
+void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push);
 
 
 void	print_stacks(t_list *a, t_list *b);
 int     last_elem(t_list *stack);
 void    do_one_comm(t_list **a, t_list **b, t_list *comm);
-void    do_all_comm(t_list **a, t_list **b, t_list *comm);
+void    do_one_chaos_comm(t_list **a, t_list **b, t_list *comm);
+void    do_all_comm(t_list **a, t_list **b, t_list *comm, char chaos);
 
 //void    lst_to_array(t_list *st, int *ar, int count);
 int     atoi_check(char *s);

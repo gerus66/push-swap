@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/11 19:18:57 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/12 18:48:14 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,28 @@ void	do_one_comm(t_list **a, t_list **b, t_list *comm)
 		exit(clean(ERR_M));//TODO
 }
 
-void	do_all_comm(t_list **a, t_list **b, t_list *comm)
+void	do_one_chaos_comm(t_list **a, t_list **b, t_list *comm)
+{
+	if (*b && (*b)->next)
+	{
+		if (!(ft_strcmp(CCONT(comm), "sa")))
+			ft_memcpy(comm->cont, (void *)"ss", sizeof(char *));
+		else if (!(ft_strcmp(CCONT(comm), "ra")))
+			ft_memcpy(comm->cont, (void *)"rr", sizeof(char *));
+		else if (!(ft_strcmp(CCONT(comm), "rra")))
+			ft_memcpy(comm->cont, (void *)"rrr", sizeof(char *));
+	}
+	do_one_comm(a, b, comm);
+}
+
+void	do_all_comm(t_list **a, t_list **b, t_list *comm, char chaos)
 {
 	while (comm)
 	{
-		do_one_comm(a, b, comm);
+		if (chaos)
+			do_one_chaos_comm(a, b, comm);
+		else
+			do_one_comm(a, b, comm);
 		comm = comm->next;
 	}
 }

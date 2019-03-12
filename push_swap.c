@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/01 05:27:19 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/12 20:03:49 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,36 +21,11 @@ static void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-//		printf("%s ", (char *)comm->cont);
+		printf("%s\n", (char *)comm->cont);
 		comm = comm->next;
 	}
-	printf("\ncount: %d\n", ft_lstlen(tmp));
+//	printf("\ncount: %d\n", ft_lstlen(tmp));
 }
-/*
-static int	get_rot_b(t_list *to_push, t_list *b)
-{
-	int rot;
-	int	len;
-
-//	print_stacks(to_push, b);
-	len = ft_lstlen(b);
-	if (len < 2 || !to_push)
-		return (0);
-	rot = 1;
-	while (b && b->next)
-	{
-	//	printf("next to push: %d ", ICONT(to_push));
-		if ((ICONT(b) > ICONT(to_push) && ICONT(to_push) > ICONT(b->next)) ||
-			(ICONT(b) < ICONT(b->next) && ICONT(to_push) > ICONT(b->next)) ||
-			(ICONT(b) < ICONT(b->next) && ICONT(to_push) < ICONT(b)))
-			break ;
-		b = b->next;
-		rot++;
-	}
-	if (!(b->next))
-		return (0);
-	return (rot <= len / 2 ? rot : rot - len);
-}*/
 /*
 static int	return_to_a(t_list **a, t_list **b, t_list *to_stand, t_list **comm, t_list **prev, int count)
 {
@@ -115,47 +90,6 @@ static t_list	*lst_copy(t_list *lst)
 		lst = lst->next;
 	}
 	return (new);
-}*/
-/*
-static void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
-{
-	int	rot_b;
-	t_list	*tmp;
-	t_list	*prev;
-
-	prev = comm;
-	while (comm)
-	{
-		rot_b = get_rot_b(to_push, *b);
-		if (rot_b > 0 && !ft_strcmp(CCONT(comm), "ra"))
-		{
-			ft_memcpy(comm->cont, (void *)"rr", sizeof(char *));
-			rot_b--;
-		}
-		else if (rot_b < 0 && !ft_strcmp(CCONT(comm), "rra"))
-		{
-			ft_memcpy(comm->cont, (void *)"rrr", sizeof(char *));
-			rot_b++;
-		}
-		if (!ft_strcmp(CCONT(comm), "pb"))
-		{
-			to_push = to_push->next;
-			while (rot_b)
-			{
-				tmp = rot_b > 0 ? ft_lstnew("rb", 3) : ft_lstnew("rrb", 4);
-				prev->next = tmp;
-				tmp->next = comm;
-				comm = tmp;
-				rot_b = rot_b > 0 ? rot_b - 1 : rot_b + 1;
-				one_comm_stacks(a, b, comm);
-				prev = comm;
-				comm = comm->next;
-			}
-		}
-		one_comm_stacks(a, b, comm);
-		prev = comm;
-		comm = comm->next;
-	}
 }*/
 /*
 static void	rot_to_comm(int rot_a, int rot_b, t_list *comm)
@@ -252,7 +186,7 @@ static void	rotate_all(t_list **a, t_list **b, t_list *comm)
 		comm = comm->next;
 	do_all_comm(a, b, comm);
 }*/
-/*
+
 static void	push_a(t_list **a, t_list **b, t_list *comm)
 {
 	t_list	*tmp;
@@ -272,14 +206,14 @@ static void	push_a(t_list **a, t_list **b, t_list *comm)
 		ft_lstadd_back(&comm, tmp);
 		do_one_comm(a, b, tmp);
 	}
-	//	printf("/// %d ///\n", ICONT(*a));
+//		printf("/// %d ///\n", ICONT(*a));
 	while (ICONT(*a) != 0)
 	{
 		tmp = ft_lstnew("rra", 4);
 		ft_lstadd_back(&comm, tmp);
 		do_one_comm(a, b, tmp);
 	}
-}*/
+}
 
 static void		add_comm(t_list **comm, t_list *add)
 {
@@ -308,9 +242,10 @@ static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 	int		cccount;
 	int		prev;
 
-	printf("A: %d, B: %d\n", ft_lstlen(*a), ft_lstlen(*b));
+//	printf("A: %d, B: %d\n", ft_lstlen(*a), ft_lstlen(*b));
 	i = 0;
 	all_comm = NULL;
+	count++;
 	while (i < count)
 	{
 		cp = *b;
@@ -365,8 +300,8 @@ static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 				ft_lstadd_back(&comm, ft_lstnew("rra", 4));
 		}
 		ft_lstadd_back(&comm, ft_lstnew("pa", 3));
-		printf("|");
-		do_all_comm(a, b, comm);
+//		printf("|");
+		do_all_comm(a, b, comm, 0);
 	//	print_stacks(*a, *b);
 	//	print_comm(comm);
 		add_comm(&all_comm, comm);
@@ -374,46 +309,46 @@ static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 		i++;
 	}
 //	print_stacks(*a, *b);
-	print_comm(all_comm);
+//	print_comm(all_comm);
 	return (all_comm);
 }
-/*
-static t_list	*bubble(t_list **st)
+
+static t_list	*last(t_list **b)
 {
 	t_list	*comm;
-//	int		i;
 	int		len;
-	char	fl;
-	t_list	*cp;
 
-	fl = 1;
-	len = ft_lstlen(*st);
 	comm = NULL;
-//	i = -1;
-	while (fl)
+	len = ft_lstlen(*b);
+	if (len == 0 || len == 1)
+		return (NULL);
+	if (len == 2 && ICONT(*b) > ICONT((*b)->next))
 	{
-		cp = *st;
-		fl = 0;
-		while (cp && cp->next)
-		{
-			if (ICONT(cp) > ICONT(cp->next))
-			{
-				ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-				do_one_comm(NULL, st, ft_lstnew("sb", 3));
-				fl = 1;
-			}
-			ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-			do_one_comm(NULL, st, ft_lstnew("sb", 3));
-			cp = cp->next;
-		}
+		ft_lstadd_back(&comm, ft_lstnew("sb", 3));
+		do_one_comm(NULL, b, ft_lstnew("sb", 3));
+		return (comm);
 	}
-	print_stacks(*st, NULL);
-	print_comm(comm);
+	if (len == 2)
+		return (NULL);
+	if (ICONT(*b) < ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next) && 
+			ICONT((*b)->next) > ICONT((*b)->next->next))
+	{
+		ft_lstadd_back(&comm, ft_lstnew("rrb", 4));
+		do_one_comm(NULL, b, ft_lstnew("rrb", 4));
+	}
+	else if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) > ICONT((*b)->next->next) && 
+			ICONT((*b)->next) > ICONT((*b)->next->next))
+	{
+		ft_lstadd_back(&comm, ft_lstnew("rb", 3));
+		do_one_comm(NULL, b, ft_lstnew("rb", 3));
+	}
+	if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next))
+	{
+		ft_lstadd_back(&comm, ft_lstnew("sb", 3));
+		do_one_comm(NULL, b, ft_lstnew("sb", 3));
+	}
 	return (comm);
-
-//	cp = lst_copy(*st);
-
-}*/
+}
 
 static void	simplify(t_list *in)
 {
@@ -464,6 +399,7 @@ int			main(int argc, char **argv)
 	int		*standing;
 	int		len;
 	t_list	*comm;
+	t_list	*to_push;
 
 	comm = NULL;
 	if (argc < 2)
@@ -471,17 +407,25 @@ int			main(int argc, char **argv)
 	a = NULL;
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
+//	printf("INPUT:\n");
 //	print_stacks(a, b);
 	choose_sequence(get_diff(a, 1), &standing, len, 1);
-	push_b(standing, &a, &b, &comm);
+	to_push = push_b(standing, &a, &b, &comm);
+//	printf("TO B:\n");
+//	print_stacks(to_push, NULL);
+	clever_push_b(comm, &a, &b, to_push);
+//	print_stacks(a, b);
+//	print_comm(comm);
 //	do_all_comm(&a, &b, comm);
-	while (ft_lstlen(b) > 10)
+	while (ft_lstlen(b) > 3)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
 		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
 	}
+	add_comm(&comm, last(&b));
+	push_a(&a, &b, comm);
+//	printf("RESULT:\n");
 //	print_stacks(a, b);//
 	print_comm(comm);//
-//	bubble(&b);
 	return (0);
 }
