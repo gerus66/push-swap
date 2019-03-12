@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/12 20:03:49 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/12 20:21:29 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,8 @@ static void	push_a(t_list **a, t_list **b, t_list *comm)
 {
 	t_list	*tmp;
 
-	if (ICONT(*b) > ICONT(*a))
+	printf("start push to A\n");
+	if (*b && ICONT(*b) > ICONT(*a))
 	{
 		tmp = ft_lstnew("pa", 3);
 		ft_lstadd_back(&comm, tmp);
@@ -421,6 +422,7 @@ int			main(int argc, char **argv)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
 		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
+//		print_stacks(a, b);
 	}
 	add_comm(&comm, last(&b));
 	push_a(&a, &b, comm);
