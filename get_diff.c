@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/01 02:30:30 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/14 16:34:03 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 	return (razn);
 }
 
-int		*get_diff(t_list *in, char fl)
+int		*get_diff(t_list *in, char return_razn)
 {
 	t_avltree *tr;
 	t_list	*cp;
@@ -83,7 +83,7 @@ int		*get_diff(t_list *in, char fl)
 	sorted_ar = (int *)malloc(sizeof(int) * len);
 	lst_to_array(cp, sorted_ar, len);
 	ft_lstdel(&cp, NULL);
-	if (fl)
+	if (return_razn)
 		return (init_razn(sorted_ar, in, len));
 	else
 		return(sorted_ar);

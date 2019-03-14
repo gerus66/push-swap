@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/13 15:58:31 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/14 19:52:31 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,4 +167,35 @@ void		add_comm(t_list **comm, t_list *add)
 			tmp = tmp->next;
 		tmp->next = add;
 	}
+}
+
+void	delete_tail(t_list **comm, char *name)
+{
+	t_list	*tmp;
+	t_list	*del;
+
+	if (!(*comm))
+		return ;
+	tmp = *comm;
+	while (tmp->next && tmp->next->next)
+		tmp = tmp->next;
+	if (ft_strcmp(CCONT(tmp->next), name))
+		return ;
+	del = tmp->next;
+	tmp->next = NULL;
+	ft_lstdelone(&del, NULL);
+	delete_tail(comm, name);
+}
+
+t_list	*lst_copy(t_list *lst)
+{
+	t_list	*new;
+
+	new = NULL;
+	while (lst)
+	{
+		ft_lstadd_back(&new, ft_lstnew(lst->cont, sizeof(int)));
+		lst = lst->next;
+	}
+	return (new);
 }

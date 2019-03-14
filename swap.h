@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/13 16:30:09 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/14 22:17:10 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,15 @@ void	r_rotate_stack(t_list **st);
 ** get sequence of diffs for current stack
 */
 
-int		*get_diff(t_list *in, char fl);
+int		*get_diff(t_list *in, char return_razn);
 
 /*
 ** choose sorted sequence
 */
 
-void	choose_sequence(int *razn, int **standing, int count, char fl);
+int		*choose_sequence(int *razn, int count, char include_swap);
+void	init_push_and_stay(t_list *st, t_list **push, t_list **stay, 
+			char include_swap);
 
 /*
 ** push to B (one time, the first)
@@ -57,10 +59,19 @@ void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push);
 ** push to A (in cycle)
 */
 
-t_list  *get_to_push(int *seq, t_list *st);
 t_list  *rot_all(t_list **a, t_list **b, int *seq, int count);
 void    push_a(t_list **a, t_list **b, t_list *comm);
 
+/*
+** stacks magic
+*/
+
+char    can_insert(int val, t_list *st);
+void	*stacks_magic(t_list **a, t_list **b, t_list **comm);
+
+
+t_list	*lst_copy(t_list *lst);
+void	delete_tail(t_list **comm, char *name);
 void    print_comm(t_list *comm);
 void	print_stacks(t_list *a, t_list *b);
 int     last_elem(t_list *stack);

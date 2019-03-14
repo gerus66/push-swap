@@ -6,30 +6,12 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/13 17:06:40 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/14 15:32:37 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
-
-t_list	*get_to_push(int *seq, t_list *st)
-{
-	int		i;
-	int		count;
-	t_list	*to_push;
-
-	count = ft_lstlen(st);
-	to_push = NULL;
-	i = -1;
-	while (++i < count)
-	{
-		if (seq[i] == 0)
-			ft_lstadd_back(&to_push,ft_lstnew(st->cont, sizeof(int)));
-		st = st->next;
-	}
-	return (to_push);
-}
-
+/*
 t_list	*adjust_stacks(t_list *a, t_list *b, t_list *to_push)
 {
 	int lena;
@@ -47,7 +29,7 @@ t_list	*adjust_stacks(t_list *a, t_list *b, t_list *to_push)
 	}
 	prev = last_elem(a);
 	while()
-}
+}*/
 
 t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 {
