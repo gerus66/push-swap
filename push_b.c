@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 08:07:46 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/12 18:48:36 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/13 16:29:52 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ static int	get_rot_b(t_list *to_push, t_list *b, int n, char fl)
 		else if (fl && len > FIRST_SORT && 
 				 (ICONT(b) > n * (ICONT(to_push) / n) && ICONT(b) < n * (ICONT(to_push) / n + 1)))
 			break ;
-	//	else
-	//		printf("_");
 		b = b->next;
 		rot++;
 	}
@@ -153,24 +151,19 @@ void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push)
 //	do_push(a, b, comm);
 }
 
-t_list	*push_b(int *standing, t_list **a, t_list **b, t_list **comm)
+void	push_b(int *standing, t_list **a, t_list **b, t_list **comm)
 {
 	int		i;
 	int		count;
-	t_list	*to_push;
 	t_list	*tmp;
 
 	count = ft_lstlen(*a);
-	to_push = NULL;
 	i = -1;
 	tmp = *a;
 	while (++i < count)
 	{
 		if (standing[i] == 0)
-		{
 			ft_lstadd_back(comm, ft_lstnew("pb", 3));
-			ft_lstadd_back(&to_push,ft_lstnew(tmp->cont, sizeof(int)));
-		}
 		else if (standing[i] == -1)
 		{
 			ft_lstadd_back(comm, ft_lstnew("rra", 4));
@@ -186,6 +179,5 @@ t_list	*push_b(int *standing, t_list **a, t_list **b, t_list **comm)
 	improve_comm(comm);
 	b++;
 //	do_push(a, b, *comm);
-	return (to_push);
 	//	do_all_comm(a, b, *comm);
 }

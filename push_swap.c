@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/12 20:48:54 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/13 16:42:03 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,6 @@
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 
-static void	print_comm(t_list *comm)
-{
-	t_list	*tmp;
-
-	tmp = comm;
-	while (comm)
-	{
-		printf("%s ", (char *)comm->cont);
-		comm = comm->next;
-	}
-	printf("\ncount: %d\n", ft_lstlen(tmp));
-}
 /*
 static int	return_to_a(t_list **a, t_list **b, t_list *to_stand, t_list **comm, t_list **prev, int count)
 {
@@ -187,134 +175,6 @@ static void	rotate_all(t_list **a, t_list **b, t_list *comm)
 	do_all_comm(a, b, comm);
 }*/
 
-static void	push_a(t_list **a, t_list **b, t_list *comm)
-{
-	t_list	*tmp;
-
-	print_comm(comm);
-	printf("start push to A\n");
-	if (*b && ICONT(*b) > ICONT(*a))
-	{
-		tmp = ft_lstnew("pa", 3);
-		ft_lstadd_back(&comm, tmp);
-		do_one_comm(a, b, tmp);
-	}
-	while (*b)
-	{
-		if (ICONT(*b) == ICONT(*a) - 1)
-			tmp = ft_lstnew("pa", 3);
-		else
-			tmp = ft_lstnew("rra", 4);
-		ft_lstadd_back(&comm, tmp);
-		do_one_comm(a, b, tmp);
-	}
-//		printf("/// %d ///\n", ICONT(*a));
-	while (ICONT(*a) != 0)
-	{
-		tmp = ft_lstnew("rra", 4);
-		ft_lstadd_back(&comm, tmp);
-		do_one_comm(a, b, tmp);
-	}
-}
-
-static void		add_comm(t_list **comm, t_list *add)
-{
-	t_list	*tmp;
-
-	if (!(*comm))
-		*comm = add;
-	else
-	{
-		tmp = *comm;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = add;
-	}
-}
-
-static t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
-{
-	t_list	*comm;
-	t_list	*all_comm;
-	t_list	*cp;
-	t_list	*cp2;
-	t_list	*cp3;
-	int		to_push;
-	int		i;
-	int		cccount;
-	int		prev;
-
-//	printf("A: %d, B: %d\n", ft_lstlen(*a), ft_lstlen(*b));
-	i = 0;
-	all_comm = NULL;
-	count++;
-	while (i < count)
-	{
-		cp = *b;
-		comm = NULL;
-//		prev = ICONT(cp);
-		while (!seq[i] && i < count)
-		{
-//			if (seq[i + 1] == 0 && cp->next && prev > ICONT(cp->next))
-//			{
-//				ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-//				printf("S %d <-> %d\n", prev, ICONT(cp->next));
-	//			print_comm(comm);
-//			}
-//			else if (cp->next)
-//				prev = ICONT(cp->next);
-			cp = cp->next;
-			ft_lstadd_back(&comm, ft_lstnew("rb", 3));
-			i++;
-		}
-		if (i == count)
-			break ;
-		to_push = ICONT(cp);
-		cp3 = *a;
-		cccount = 0;
-		prev = last_elem(cp3);
-		while (!((to_push < ICONT(cp3) && to_push > prev) ||
-			(to_push > ICONT(cp3) && to_push > prev && prev > ICONT(cp3)) ||
-			(to_push < ICONT(cp3) && ICONT(cp3) < prev)))
-		{
-			cccount++;
-			prev = ICONT(cp3);
-			cp3 = cp3->next;
-		}
-		if (cccount < ft_lstlen(*a) / 2)
-		{
-			cp2 = comm;
-			while (cccount--)
-			{
-				if (cp2 && (!ft_strcmp(CCONT(cp2), "rb")))
-				{
-					ft_memcpy(cp2->cont, (void *)"rr", sizeof(char *));
-					cp2 = cp2->next;
-				}
-				else
-					ft_lstadd_back(&comm, ft_lstnew("ra", 3));
-			}
-		}
-		else
-		{
-			cccount = ft_lstlen(*a) - cccount;
-			while (cccount--)
-				ft_lstadd_back(&comm, ft_lstnew("rra", 4));
-		}
-		ft_lstadd_back(&comm, ft_lstnew("pa", 3));
-//		printf("|");
-		do_all_comm(a, b, comm, 0);
-	//	print_stacks(*a, *b);
-	//	print_comm(comm);
-		add_comm(&all_comm, comm);
-	//	print_comm(all_comm);
-		i++;
-	}
-//	print_stacks(*a, *b);
-//	print_comm(all_comm);
-	return (all_comm);
-}
-
 static t_list	*last(t_list **b)
 {
 	t_list	*comm;
@@ -412,7 +272,8 @@ int			main(int argc, char **argv)
 //	printf("INPUT:\n");
 //	print_stacks(a, b);
 	choose_sequence(get_diff(a, 1), &standing, len, 1);
-	to_push = push_b(standing, &a, &b, &comm);
+	to_push = get_to_push(standing, a);
+	push_b(standing, &a, &b, &comm);
 //	printf("TO B:\n");
 //	print_stacks(to_push, NULL);
 	clever_push_b(comm, &a, &b, to_push);
@@ -423,7 +284,8 @@ int			main(int argc, char **argv)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
 		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
-//		print_stacks(a, b);
+		print_comm(comm);
+		print_stacks(a, b);
 	}
 	add_comm(&comm, last(&b));
 	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
