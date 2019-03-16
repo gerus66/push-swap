@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/14 23:15:44 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/16 20:00:18 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,47 +266,71 @@ int			main(int argc, char **argv)
 {
 	t_list	*a;
 	t_list	*b;
-//	int		*seq_a;
-//	int		*seq_b;
-//	int		len;
+	int		*seq;
+	//	int		*seq_b;
+	//	int		len;
 	t_list	*comm;
-//	t_list	*to_push;
-//	t_list	*to_stay;
+//	t_list	*sorted_in_a;
+//	t_list	*other_in_a;
+//	t_list	*push_to_b;
+//	t_list	*sorted_in_b;
+//	t_list	*other_in_b;
+//	t_list	*push_to_a;
+//	t_list	*tmp;
+	//	t_list	*to_push;
+	//	t_list	*to_stay;
 
-//	comm = NULL;
+	//	comm = NULL;
 	if (argc < 2)
 		return (clean("Error\n"));
 	a = NULL;
 	b = NULL;
 	argv_to_list(&a, argv, argc - 1);
-	print_stacks(a, b);
-//	choose_sequence(get_diff(a, 1), &seq_a, ft_lstlen(a), 1);
-	comm = split_on_two(&a, &b);
-//	printf("INPUT:\n");
-	print_stacks(a, b);
-	while (stacks_magic(&a, &b, &comm))
-		;
-//	to_push = get_to_push(standing, a);
-//	push_b(standing, &a, &b, &comm);
-//	printf("TO B:\n");
-//	print_stacks(to_push, NULL);
-//	clever_push_b(comm, &a, &b, to_push);
 //	print_stacks(a, b);
-//	print_comm(comm);
-//	do_all_comm(&a, &b, comm);
-//	while (ft_lstlen(b) > 3)
-//	{
-//		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
-//		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
-//		print_comm(comm);
-//		print_stacks(a, b);
-//	}
-//	add_comm(&comm, last(&b));
-//	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
-//	add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
-//	push_a(&a, &b, comm);
-//	printf("RESULT:\n");
-//	print_stacks(a, b);//
+	//	choose_sequence(get_diff(a, 1), &seq_a, ft_lstlen(a), 1);
+	comm = split_on_two(&a, &b);
+	print_comm(comm);
+	//	printf("INPUT:\n");
+//	print_stacks(a, b);
+//	init_push_and_stay(*a, &other_in_a, &sorted_in_a, 0);
+//	init_push_and_stay(other_in_a, &tmp, &push_to_b, 0);
+//	init_push_and_stay(*b, &other_in_b, &sorted_in_b, 0);
+/*	if (!other_in_a && !other_in_b)
+	{
+		seq = choose_sequence(get_diff(b, 1), ft_lstlen(b), 0);
+		add_comm(&comm, rot_all(&a, &b, seq, ft_lstlen(b) - 1));
+		push_a(&a, &b, comm);
+		//	printf("RESULT:\n");
+		print_stacks(a, b);//
+		print_comm(comm);//
+		return (0);
+	}*/
+//	init_push_and_stay(other_in_b, &tmp, &push_to_a, 0);
+//	sorted_in_a = NULL;
+//	sorted_in_b = NULL;
+	stacks_magic(&a, &b, &comm, NULL, NULL);
+	print_comm(comm);
+	//	to_push = get_to_push(standing, a);
+	//	push_b(standing, &a, &b, &comm);
+	//	printf("TO B:\n");
+	//	print_stacks(to_push, NULL);
+	//	clever_push_b(comm, &a, &b, to_push);
+//	print_stacks(a, b);
+	//	print_comm(comm);
+	//	do_all_comm(&a, &b, comm);
+	//	while (ft_lstlen(b) > 3)
+	//	{
+	//		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
+	//		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
+	//		print_comm(comm);
+	//		print_stacks(a, b);
+	//	}
+	//	add_comm(&comm, last(&b));
+	seq = choose_sequence(get_diff(b, 1), ft_lstlen(b), 0);
+	add_comm(&comm, rot_all(&a, &b, seq, ft_lstlen(b) - 1));
+	push_a(&a, &b, comm);
+	//	printf("RESULT:\n");
+	print_stacks(a, b);//
 	print_comm(comm);//
 	return (0);
 }

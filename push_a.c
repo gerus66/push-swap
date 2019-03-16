@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/14 15:32:37 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/16 19:51:26 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	push_a(t_list **a, t_list **b, t_list *comm)
 {
 	t_list	*tmp;
 
-	print_comm(comm);
+//	print_comm(comm);
 	printf("start push to A\n");
 	if (*b && ICONT(*b) > ICONT(*a))
 	{

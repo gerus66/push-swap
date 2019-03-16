@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/14 22:17:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/16 18:33:33 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ void    push_a(t_list **a, t_list **b, t_list *comm);
 */
 
 char    can_insert(int val, t_list *st);
-void	*stacks_magic(t_list **a, t_list **b, t_list **comm);
+void	*stacks_magic(t_list **a, t_list **b, t_list **comm, 
+			t_list *sorted_in_a, t_list *sorted_in_b);
 
 
 t_list	*lst_copy(t_list *lst);

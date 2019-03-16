@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/14 23:15:47 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/16 19:59:48 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,10 +133,15 @@ int			*choose_sequence(int *razn, int count, char include_swap)
 	int	stand_tmp;
 	int	fill[count];
 
-//	i = -1;
-//	while (++i < count)
-//		printf("%d ", razn[i]);
-//	printf("\n");
+	if (count < 3)
+	{
+		if (!(standing = (int *)malloc(sizeof(int) * count)))
+			return (NULL);
+		i = -1;
+		while (++i < count)
+			standing[i] = 1;
+		return (standing);
+	}
 	i = -1;
 	while (++i < count)
 		fill[i] = 0;
@@ -158,12 +163,49 @@ int			*choose_sequence(int *razn, int count, char include_swap)
 				stand = stand_tmp;
 			}
 		}
-	i = -1;
-	while (++i < count)
-		printf("%d ", (standing)[i]);
-	printf("\n");
 	free(razn);
 	return (standing);
+}
+
+static void	adjust_stay_to_st(t_list *st, t_list **stay)
+{
+	int	i;
+	int	count;
+
+	count = ft_lstlen(*stay);
+	i = -1;
+	while (++i < count)
+	{
+		if (ICONT(st) == ICONT(*stay))
+			return ;
+		do_one_comm(stay, NULL, ft_lstnew("ra", 3));
+	}
+	adjust_stay_to_st(st->next, stay);
+}
+
+static int	*get_sequence(t_list *st, t_list *to_stay, int count)
+{
+	int	*seq;
+	int	i;
+
+//	printf("GET SEQUENSE\n");
+//	print_stacks(st, to_stay);
+	if (!(seq = ft_memalloc(sizeof(int) * count)))
+		return (NULL);
+	i = -1;
+	while (++i < count && to_stay)
+	{
+//		printf("st: %d  stay: %d\n", ICONT(st), ICONT(to_stay));
+		seq[i] = (ICONT(st) == ICONT(to_stay)) ? 1 : 0;
+		if (seq[i])
+			to_stay = to_stay->next;
+		st = st->next;
+	}
+//	i = -1;//
+//	while (++i < count)//
+//		printf("%d ", (seq)[i]);//
+//	printf("\n");//
+	return (seq);
 }
 
 void	init_push_and_stay(t_list *st, t_list **push, t_list **stay,
@@ -173,8 +215,14 @@ void	init_push_and_stay(t_list *st, t_list **push, t_list **stay,
 	int		count;
 	int		*seq;
 
-	seq = choose_sequence(get_diff(st, 1), ft_lstlen(st), include_swap);
 	count = ft_lstlen(st);
+	if (!(*stay))
+		seq = choose_sequence(get_diff(st, 1), count, include_swap);
+	else
+	{
+		adjust_stay_to_st(st, stay);
+		seq = get_sequence(st, *stay, count);
+	}
 	*push = NULL;
 	*stay = NULL;
 	i = -1;
@@ -186,4 +234,8 @@ void	init_push_and_stay(t_list *st, t_list **push, t_list **stay,
 			ft_lstadd_back(push,ft_lstnew(st->cont, sizeof(int)));
 		st = st->next;
 	}
+	i = -1;//
+	while (++i < count)//
+		printf("%d ", (seq)[i]);//
+	printf("\n");//
 }
