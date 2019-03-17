@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/16 20:00:18 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/16 20:10:42 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,7 +330,7 @@ int			main(int argc, char **argv)
 	add_comm(&comm, rot_all(&a, &b, seq, ft_lstlen(b) - 1));
 	push_a(&a, &b, comm);
 	//	printf("RESULT:\n");
-	print_stacks(a, b);//
+//	print_stacks(a, b);//
 	print_comm(comm);//
 	return (0);
 }
