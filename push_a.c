@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/17 16:39:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/17 21:01:40 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,10 +120,11 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 		do_all_comm(a, b, comm, 0);
 		add_comm(&all_comm, comm);
 		i++;
+//		print_stacks(*a, *b);
 	}
 	return (all_comm);
 }
-
+/*
 void	push_a(t_list **a, t_list **b, t_list *comm)
 {
 	t_list	*tmp;
@@ -151,4 +152,4 @@ void	push_a(t_list **a, t_list **b, t_list *comm)
 		ft_lstadd_back(&comm, tmp);
 		do_one_comm(a, b, tmp);
 	}
-}
+}*/

@@ -6,29 +6,11 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 08:07:46 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/13 16:29:52 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/17 19:34:55 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
-
-static void	delete_ra(t_list **comm)
-{
-	t_list	*tmp;
-	t_list	*del;
-
-	if (!(*comm))
-		return ;
-	tmp = *comm;
-	while (tmp->next && tmp->next->next)
-		tmp = tmp->next;
-	if (ft_strcmp(CCONT(tmp->next), "ra"))
-		return ;
-	del = tmp->next;
-	tmp->next = NULL;
-	ft_lstdelone(&del, NULL);
-	delete_ra(comm);
-}
 
 static char	need_improve(t_list	*cur)
 {
@@ -175,7 +157,7 @@ void	push_b(int *standing, t_list **a, t_list **b, t_list **comm)
 			ft_lstadd_back(comm, ft_lstnew("ra", 3));
 		tmp = tmp->next;
 	}
-	delete_ra(comm);
+	cut_tail(comm, "ra");
 	improve_comm(comm);
 	b++;
 //	do_push(a, b, *comm);

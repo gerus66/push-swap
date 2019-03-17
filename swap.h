@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/13 16:30:09 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/17 19:34:11 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void    do_one_comm(t_list **a, t_list **b, t_list *comm);
 void    do_one_chaos_comm(t_list **a, t_list **b, t_list *comm);
 void    do_all_comm(t_list **a, t_list **b, t_list *comm, char chaos);
 void        add_comm(t_list **comm, t_list *add);
+void    add_and_do(t_list **comm, t_list **a, t_list **b, char *name);
+void    cut_tail(t_list **comm, char *name);
 
 //void    lst_to_array(t_list *st, int *ar, int count);
 int     atoi_check(char *s);

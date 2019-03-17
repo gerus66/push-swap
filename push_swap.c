@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/13 16:42:03 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/17 21:04:01 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,12 @@ static void	rotate_all(t_list **a, t_list **b, t_list *comm)
 	do_all_comm(a, b, comm);
 }*/
 
+/*static t_list	*bubble(t_list **st)
+{
+
+}*/
+
+
 static t_list	*last(t_list **b)
 {
 	t_list	*comm;
@@ -182,7 +188,7 @@ static t_list	*last(t_list **b)
 
 	comm = NULL;
 	len = ft_lstlen(*b);
-	if (len == 0 || len == 1)
+	if (len == 0 || len == 1 || len == 2)
 		return (NULL);
 	if (len == 2 && ICONT(*b) > ICONT((*b)->next))
 	{
@@ -254,14 +260,36 @@ static int	argv_to_list(t_list **in, char **argv, int count)
 	return (ft_lstlen(*in));
 }
 
+/*
+** rotate sorted stack to the start [ < N / 2]
+*/
+
+static t_list	*final_rotation(t_list **st)
+{
+	t_list	*comm;
+	int		len;
+
+	comm = NULL;
+	len = ft_lstlen(*st);
+	if (len - ICONT(*st) < len / 2)
+		while (ICONT(*st) != 0)
+			add_and_do(&comm, st, NULL, "ra");
+	else
+		while (ICONT(*st) != 0)
+			add_and_do(&comm, st, NULL, "rra");
+	return (comm);
+}
+
 int			main(int argc, char **argv)
 {
 	t_list	*a;
 	t_list	*b;
 	int		*standing;
 	int		len;
+	int		i;
 	t_list	*comm;
 	t_list	*to_push;
+	t_list	*new_comm;
 
 	comm = NULL;
 	if (argc < 2)
@@ -278,19 +306,46 @@ int			main(int argc, char **argv)
 //	print_stacks(to_push, NULL);
 	clever_push_b(comm, &a, &b, to_push);
 //	print_stacks(a, b);
-//	print_comm(comm);
+	printf("first push to B:");
+	print_comm(comm);
 //	do_all_comm(&a, &b, comm);
 	while (ft_lstlen(b) > 3)
 	{
-		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
-		add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
-		print_comm(comm);
+		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
+	i = -1;
+	len = ft_lstlen(b);
+	while (++i < len)
+		printf("%d ", standing[i]);
+	printf("\n");
+		new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
+		print_comm(new_comm);
+		add_comm(&comm, new_comm);
 		print_stacks(a, b);
 	}
-	add_comm(&comm, last(&b));
+//	new_comm = bubble(&b);
+	new_comm = last(&b);
+	printf("last elements:\n");
+	print_stacks(NULL, b);
+	print_comm(new_comm);
+	add_comm(&comm, new_comm);
+//	add_comm(&comm, last(&b));
+//	print_stacks(a, b);
 	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
-	add_comm(&comm, rot_all(&a, &b, standing, ft_lstlen(b) - 1));
-	push_a(&a, &b, comm);
+	i = -1;
+	len = ft_lstlen(b);
+	while (++i < len)
+		printf("%d ", standing[i]);
+	printf("\n");
+	new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
+	printf("final push to A:");
+	print_comm(new_comm);
+	add_comm(&comm, new_comm);
+//	print_stacks(a, b);
+//	push_a(&a, &b, comm);
+	new_comm = final_rotation(&a);
+	printf("final rotation:");
+	print_comm(new_comm);
+	add_comm(&comm, new_comm);
 //	printf("RESULT:\n");
 	print_stacks(a, b);//
 	print_comm(comm);//
