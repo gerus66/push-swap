@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/17 19:24:00 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/18 00:08:29 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ static int	*positive_seq(int *razn, int start, int count, char fll)
 			prev = last;
 			last = razn[i];
 		}
-		else if (razn[i] > last && razn[i] <= prev && (fll == 1 ||
-					(fll == 2 && i > 0 && standing[i - 1] == 1)))
+		else if (razn[i] > last && razn[i] <= prev && (fll == 1))
 		{
 			if (fl == 0)
 			{
@@ -83,8 +82,7 @@ static int	*negative_seq(int *razn, int start, int count, char fll)
 			prev = last;
 			last = razn[i];
 		}
-		else if (razn[i] > last && razn[i] <= prev && (fll == 1 ||
-					(fll == 2 && i > 0 && standing[i - 1] == 1)))
+		else if (razn[i] > last && razn[i] <= prev && (fll == 1))
 		{
 			if (fl == 0)
 			{

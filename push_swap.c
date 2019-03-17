@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/17 21:43:31 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/18 00:49:58 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,49 +214,125 @@ while (len--)
 comm = comm->next;
 do_all_comm(a, b, comm);
 }*/
-
-/*static t_list	*bubble(t_list **st)
-  {
-
-  }*/
-
-
-static t_list	*last(t_list **b)
+/*
+static void		improve_seq(t_list *st, int *seq)
 {
+	int	len;
+	int	i;
+	int	j;
+	int	prev;
+	int	next;
+	t_list	*cp;
+
+	prev = 0;
+	next = 0;
+	len = ft_lstlen(st);
+	i = -1;
+	while (++i < len)
+	{
+		if (seq[i] == 1)
+			prev = ICONT(st);
+		if (seq[i] == 0 && ICONT(st) > prev && ICONT(st) < next)
+			{
+				seq[i] = 1;
+				prev = ICONT(st);
+				j = i;
+				cp = st;
+				while (++j < len)
+				{
+					if (seq[j] == 1 && seq[j + 1] == -1)
+						next = ICONT(cp->next);
+					else if (seq[i] == 1)
+						next = ICONT(cp);
+					cp = cp->next;
+				}
+			}
+		st = st->next;
+	}
+}*/
+
+
+
+static t_list	*bubble(t_list **st)
+{ 
+	int	i;
+	int	len;
+	int	max;
+	char	fl;
 	t_list	*comm;
-	int		len;
+	t_list	*cp;
 
 	comm = NULL;
-	len = ft_lstlen(*b);
-	if (len == 0 || len == 1 || len == 2)
-		return (NULL);
-	if (len == 2 && ICONT(*b) > ICONT((*b)->next))
+	cp = *st;
+	max = ICONT(*st);
+	while (cp)
 	{
-		ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-		do_one_comm(NULL, b, ft_lstnew("sb", 3));
-		return (comm);
+		if (ICONT(cp) > max)
+			max = ICONT(cp);
+		cp = cp->next;
 	}
-	if (len == 2)
-		return (NULL);
-	if (ICONT(*b) < ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next) && 
-			ICONT((*b)->next) > ICONT((*b)->next->next))
+//	printf("max %d\n", max);
+	len = ft_lstlen(*st);
+//	cp = *st;
+	fl = 1;
+	while (fl)
 	{
-		ft_lstadd_back(&comm, ft_lstnew("rrb", 4));
-		do_one_comm(NULL, b, ft_lstnew("rrb", 4));
+		fl = 0;
+		i = -1;
+		while (++i < len)
+		{
+	//	print_stacks(NULL, *st);
+			if (ICONT(*st) > ICONT((*st)->next) && ICONT(*st) != max)
+			{
+				add_and_do(&comm, NULL, st, "sb");
+				fl = 1;
+			}
+		//	printf("ping!\n");
+			add_and_do(&comm, NULL, st, "rb");
+		//	print_comm(comm);
+		}
 	}
-	else if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) > ICONT((*b)->next->next) && 
-			ICONT((*b)->next) > ICONT((*b)->next->next))
-	{
-		ft_lstadd_back(&comm, ft_lstnew("rb", 3));
-		do_one_comm(NULL, b, ft_lstnew("rb", 3));
-	}
-	if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next))
-	{
-		ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-		do_one_comm(NULL, b, ft_lstnew("sb", 3));
-	}
+	cut_tail(&comm, "rb");
 	return (comm);
 }
+
+/*
+   static t_list	*last(t_list **b)
+   {
+   t_list	*comm;
+   int		len;
+
+   comm = NULL;
+   len = ft_lstlen(*b);
+   if (len == 0 || len == 1 || len == 2)
+   return (NULL);
+   if (len == 2 && ICONT(*b) > ICONT((*b)->next))
+   {
+   ft_lstadd_back(&comm, ft_lstnew("sb", 3));
+   do_one_comm(NULL, b, ft_lstnew("sb", 3));
+   return (comm);
+   }
+   if (len == 2)
+   return (NULL);
+   if (ICONT(*b) < ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next) && 
+   ICONT((*b)->next) > ICONT((*b)->next->next))
+   {
+   ft_lstadd_back(&comm, ft_lstnew("rrb", 4));
+   do_one_comm(NULL, b, ft_lstnew("rrb", 4));
+   }
+   else if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) > ICONT((*b)->next->next) && 
+   ICONT((*b)->next) > ICONT((*b)->next->next))
+   {
+   ft_lstadd_back(&comm, ft_lstnew("rb", 3));
+   do_one_comm(NULL, b, ft_lstnew("rb", 3));
+   }
+   if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next))
+   {
+   ft_lstadd_back(&comm, ft_lstnew("sb", 3));
+   do_one_comm(NULL, b, ft_lstnew("sb", 3));
+   }
+   return (comm);
+   }*/
 
 static void	simplify(t_list *in)
 {
@@ -349,7 +425,11 @@ int			main(int argc, char **argv)
 	printf("first push to B:");
 	print_comm(comm);
 	//	do_all_comm(&a, &b, comm);
-	while (ft_lstlen(b) > 3)
+	//	15 for 100 
+	//	40 for 500
+	int	thsh;
+	thsh = len / 10 * 1.5;
+	while (ft_lstlen(b) > thsh)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
 		i = -1;
@@ -360,11 +440,11 @@ int			main(int argc, char **argv)
 		new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
 		print_comm(new_comm);
 		add_comm(&comm, new_comm);
-		print_stacks(a, b);
+		//		print_stacks(a, b);
 	}
-	//	new_comm = bubble(&b);
-	new_comm = last(&b);
-	printf("last elements:\n");
+	new_comm = bubble(&b);
+	//	new_comm = last(&b);
+	printf("BUBBLE:\n");
 	print_stacks(NULL, b);
 	print_comm(new_comm);
 	add_comm(&comm, new_comm);
@@ -387,7 +467,7 @@ int			main(int argc, char **argv)
 	print_comm(new_comm);
 	add_comm(&comm, new_comm);
 	//	printf("RESULT:\n");
-	print_stacks(a, b);//
+//	print_stacks(a, b);//
 	print_comm(comm);//
 	improve_comm(&comm);
 	print_comm(comm);

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/17 21:29:42 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/17 22:43:10 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,19 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 	i = 0;
 	all_comm = NULL;
 	count++;
+	prev = 0;
 	while (i < count)
 	{
 		cp = *b;
 		comm = NULL;
 		while (!seq[i] && i < count)
 		{
-			/*	if (seq[i + 1] == 0 && cp->next && prev > ICONT(cp->next))
+	//	print_stacks(*a, *b);
+	/*			if (seq[i + 1] == 0 && cp->next && prev > ICONT(cp->next))
 				{
 				ft_lstadd_back(&comm, ft_lstnew("sb", 3));
 				printf("S %d <-> %d\n", prev, ICONT(cp->next));
-				print_comm(comm);
+			//	print_comm(comm);
 				}
 				else if (cp->next)
 				prev = ICONT(cp->next);*/
