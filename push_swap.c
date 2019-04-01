@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 20:29:23 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 21:37:39 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,16 +411,16 @@ int			main(int argc, char **argv)
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
 	//	printf("INPUT:\n");
-//	print_stacks(a, b);
+	print_stack(a);
 	choose_sequence(get_diff(a, 1), &standing, len, 1);
 	to_push = get_to_push(standing, a);
 	push_b(standing, &a, &b, &comm);
-	//	printf("TO B:\n");
-	//	print_stacks(to_push, NULL);
+//	print_stacks(to_push, NULL);
 	clever_push_b(comm, &a, &b, to_push);
-//	print_stacks(a, b);
+	printf("TO B: %d\n", ft_lstlen(a));
+	print_stacks(a, b);
 //	printf("first push to B:");
-//	print_comm(comm);
+	print_comm(comm);
 	//	do_all_comm(&a, &b, comm);
 	//	15 for 100 
 	//	40 for 500
@@ -435,7 +435,7 @@ int			main(int argc, char **argv)
 //			printf("%d ", standing[i]);
 //		printf("\n");
 		new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
-//		print_comm(new_comm);
+		print_comm(new_comm);
 		add_comm(&comm, new_comm);
 //		print_stacks(a, b);
 //		printf("len of B: %d \n", ft_lstlen(b));
@@ -443,9 +443,10 @@ int			main(int argc, char **argv)
 //	print_comm(comm);
 //	print_stacks(a, b);
 	new_comm = bubble(&b);
+	printf("BUBBLE: %d\n", ft_lstlen(b));
+	print_comm(new_comm);
 	add_comm(&comm, new_comm);
 	//	new_comm = last(&b);
-//	printf("BUBBLE:\n");
 //	print_comm(comm);
 //	print_stacks(a, b);
 //	print_stacks(NULL, b);
@@ -459,14 +460,14 @@ int			main(int argc, char **argv)
 //	printf("\n");
 //	print_stacks(a, b);
 	new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
-//	printf("final push to A:");
-//	print_comm(new_comm);
+	printf("final push to A:");
+	print_comm(new_comm);
 	add_comm(&comm, new_comm);
 //	print_stacks(a, b);
 	//	push_a(&a, &b, comm);
 	new_comm = final_rotation(&a);
-//	printf("final rotation:");
-//	print_comm(new_comm);
+	printf("final rotation:");
+	print_comm(new_comm);
 	add_comm(&comm, new_comm);
 	//	printf("RESULT:\n");
 //	print_stacks(a, b);//

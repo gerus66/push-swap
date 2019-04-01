@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/17 19:34:11 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 21:01:58 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void    push_a(t_list **a, t_list **b, t_list *comm);
 
 void    print_comm(t_list *comm);
 void	print_stacks(t_list *a, t_list *b);
+void	print_stack(t_list *a);
 int     last_elem(t_list *stack);
 void    do_one_comm(t_list **a, t_list **b, t_list *comm);
 void    do_one_chaos_comm(t_list **a, t_list **b, t_list *comm);

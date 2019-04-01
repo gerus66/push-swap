@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 19:55:20 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 21:10:23 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,10 +147,10 @@ void		choose_sequence(int *razn, int **standing, int count, char fl)
 	int	stand_tmp;
 	int	fill[count];
 
-//	i = -1;
-//	while (++i < count)
-//		printf("/%d/", razn[i]);
-//	printf("\n");
+	i = -1;
+	while (++i < count)
+		printf("/%d/", razn[i]);
+	printf("\n");
 	if (count == 1 || count == 2)
 	{
 		if (!(*standing = (int *)malloc(sizeof(int) * count)))
@@ -180,9 +180,9 @@ void		choose_sequence(int *razn, int **standing, int count, char fl)
 				stand = stand_tmp;
 			}
 		}
-//	i = -1;
-//	while (++i < count)
-//		printf("%d ", (*standing)[i]);
-//	printf("\n");
+	i = -1;
+	while (++i < count)
+		printf("%d ", (*standing)[i]);
+	printf("\n");
 	free(razn);
 }

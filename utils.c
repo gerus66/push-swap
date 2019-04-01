@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 19:55:04 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 21:05:46 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,16 @@ void		print_stacks(t_list *a, t_list *b)
 	printf("%6c %6c\n\n", 'a', 'b');
 }
 
+void		print_stack(t_list *a)
+{
+	while (a)
+	{
+		printf("%d ", ICONT(a));
+		a = a->next;
+	}
+	printf(" |\n");
+}
+
 void	print_comm(t_list *comm)
 {
 	t_list	*tmp;
@@ -95,10 +105,10 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s\n", (char *)comm->cont);
+		printf("%s ", (char *)comm->cont);
 		comm = comm->next;
 	}
-//	printf("\ncount: %d\n", ft_lstlen(tmp));
+	printf("\ncount: %d\n", ft_lstlen(tmp));
 }
 
 void	do_one_comm(t_list **a, t_list **b, t_list *comm)
