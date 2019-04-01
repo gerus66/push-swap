@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 21:10:23 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 21:50:10 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static int	*positive_seq(int *razn, int start, int count, char fll)
 	fl = 0;
 	while (++i < count)
 	{
+//		printf("razn[i] %3d | last %3d | prev %3d \n", razn[i], last, prev);
 		if (razn[i] <= last && razn[i] >= 0
 				&& razn[i] >= razn[start] - start - (count - i - 1))//
 		{

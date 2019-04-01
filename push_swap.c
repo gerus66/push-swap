@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 21:37:39 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 21:49:40 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,44 +214,101 @@ while (len--)
 comm = comm->next;
 do_all_comm(a, b, comm);
 }*/
-/*
-static void		improve_seq(t_list *st, int *seq)
-{
-	int	len;
-	int	i;
-	int	j;
-	int	prev;
-	int	next;
-	t_list	*cp;
 
-	prev = 0;
-	next = 0;
+static t_list	*to_push(t_list *st, int *seq)
+{
+	t_list	*push;
+	int		i;
+	t_list	*cp;
+	int		len;
+
+	push = NULL;
 	len = ft_lstlen(st);
+	cp = st;
 	i = -1;
 	while (++i < len)
 	{
 		if (seq[i] == 1)
-			prev = ICONT(st);
-		if (seq[i] == 0 && ICONT(st) > prev && ICONT(st) < next)
+			ft_lstadd_back(&push, ft_lstnew((void *)&ICONT(cp), sizeof(int)));
+		else if (seq[i] == -1)
+		{
+			do_one_comm(&push, NULL, ft_lstnew("rra", 4));
+			ft_lstadd_back(&push, ft_lstnew((void *)&ICONT(cp), sizeof(int)));
+			do_one_comm(&push, NULL, ft_lstnew("ra", 4));
+		}
+		cp = cp->next;
+	}
+//	print_stacks(st, push);
+	return (push);
+}
+
+static void		improve_seq(t_list *st, int *seq)
+{
+	int	len;
+	int	i;
+//	int	j;
+	int	prev;
+	int	last;
+//	int	next;
+	t_list	*cp;
+	t_list	*push;
+	int	first;
+
+	cp = st;
+	push = to_push(st, seq);
+	first = ICONT(push);
+	len = ft_lstlen(st);
+	last = last_elem(push);
+	prev = ICONT(push);
+	cp = push;
+	while (cp->next && ICONT(cp->next) != last)
+		cp = cp->next;
+	prev = ICONT(cp);
+//	next = 0;
+	i = -1;
+	while (++i < len)
+	{
+		printf("prev %d | last %d | next %d | cur %d\n", prev, last,
+				push ? ICONT(push) : first, ICONT(st));
+		if (seq[i])
+		{
+			prev = last;
+			last = ICONT(push);
+			push = push->next;
+		}
+		else
+		{
+			if (ICONT(st) > prev && ICONT(st) < last)
 			{
-				seq[i] = 1;
+				printf("|%d|", ICONT(st));
+				seq[i] = -1;
 				prev = ICONT(st);
-				j = i;
-				cp = st;
-				while (++j < len)
-				{
-					if (seq[j] == 1 && seq[j + 1] == -1)
-						next = ICONT(cp->next);
-					else if (seq[i] == 1)
-						next = ICONT(cp);
-					cp = cp->next;
-				}
 			}
+			else if (ICONT(st) > last &&
+					((push && ICONT(st) < ICONT(push)) ||
+					 (!push && ICONT(st) < first)))
+			{
+				printf("/%d/", ICONT(st));
+				seq[i] = 1;
+				prev = last;
+				last = ICONT(st);
+			}
+/*			else if (push && ICONT(st) > ICONT(push) &&
+					((push->next && ICONT(st) < ICONT(push->next)) ||
+					(!(push->next) && ICONT(st) < first)))
+			{
+				printf("-/%d/-", ICONT(st));
+				seq[i] = 1;
+				prev = last;
+				last = ICONT(st);
+			}*/
+
+		}
 		st = st->next;
 	}
-}*/
-
-
+//	if (!in_prev && !in_last)
+//		improve_seq(cp, seq, prev, last);
+}
 
 static t_list	*bubble(t_list **st)
 { 
@@ -413,6 +470,7 @@ int			main(int argc, char **argv)
 	//	printf("INPUT:\n");
 	print_stack(a);
 	choose_sequence(get_diff(a, 1), &standing, len, 1);
+	improve_seq(a, standing);
 	to_push = get_to_push(standing, a);
 	push_b(standing, &a, &b, &comm);
 //	print_stacks(to_push, NULL);
@@ -424,21 +482,33 @@ int			main(int argc, char **argv)
 	//	do_all_comm(&a, &b, comm);
 	//	15 for 100 
 	//	40 for 500
+	print_stacks(a, b);
 	int	thsh;
 	thsh = (len > 20) ? len / 10 * 1.5 : 5;
 	while (ft_lstlen(b) > thsh)
 	{
-		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
-//		i = -1;
-//		len = ft_lstlen(b);
-//		while (++i < len)
-//			printf("%d ", standing[i]);
-//		printf("\n");
+		len = ft_lstlen(b);
+		choose_sequence(get_diff(b, 1), &standing, len, 1);
+		printf("traditional:\n");
+		i = -1;
+		while (++i < len)
+			printf("%2d ", standing[i]);
+		printf("\n");
+//		improve_seq(b, standing);
+		new_comm = adjust_stacks(&a, &b, standing, len);
+		print_comm(new_comm);
+		add_comm(&comm, new_comm);
+//		choose_sequence(get_diff(b, 1), &standing, len, 1);
+		printf("after adjusting:\n");
+		i = -1;
+		while (++i < len)
+			printf("%2d ", standing[i]);
+		printf("\n");
 		new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
 		print_comm(new_comm);
 		add_comm(&comm, new_comm);
-//		print_stacks(a, b);
-//		printf("len of B: %d \n", ft_lstlen(b));
+		print_stacks(a, b);
+		//		print_stacks(a, b);
 	}
 //	print_comm(comm);
 //	print_stacks(a, b);
@@ -459,10 +529,18 @@ int			main(int argc, char **argv)
 //		printf("%d ", standing[i]);
 //	printf("\n");
 //	print_stacks(a, b);
-	new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
-	printf("final push to A:");
+	new_comm = adjust_stacks(&a, &b, standing, len);
 	print_comm(new_comm);
 	add_comm(&comm, new_comm);
+	i = -1;
+	len = ft_lstlen(b);
+	while (++i < len)
+		printf("%d ", standing[i]);
+	printf("\n");
+//	new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
+//	printf("final push to A:");
+//	print_comm(new_comm);
+//	add_comm(&comm, new_comm);
 //	print_stacks(a, b);
 	//	push_a(&a, &b, comm);
 	new_comm = final_rotation(&a);
@@ -471,7 +549,7 @@ int			main(int argc, char **argv)
 	add_comm(&comm, new_comm);
 	//	printf("RESULT:\n");
 //	print_stacks(a, b);//
-//	print_comm(comm);//
+	//	print_stacks(a, b);//
 	improve_comm(&comm);
 	print_comm(comm);
 //	print_stacks(a, b);//

@@ -22,7 +22,7 @@ $(NAME2): $(OBJ2)
 	gcc  $(LIB) $(OBJ2) -o $(NAME2)
 
 %.o: %.c $(HDR) $(LIB)
-	gcc $(FLAGS) -c $< -o $@
+	gcc  -c $< -o $@
 
 clean:
 	rm -f $(OBJ1) $(OBJ2)

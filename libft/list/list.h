@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 13:51:55 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/04 07:37:50 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/29 15:34:56 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct	s_list
 
 t_list			*ft_lstnew(void const *content, size_t content_size);
 
-/* 
+/*
 ** just hook new element on the top of list (or push it to the back)
 */
 

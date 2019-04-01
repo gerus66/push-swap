@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 21:05:46 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 21:43:53 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,4 +211,13 @@ void	cut_tail(t_list **comm, char *name)
 	ft_lstdelone(&del, NULL);
 //	print_comm(*comm);
 	cut_tail(comm, name);
+}
+
+char	can_insert(int val, t_list *st)
+{
+	if ((val < ICONT(st) && val > last_elem(st)) ||
+			(val > ICONT(st) && val > last_elem(st) && ICONT(st) < last_elem(st))
+			|| (val < ICONT(st) && ICONT(st) < last_elem(st)))
+		return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/01 02:30:30 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/03/19 14:15:39 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 		j++;
 	}
 	free(sorted);
+//	i = -1;
+//	while (++i < count)
+//		printf("%3d ", razn[i]);
+//	printf("\n");
 	return (razn);
 }
 
