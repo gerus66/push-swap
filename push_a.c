@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/17 22:43:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 20:27:36 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 			prev = ICONT(cp3);
 			cp3 = cp3->next;
 		}
-		if (cccount < ft_lstlen(*a) / 2)
+		if (cccount <= ft_lstlen(*a) / 2)
 		{
 			cp2 = comm;
 			while (cccount--)

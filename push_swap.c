@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 19:41:29 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 20:29:23 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,7 +418,7 @@ int			main(int argc, char **argv)
 	//	printf("TO B:\n");
 	//	print_stacks(to_push, NULL);
 	clever_push_b(comm, &a, &b, to_push);
-	//	print_stacks(a, b);
+//	print_stacks(a, b);
 //	printf("first push to B:");
 //	print_comm(comm);
 	//	do_all_comm(&a, &b, comm);
