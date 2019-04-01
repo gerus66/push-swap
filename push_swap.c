@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/18 00:49:58 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 17:33:49 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,9 @@ static t_list	*bubble(t_list **st)
 	t_list	*cp;
 
 	comm = NULL;
+	len = ft_lstlen(*st);
+	if (len < 3)
+		return (NULL);
 	cp = *st;
 	max = ICONT(*st);
 	while (cp)
@@ -271,9 +274,6 @@ static t_list	*bubble(t_list **st)
 			max = ICONT(cp);
 		cp = cp->next;
 	}
-//	printf("max %d\n", max);
-	len = ft_lstlen(*st);
-//	cp = *st;
 	fl = 1;
 	while (fl)
 	{
@@ -281,15 +281,12 @@ static t_list	*bubble(t_list **st)
 		i = -1;
 		while (++i < len)
 		{
-	//	print_stacks(NULL, *st);
 			if (ICONT(*st) > ICONT((*st)->next) && ICONT(*st) != max)
 			{
 				add_and_do(&comm, NULL, st, "sb");
 				fl = 1;
 			}
-		//	printf("ping!\n");
 			add_and_do(&comm, NULL, st, "rb");
-		//	print_comm(comm);
 		}
 	}
 	cut_tail(&comm, "rb");
@@ -428,7 +425,7 @@ int			main(int argc, char **argv)
 	//	15 for 100 
 	//	40 for 500
 	int	thsh;
-	thsh = len / 10 * 1.5;
+	thsh = (len > 20) ? len / 10 * 1.5 : 5;
 	while (ft_lstlen(b) > thsh)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
@@ -440,7 +437,8 @@ int			main(int argc, char **argv)
 		new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
 		print_comm(new_comm);
 		add_comm(&comm, new_comm);
-		//		print_stacks(a, b);
+		print_stacks(a, b);
+		printf("len of B: %d \n", ft_lstlen(b));
 	}
 	new_comm = bubble(&b);
 	//	new_comm = last(&b);
@@ -467,7 +465,7 @@ int			main(int argc, char **argv)
 	print_comm(new_comm);
 	add_comm(&comm, new_comm);
 	//	printf("RESULT:\n");
-//	print_stacks(a, b);//
+	print_stacks(a, b);//
 	print_comm(comm);//
 	improve_comm(&comm);
 	print_comm(comm);
