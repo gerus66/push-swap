@@ -6,11 +6,24 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/18 00:08:29 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/01 19:55:20 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
+
+static void	improve_razn(int *razn, int len, char fl)
+{
+	int	i;
+
+	i = -1;
+	while (++i < len)
+	{
+		if ((fl == 1 && razn[i] * (-2) == len) ||
+			(fl == -1 && razn[i] * 2 == len))
+			razn[i] = -razn[i];
+	}
+}
 
 static int	*positive_seq(int *razn, int start, int count, char fll)
 {
@@ -22,6 +35,7 @@ static int	*positive_seq(int *razn, int start, int count, char fll)
 
 	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
 		return (NULL);
+	improve_razn(razn, count, 1);
 	standing[start] = 1;
 	last = razn[start];
 	prev = count;//
@@ -67,6 +81,7 @@ static int	*negative_seq(int *razn, int start, int count, char fll)
 
 	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
 		return (NULL);
+	improve_razn(razn, count, -1);
 	standing[start] = 1;
 	last = razn[start];
 	prev = 0;
@@ -134,7 +149,7 @@ void		choose_sequence(int *razn, int **standing, int count, char fl)
 
 //	i = -1;
 //	while (++i < count)
-//		printf("%d ", razn[i]);
+//		printf("/%d/", razn[i]);
 //	printf("\n");
 	if (count == 1 || count == 2)
 	{
@@ -158,7 +173,7 @@ void		choose_sequence(int *razn, int **standing, int count, char fl)
 				positive_seq(razn, i, count, fl);
 			stand_tmp = stand_count(standing_tmp, count);
 			add_array(fill, standing_tmp, count);
-			if (stand_tmp > stand)
+			if (stand_tmp >= stand)
 			{
 				free(*standing);
 				*standing = standing_tmp;
