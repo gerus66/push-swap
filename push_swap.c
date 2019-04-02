@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 00:02:22 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 02:31:52 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,8 +411,8 @@ int			main(int argc, char **argv)
 	to_push = get_to_push(standing, a);
 	push_b(standing, &a, &b, &comm);
 	clever_push_b(comm, &a, &b, to_push);
-	printf("first push to B:   ");//
-	print_comm(comm);//
+//	printf("first push to B:   ");//
+//	print_comm(comm);//
 	/*	15 for 100 
 		40 for 500*/
 	int	thsh;
@@ -420,23 +420,23 @@ int			main(int argc, char **argv)
 	while (ft_lstlen(b) > thsh)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
-		new_comm = rot_all(&a, &b, standing, ft_lstlen(b));
+		new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 0);
 		add_comm(&comm, new_comm);
 	}
 	new_comm = bubble(&b);
-	printf("BUBBLE:   ");//
-	print_comm(new_comm);//
+//	printf("BUBBLE:   ");//
+//	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
-	print_stacks(a, b);
+//	print_stacks(a, b);//
 	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
-	new_comm = rot_all(&a, &b, standing, ft_lstlen(b));
+	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 1);
 	add_comm(&comm, new_comm);
 	new_comm = final_rotation(&a);
-	printf("final rotation:   ");//
-	print_comm(new_comm);//
+//	printf("final rotation:   ");//
+//	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
 	improve_comm(&comm);
-	printf("FINAL:   ");//
+//	printf("FINAL:   ");//
 	print_comm(comm);
 //	print_stack(a);//
 	return (0);

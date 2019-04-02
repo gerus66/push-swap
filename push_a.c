@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/02 23:18:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 02:32:12 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ static int	get_rot(t_list *st, int to_push, int i, int len_b, char *fl)
 		ret = i + ABS(rot - len_a);
 	if (rot + ABS(i - len_b) < ret && (*fl = 21))
 		ret = rot + ABS(i - len_b);
+//	if (final)
+//		return (ret + last_elem(st));
 	return (ret);
 }
 
@@ -155,7 +157,51 @@ t_list	*adjust_stacks(t_list **a, t_list **b, int *seq, int count)
 	return (comm);
 }
 
-t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
+t_list	*adjust_stacks_last(t_list **a, t_list **b, int *seq, int count)
+{
+	t_list	*comm;
+	t_list	*cp;
+	int		i;
+	int		rot;
+	int		min_rot;
+	int		to_push;
+	int		last_to_push;
+	char	fl;
+	char	min_fl;
+
+	comm = NULL;
+	min_rot = 2 * (count + ft_lstlen(*a));
+	to_push = 0;
+	last_to_push = last_elem(*b);
+	min_fl = 0;
+	cp = *b;
+	i = -1;
+	while (++i < count)
+	{
+		rot = get_rot(*a, ICONT(cp), i, count, &fl);
+//		printf("--| %d -->", rot);
+		rot += MIN(last_to_push, (count + ft_lstlen(*a) - last_to_push));
+//		printf(" %d -->", rot);
+		rot += (ICONT(cp) > last_to_push) ?
+			count + ft_lstlen(*a) - ICONT(cp) + last_to_push :
+			last_to_push - ICONT(cp);
+//		printf(" %d |--", rot);
+		if (rot < min_rot)
+		{
+			min_rot = rot;
+			to_push = ICONT(cp);
+			min_fl = fl;
+		}
+		last_to_push = ICONT(cp);
+		cp = cp->next;
+	}
+//	printf("\n");
+	comm = perform_rot(a, b, to_push, min_fl, seq, count);
+	return (comm);
+}
+
+
+t_list	*rot_all(t_list **a, t_list **b, int *seq, int count, char final)
 {
 	t_list	*comm;
 	t_list	*all_comm;
@@ -167,7 +213,10 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 	int		cccount;
 	int		prev;
 
-	all_comm = adjust_stacks(a, b, seq, count);
+	if (final)
+		all_comm = adjust_stacks_last(a, b, seq, count);
+	else
+		all_comm = adjust_stacks(a, b, seq, count);
 //	printf("adjust stacks:   ");//
 //	print_comm(all_comm);//
 	i = 0;
@@ -221,7 +270,7 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 		add_comm(&all_comm, comm);
 		i++;
 	}
-//	printf("rot all:   ");//
-//	print_comm(all_comm);//
+//		printf("rot all:   ");//
+//		print_comm(all_comm);//
 	return (all_comm);
 }
