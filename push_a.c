@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 20:27:36 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/02 23:18:35 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,131 @@ t_list	*get_to_push(int *seq, t_list *st)
 	}
 	return (to_push);
 }
-/*
-t_list	*adjust_stacks(t_list *a, t_list *b, t_list *to_push)
-{
-	int lena;
-	int	lenb;
-	int	rot;
-	t_list	prev;
 
-	lena = ft_lstlen(a);
-	lenb = ft_lstlen(b);
-	rot = 0;
-	while (ICONT(b) != ICONT(to_push))
+static void    rotate_seq(int *seq, int len, char fl)
+{
+	int     mem;
+	int     tmp;
+	int     i;
+
+	if (fl == -1)
 	{
-		b = b->next;
-		rot++;
+		mem = seq[len - 1];
+		i = -1;
+		while (++i < len)
+		{
+			tmp = seq[i];
+			seq[i] = mem;
+			mem = tmp;
+		}
 	}
-	prev = last_elem(a);
-	while()
-}*/
+	else
+	{
+		mem = seq[0];
+		i = len;
+		while (--i >= 0)
+		{
+			tmp = seq[i];
+			seq[i] = mem;
+			mem = tmp;
+		}
+	}
+}
+
+static int	get_rot(t_list *st, int to_push, int i, int len_b, char *fl)
+{
+	t_list 	*cp;
+	int		rot;
+	int		ret;
+	int		len_a;
+
+	cp = lst_copy(st);
+	len_a = ft_lstlen(st);
+	rot = 0;
+	while (!can_insert(to_push, cp))
+	{
+		rot++;
+		do_one_comm(&cp, NULL, ft_lstnew("ra", 3));
+	}
+	ret = MAX(rot, i);
+	*fl = 11;
+	if (MAX(len_b - i, len_a - rot) < ret && (*fl = 22))
+		ret = MAX(len_b - i, len_a - rot);
+	if (i + ABS(rot - len_a) < ret && (*fl = 12))
+		ret = i + ABS(rot - len_a);
+	if (rot + ABS(i - len_b) < ret && (*fl = 21))
+		ret = rot + ABS(i - len_b);
+	return (ret);
+}
+
+static t_list	*perform_rot(t_list **a, t_list **b, int to_push, char fl,
+		int *seq, int count)
+{
+	t_list	*comm;
+
+	comm = NULL;
+	if (fl / 10 == fl % 10)
+	{
+		while (ICONT(*b) != to_push && !can_insert(to_push, *a))
+		{
+			add_and_do(&comm, a, b, fl / 10 == 1 ? "rr" : "rrr");
+			rotate_seq(seq, count, fl / 10 == 1 ? 1 : -1);
+		}
+		while (ICONT(*b) != to_push)
+		{
+			add_and_do(&comm, a, b, fl / 10 == 1 ? "rb" : "rrb");
+			rotate_seq(seq, count, fl / 10 == 1 ? 1 : -1);
+		}
+		while (!can_insert(to_push, *a))
+			add_and_do(&comm, a, b, fl / 10 == 1 ? "ra" : "rra");
+	}
+	else
+	{
+		while (ICONT(*b) != to_push)
+		{
+			add_and_do(&comm, a, b, fl / 10 == 1 ? "rb" : "rrb");
+			rotate_seq(seq, count, fl / 10 == 1 ? 1 : -1);
+		}
+		while (!can_insert(to_push, *a))
+			add_and_do(&comm, a, b, fl % 10 == 1 ? "ra" : "rra");
+	}
+	return (comm);
+}
+
+t_list	*adjust_stacks(t_list **a, t_list **b, int *seq, int count)
+{
+	t_list	*comm;
+	t_list	*cp;
+	int		i;
+	int		rot;
+	int		min_rot;
+	int		to_push;
+	char	fl;
+	char	min_fl;
+
+	comm = NULL;
+	min_rot = MAX(count, ft_lstlen(*a));
+	to_push = 0;
+	min_fl = 0;
+	cp = *b;
+	i = -1;
+	while (++i < count)
+	{
+		if (seq[i])
+		{
+			rot = get_rot(*a, ICONT(cp), i, count, &fl);
+			if (rot < min_rot)
+			{
+				min_rot = rot;
+				to_push = ICONT(cp);
+				min_fl = fl;
+			}
+		}
+		cp = cp->next;
+	}
+	comm = perform_rot(a, b, to_push, min_fl, seq, count);
+	return (comm);
+}
 
 t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 {
@@ -61,9 +167,10 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 	int		cccount;
 	int		prev;
 
+	all_comm = adjust_stacks(a, b, seq, count);
+//	printf("adjust stacks:   ");//
+//	print_comm(all_comm);//
 	i = 0;
-	all_comm = NULL;
-	count++;
 	prev = 0;
 	while (i < count)
 	{
@@ -71,15 +178,6 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 		comm = NULL;
 		while (!seq[i] && i < count)
 		{
-	//	print_stacks(*a, *b);
-	/*			if (seq[i + 1] == 0 && cp->next && prev > ICONT(cp->next))
-				{
-				ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-				printf("S %d <-> %d\n", prev, ICONT(cp->next));
-			//	print_comm(comm);
-				}
-				else if (cp->next)
-				prev = ICONT(cp->next);*/
 			cp = cp->next;
 			ft_lstadd_back(&comm, ft_lstnew("rb", 3));
 			i++;
@@ -122,36 +220,8 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count)
 		do_all_comm(a, b, comm, 0);
 		add_comm(&all_comm, comm);
 		i++;
-//		print_stacks(*a, *b);
 	}
+//	printf("rot all:   ");//
+//	print_comm(all_comm);//
 	return (all_comm);
 }
-/*
-void	push_a(t_list **a, t_list **b, t_list *comm)
-{
-	t_list	*tmp;
-
-	print_comm(comm);
-	printf("start push to A\n");
-	if (*b && ICONT(*b) > ICONT(*a))
-	{
-		tmp = ft_lstnew("pa", 3);
-		ft_lstadd_back(&comm, tmp);
-		do_one_comm(a, b, tmp);
-	}
-	while (*b)
-	{
-		if (ICONT(*b) == ICONT(*a) - 1)
-			tmp = ft_lstnew("pa", 3);
-		else
-			tmp = ft_lstnew("rra", 4);
-		ft_lstadd_back(&comm, tmp);
-		do_one_comm(a, b, tmp);
-	}
-	while (ICONT(*a) != 0)
-	{
-		tmp = ft_lstnew("rra", 4);
-		ft_lstadd_back(&comm, tmp);
-		do_one_comm(a, b, tmp);
-	}
-}*/

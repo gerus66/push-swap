@@ -6,13 +6,11 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 20:29:23 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 00:02:22 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
-
-#define ABS(x) ((x) < 0 ? -(x) : (x))
 
 static char	need_improve(t_list	*cur)
 {
@@ -399,7 +397,6 @@ int			main(int argc, char **argv)
 	t_list	*b;
 	int		*standing;
 	int		len;
-//	int		i;
 	t_list	*comm;
 	t_list	*to_push;
 	t_list	*new_comm;
@@ -410,69 +407,37 @@ int			main(int argc, char **argv)
 	a = NULL;
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
-	//	printf("INPUT:\n");
-//	print_stacks(a, b);
 	choose_sequence(get_diff(a, 1), &standing, len, 1);
 	to_push = get_to_push(standing, a);
 	push_b(standing, &a, &b, &comm);
-	//	printf("TO B:\n");
-	//	print_stacks(to_push, NULL);
 	clever_push_b(comm, &a, &b, to_push);
-//	print_stacks(a, b);
-//	printf("first push to B:");
-//	print_comm(comm);
-	//	do_all_comm(&a, &b, comm);
-	//	15 for 100 
-	//	40 for 500
+	printf("first push to B:   ");//
+	print_comm(comm);//
+	/*	15 for 100 
+		40 for 500*/
 	int	thsh;
 	thsh = (len > 20) ? len / 10 * 1.5 : 5;
 	while (ft_lstlen(b) > thsh)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
-//		i = -1;
-//		len = ft_lstlen(b);
-//		while (++i < len)
-//			printf("%d ", standing[i]);
-//		printf("\n");
-		new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
-//		print_comm(new_comm);
+		new_comm = rot_all(&a, &b, standing, ft_lstlen(b));
 		add_comm(&comm, new_comm);
-//		print_stacks(a, b);
-//		printf("len of B: %d \n", ft_lstlen(b));
 	}
-//	print_comm(comm);
-//	print_stacks(a, b);
 	new_comm = bubble(&b);
+	printf("BUBBLE:   ");//
+	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
-	//	new_comm = last(&b);
-//	printf("BUBBLE:\n");
-//	print_comm(comm);
-//	print_stacks(a, b);
-//	print_stacks(NULL, b);
-	//	add_comm(&comm, last(&b));
-	//	print_stacks(a, b);
+	print_stacks(a, b);
 	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
-//	int i = -1;
-//	len = ft_lstlen(b);
-//	while (++i < len)
-//		printf("%d ", standing[i]);
-//	printf("\n");
-//	print_stacks(a, b);
-	new_comm = rot_all(&a, &b, standing, ft_lstlen(b) - 1);
-//	printf("final push to A:");
-//	print_comm(new_comm);
+	new_comm = rot_all(&a, &b, standing, ft_lstlen(b));
 	add_comm(&comm, new_comm);
-//	print_stacks(a, b);
-	//	push_a(&a, &b, comm);
 	new_comm = final_rotation(&a);
-//	printf("final rotation:");
-//	print_comm(new_comm);
+	printf("final rotation:   ");//
+	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
-	//	printf("RESULT:\n");
-//	print_stacks(a, b);//
-//	print_comm(comm);//
 	improve_comm(&comm);
+	printf("FINAL:   ");//
 	print_comm(comm);
-//	print_stacks(a, b);//
+//	print_stack(a);//
 	return (0);
 }
