@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 04:51:24 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 05:31:43 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,6 @@ static void	improve_comm(t_list **comm)
 	t_list	*tmp;
 	t_list	*cur;
 
-/*	if (need_improve(*comm))
-	{
-		tmp = *comm;
-		*comm = (*comm)->next;
-		ft_lstdelone(&tmp, NULL);
-		tmp = *comm;
-		*comm = (*comm)->next;
-		ft_lstdelone(&tmp, NULL);
-		improve_comm(comm);
-	}*/
 	cur = *comm;
 	while (cur && cur->next && cur->next->next && cur->next->next->next)
 	{
@@ -104,19 +94,6 @@ return (1);
 printf(" - no \n");
 return (0);
 }*/
-/*
-   static t_list	*lst_copy(t_list *lst)
-   {
-   t_list	*new;
-
-   new = NULL;
-   while (lst)
-   {
-   ft_lstadd_back(&new, ft_lstnew(lst->cont, sizeof(int)));
-   lst = lst->next;
-   }
-   return (new);
-   }*/
 /*
    static void	rot_to_comm(int rot_a, int rot_b, t_list *comm)
    {
@@ -250,47 +227,6 @@ static void		improve_seq(t_list *st, int *seq)
 }*/
 
 
-
-static t_list	*bubble(t_list **st)
-{ 
-	int	i;
-	int	len;
-	int	max;
-	char	fl;
-	t_list	*comm;
-	t_list	*cp;
-
-	comm = NULL;
-	len = ft_lstlen(*st);
-	if (len < 3)
-		return (NULL);
-	cp = *st;
-	max = ICONT(*st);
-	while (cp)
-	{
-		if (ICONT(cp) > max)
-			max = ICONT(cp);
-		cp = cp->next;
-	}
-	fl = 1;
-	while (fl)
-	{
-		fl = 0;
-		i = -1;
-		while (++i < len)
-		{
-			if (ICONT(*st) > ICONT((*st)->next) && ICONT(*st) != max)
-			{
-				add_and_do(&comm, NULL, st, "sb");
-				fl = 1;
-			}
-			add_and_do(&comm, NULL, st, "rb");
-		}
-	}
-	cut_tail(&comm, "rb");
-	return (comm);
-}
-
 static void	simplify(t_list *in)
 {
 	int	*sorted;
@@ -310,6 +246,44 @@ static void	simplify(t_list *in)
 			}
 		in = in->next;
 	}
+}
+
+
+static t_list	*bubble(t_list *st)
+{ 
+	int	i;
+	int	len;
+	int	max;
+	char	fl;
+	t_list	*comm;
+	t_list	*cp;
+
+//	print_stack(st);
+	comm = NULL;
+	len = ft_lstlen(st);
+	if (len < 3)
+		return (NULL);
+	cp = lst_copy(st);
+	simplify(cp);
+	max = len - 1;
+	fl = 1;
+	while (fl)
+	{
+		fl = 0;
+		i = -1;
+		while (++i < len)
+		{
+			if (ICONT(cp) > ICONT(cp->next) && ICONT(cp) != max)
+			{
+				add_and_do(&comm, NULL, &cp, "sb");
+				fl = 1;
+			}
+			add_and_do(&comm, NULL, &cp, "rb");
+		}
+	}
+	cut_tail(&comm, "rb");
+//	print_comm(comm);
+	return (comm);
 }
 
 static int	argv_to_list(t_list **in, char **argv, int count)
@@ -357,7 +331,7 @@ int			main(int argc, char **argv)
 {
 	t_list	*a;
 	t_list	*b;
-	t_list	*cp;
+//	t_list	*cp;
 	int		*standing;
 	int		len;
 	t_list	*comm;
@@ -383,16 +357,13 @@ int			main(int argc, char **argv)
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
 		new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 0);
 		add_comm(&comm, new_comm);
-		if (ft_lstlen(b) < 50)
-		{
-			cp = lst_copy(b);
-			if (ft_lstlen(bubble(&cp)) < len)
+		if (ft_lstlen(b) < 50 && ft_lstlen(bubble(b)) < len)
 				break ;
-		}
 	}
-	new_comm = bubble(&b);
+	new_comm = bubble(b);
 //	printf("BUBBLE (%d):   ", ft_lstlen(b));//
 //	print_comm(new_comm);//
+	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
 //	print_stacks(a, b);//
 	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
