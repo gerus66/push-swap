@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 02:31:52 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 04:51:24 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -291,44 +291,6 @@ static t_list	*bubble(t_list **st)
 	return (comm);
 }
 
-/*
-   static t_list	*last(t_list **b)
-   {
-   t_list	*comm;
-   int		len;
-
-   comm = NULL;
-   len = ft_lstlen(*b);
-   if (len == 0 || len == 1 || len == 2)
-   return (NULL);
-   if (len == 2 && ICONT(*b) > ICONT((*b)->next))
-   {
-   ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-   do_one_comm(NULL, b, ft_lstnew("sb", 3));
-   return (comm);
-   }
-   if (len == 2)
-   return (NULL);
-   if (ICONT(*b) < ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next) && 
-   ICONT((*b)->next) > ICONT((*b)->next->next))
-   {
-   ft_lstadd_back(&comm, ft_lstnew("rrb", 4));
-   do_one_comm(NULL, b, ft_lstnew("rrb", 4));
-   }
-   else if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) > ICONT((*b)->next->next) && 
-   ICONT((*b)->next) > ICONT((*b)->next->next))
-   {
-   ft_lstadd_back(&comm, ft_lstnew("rb", 3));
-   do_one_comm(NULL, b, ft_lstnew("rb", 3));
-   }
-   if (ICONT(*b) > ICONT((*b)->next) && ICONT(*b) < ICONT((*b)->next->next))
-   {
-   ft_lstadd_back(&comm, ft_lstnew("sb", 3));
-   do_one_comm(NULL, b, ft_lstnew("sb", 3));
-   }
-   return (comm);
-   }*/
-
 static void	simplify(t_list *in)
 {
 	int	*sorted;
@@ -395,6 +357,7 @@ int			main(int argc, char **argv)
 {
 	t_list	*a;
 	t_list	*b;
+	t_list	*cp;
 	int		*standing;
 	int		len;
 	t_list	*comm;
@@ -415,16 +378,20 @@ int			main(int argc, char **argv)
 //	print_comm(comm);//
 	/*	15 for 100 
 		40 for 500*/
-	int	thsh;
-	thsh = (len > 20) ? len / 10 * 1.5 : 5;
-	while (ft_lstlen(b) > thsh)
+	while (ft_lstlen(b) > 5)
 	{
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
 		new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 0);
 		add_comm(&comm, new_comm);
+		if (ft_lstlen(b) < 50)
+		{
+			cp = lst_copy(b);
+			if (ft_lstlen(bubble(&cp)) < len)
+				break ;
+		}
 	}
 	new_comm = bubble(&b);
-//	printf("BUBBLE:   ");//
+//	printf("BUBBLE (%d):   ", ft_lstlen(b));//
 //	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
 //	print_stacks(a, b);//
