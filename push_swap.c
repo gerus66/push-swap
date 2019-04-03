@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 05:31:43 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 09:10:15 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,7 @@ static void	simplify(t_list *in)
 	}
 }
 
-
+/*
 static t_list	*bubble(t_list *st)
 { 
 	int	i;
@@ -258,13 +258,13 @@ static t_list	*bubble(t_list *st)
 	t_list	*comm;
 	t_list	*cp;
 
-//	print_stack(st);
 	comm = NULL;
 	len = ft_lstlen(st);
 	if (len < 3)
 		return (NULL);
 	cp = lst_copy(st);
 	simplify(cp);
+//	print_stack(cp);
 	max = len - 1;
 	fl = 1;
 	while (fl)
@@ -280,11 +280,18 @@ static t_list	*bubble(t_list *st)
 			}
 			add_and_do(&comm, NULL, &cp, "rb");
 		}
+		i = cut_tail(&comm, "rb");
+		while (--i >= 0)
+			do_one_comm(NULL, &cp, ft_lstnew("rrb", 4));
+//		while (ICONT(cp) < ICONT(cp->next))
+//			add_and_do(&comm, NULL, &cp, "rrb");
+	//	add_and_do(&comm, NULL, &cp, "rb");
 	}
-	cut_tail(&comm, "rb");
+//	print_stack(cp);//
+//	cut_tail(&comm, "rb");
 //	print_comm(comm);
 	return (comm);
-}
+}*/
 
 static int	argv_to_list(t_list **in, char **argv, int count)
 {
@@ -327,6 +334,52 @@ static t_list	*final_rotation(t_list **st)
 	return (comm);
 }
 
+static t_list	*push_one(t_list **a, t_list **b)
+{
+	t_list	*comm;
+	t_list	*cp;
+	int		rot;
+	char	fl;
+
+	comm = NULL;
+	cp = *b;
+	rot = 0;
+//	print_stacks(*a, cp);
+	while (!can_insert(ICONT(*a), cp) && cp->next)
+	{
+		rot++;
+		cp = cp->next;
+	}
+//	printf("ROT %d\n", rot);
+	fl = rot > ft_lstlen(*b) / 2 ? -1 : 1;
+	rot = rot > ft_lstlen(*b) / 2 ? ft_lstlen(*b) - rot : rot;
+	while (--rot >= 0)
+		add_and_do(&comm, a, b, fl == 1 ? "rb" : "rrb");
+	add_and_do(&comm, a, b, "pb");
+//	print_comm(comm);
+//	print_stacks(*a, *b);
+	return (comm);
+}
+
+static t_list	*last(t_list *b)
+{
+	t_list	*comm;
+	t_list	*a;
+	t_list	*cp;
+	int		*standing;
+	int		i;
+
+	a = NULL;
+	cp = lst_copy(b);
+	comm = NULL;
+	choose_sequence(get_diff(cp, 1), &standing, ft_lstlen(cp), 1);
+	i = push_a(standing, &a, &cp, &comm);
+//	printf(">> %d %d\n", i, ft_lstlen(a));
+	while (--i >= 0)
+		add_comm(&comm, push_one(&a, &cp));
+	return (comm);
+}
+
 int			main(int argc, char **argv)
 {
 	t_list	*a;
@@ -334,6 +387,7 @@ int			main(int argc, char **argv)
 //	t_list	*cp;
 	int		*standing;
 	int		len;
+//	int		i;
 	t_list	*comm;
 	t_list	*to_push;
 	t_list	*new_comm;
@@ -357,15 +411,20 @@ int			main(int argc, char **argv)
 		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
 		new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 0);
 		add_comm(&comm, new_comm);
-		if (ft_lstlen(b) < 50 && ft_lstlen(bubble(b)) < len)
+		if (ft_lstlen(b) < 50 && ft_lstlen(last(b)) < len)
 				break ;
 	}
-	new_comm = bubble(b);
+
+//	new_comm = bubble(b);
 //	printf("BUBBLE (%d):   ", ft_lstlen(b));//
 //	print_comm(new_comm);//
+
+	new_comm = last(b);
+//	printf("INSERT (%d):   ", ft_lstlen(b));//
+//	print_comm(new_comm);//
+	
 	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
-//	print_stacks(a, b);//
 	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
 	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 1);
 	add_comm(&comm, new_comm);

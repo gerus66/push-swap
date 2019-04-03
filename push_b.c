@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 08:07:46 by mbartole          #+#    #+#             */
-/*   Updated: 2019/03/17 19:34:55 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 08:57:00 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,5 +161,41 @@ void	push_b(int *standing, t_list **a, t_list **b, t_list **comm)
 	improve_comm(comm);
 	b++;
 //	do_push(a, b, *comm);
-	//	do_all_comm(a, b, *comm);
+}
+
+int		push_a(int *standing, t_list **a, t_list **b, t_list **comm)
+{
+	int		i;
+	int		count;
+	t_list	*tmp;
+	t_list	*new_comm;
+	int		ret;
+
+	new_comm = NULL;
+	count = ft_lstlen(*b);
+	i = -1;
+	tmp = *b;
+	ret = 0;
+	while (++i < count)
+	{
+		if (standing[i] == 0 && (ret = ret + 1))
+			ft_lstadd_back(&new_comm, ft_lstnew("pa", 3));
+		else if (standing[i] == -1)
+		{
+			ft_lstadd_back(&new_comm, ft_lstnew("rrb", 4));
+			ft_lstadd_back(&new_comm, ft_lstnew("sb", 3));
+			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
+			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
+		}
+		else
+			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
+		tmp = tmp->next;
+	}
+	cut_tail(&new_comm, "rb");
+	improve_comm(&new_comm);
+//	b++;
+//	print_comm(new_comm);
+	do_all_comm(a, b, new_comm, 0);
+	add_comm(comm, new_comm);
+	return (ret);
 }

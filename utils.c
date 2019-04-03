@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 04:51:05 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/03 09:00:42 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void		print_stack(t_list *a)
 {
 	while (a)
 	{
-		printf("%6d ", ICONT(a));
+		printf("%d ", ICONT(a));
 			a = a->next;
 	}
 	printf("\n");
@@ -105,10 +105,10 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s ", (char *)comm->cont);
+		printf("%s\n", (char *)comm->cont);
 		comm = comm->next;
 	}
-	printf(" // count: %d\n", ft_lstlen(tmp));
+//	printf(" // count: %d\n", ft_lstlen(tmp));
 }
 
 void	do_one_comm(t_list **a, t_list **b, t_list *comm)
@@ -188,29 +188,29 @@ void	add_and_do(t_list **comm, t_list **a, t_list **b, char *name)
 	do_one_comm(a, b, tmp);
 }
 
-void	cut_tail(t_list **comm, char *name)
+int	cut_tail(t_list **comm, char *name)
 {
 	t_list	*tmp;
 	t_list	*del;
 
 	if (!(*comm))
-		return ;
-	if (!(*comm)->next)
+		return(0) ;
+	if (!(*comm)->next && !ft_strcmp(CCONT(*comm), name))
 	{
 		free(*comm);
 		*comm = NULL;
-		return ;
+		return(0) ;
 	}
 	tmp = *comm;
 	while (tmp->next && tmp->next->next)
 		tmp = tmp->next;
 	if (ft_strcmp(CCONT(tmp->next), name))
-		return ;
+		return(0) ;
 	del = tmp->next;
 	tmp->next = NULL;
 	ft_lstdelone(&del, NULL);
 //	print_comm(*comm);
-	cut_tail(comm, name);
+	return (1 + cut_tail(comm, name));
 }
 
 char    can_insert(int val, t_list *st)
