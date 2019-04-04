@@ -6,28 +6,60 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 04:11:47 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/04 21:12:09 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-t_list	*get_to_push(int *seq, t_list *st)
-{
-	int		i;
-	int		count;
-	t_list	*to_push;
+/*
+** push one top element from stack A to somewhere in stack B (optimised)
+*/
 
-	count = ft_lstlen(st);
-	to_push = NULL;
-	i = -1;
-	while (++i < count)
-	{
-		if (seq[i] == 0)
-			ft_lstadd_back(&to_push,ft_lstnew(st->cont, sizeof(int)));
-		st = st->next;
-	}
-	return (to_push);
+t_list	*push_one_ab(t_list **a, t_list **b)
+{
+	t_list	*comm;
+	t_list	*cp;
+	int		rot;
+	char	reverse;
+
+	comm = NULL;
+	cp = *b;
+	rot = 0;
+	while (!can_insert(ICONT(*a), cp) && cp->next && ++rot)
+		cp = cp->next;
+	reverse = rot > ft_lstlen(*b) / 2 ? 1 : 0;
+	if (reverse)
+		rot = ft_lstlen(*b) - rot;
+	while (--rot >= 0)
+		add_and_do(&comm, a, b, reverse ? "rrb" : "rb");
+	add_and_do(&comm, a, b, "pb");
+	return (comm);
+}
+
+/*
+** push one top element from stack B to somewhere in stack A (optimised)
+*/
+
+t_list	*push_one_ba(t_list **a, t_list **b)
+{
+	t_list	*comm;
+	t_list	*cp;
+	int		rot;
+	char	reverse;
+
+	comm = NULL;
+	cp = *a;
+	rot = 0;
+	while (!can_insert(ICONT(*b), cp) && cp->next && ++rot)
+		cp = cp->next;
+	reverse = rot > ft_lstlen(*a) / 2 ? 1 : 0;
+	if (reverse)
+		rot = ft_lstlen(*a) - rot;
+	while (--rot >= 0)
+		add_and_do(&comm, a, b, reverse ? "rra" : "ra");
+	add_and_do(&comm, a, b, "pa");
+	return (comm);
 }
 
 static void    rotate_seq(int *seq, int len, char fl)
@@ -83,8 +115,8 @@ static int	get_rot(t_list *st, int to_push, int i, int len_b, char *fl)
 		ret = i + ABS(rot - len_a);
 	if (rot + ABS(i - len_b) < ret && (*fl = 21))
 		ret = rot + ABS(i - len_b);
-//	if (final)
-//		return (ret + last_elem(st));
+	//	if (final)
+	//		return (ret + last_elem(st));
 	return (ret);
 }
 
@@ -178,14 +210,14 @@ t_list	*adjust_stacks_last(t_list **a, t_list **b, int *seq, int count)
 	i = -1;
 	while (++i < count)
 	{
+		//adjust stacks to each other
 		rot = get_rot(*a, ICONT(cp), i, count, &fl);
-//		printf("--| %d -->", rot);
+		//last rotation of stack A to 0
 		rot += MIN(last_to_push, (count + ft_lstlen(*a) - last_to_push));
-//		printf(" %d -->", rot);
+		//rotation of stack A during push
 		rot += (ICONT(cp) > last_to_push) ?
 			count + ft_lstlen(*a) - ICONT(cp) + last_to_push :
 			last_to_push - ICONT(cp);
-//		printf(" %d |--", rot);
 		if (rot < min_rot)
 		{
 			min_rot = rot;
@@ -195,7 +227,6 @@ t_list	*adjust_stacks_last(t_list **a, t_list **b, int *seq, int count)
 		last_to_push = ICONT(cp);
 		cp = cp->next;
 	}
-//	printf("\n");
 	comm = perform_rot(a, b, to_push, min_fl, seq, count);
 	return (comm);
 }
@@ -217,10 +248,9 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count, char final)
 		all_comm = adjust_stacks_last(a, b, seq, count);
 	else
 		all_comm = adjust_stacks(a, b, seq, count);
-//	printf("adjust stacks:   ");//
-//	print_comm(all_comm);//
+	//	printf("adjust stacks:   ");//
+	//	print_comm(all_comm);//
 	i = 0;
-	prev = 0;
 	while (i < count)
 	{
 		cp = *b;
@@ -270,7 +300,56 @@ t_list	*rot_all(t_list **a, t_list **b, int *seq, int count, char final)
 		add_comm(&all_comm, comm);
 		i++;
 	}
-//		printf("rot all:   ");//
-//		print_comm(all_comm);//
+	//		printf("rot all:   ");//
+	//		print_comm(all_comm);//
 	return (all_comm);
+}
+
+char static	empty_seq(int *seq, int count)
+{
+	while (--count >= 0)
+		if (seq[count])
+			return (0);
+	return (1);
+}
+
+void	print_seq(int *seq, int count)
+{
+	int i = -1;
+	while (++i < count)
+		printf("%d ", seq[i]);
+	printf("\n");
+}
+
+t_list	*new_rot_all(t_list **a, t_list **b, int *seq, int count)
+{
+	t_list	*comm;
+	t_list	*new;
+
+	comm = NULL;
+	while (1)
+	{
+//		print_seq(seq, count);
+		new = adjust_stacks(a, b, seq, count);
+//		print_seq(seq, count);
+//		printf("-- adjust: ");
+//		print_comm(new);
+		add_comm(&comm, new);
+//		new = push_one_ba(a, b);
+//		printf("-- push one: ");
+//		print_comm(new);
+		add_and_do(&comm, a, b, "pa");
+		seq++;
+		count--;
+		if (empty_seq(seq, count))
+			return (comm);
+//		while ((*seq) == 0 && count > 0)
+//		{
+//			seq++;
+//			count--;
+//		}
+//		if (count == 0)
+//			break ;
+	}
+//	return (comm);
 }

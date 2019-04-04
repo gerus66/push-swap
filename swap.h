@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 08:02:51 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/04 20:41:17 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,11 @@ void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push);
 
 t_list  *get_to_push(int *seq, t_list *st);
 t_list  *rot_all(t_list **a, t_list **b, int *seq, int count, char fl);
+t_list  *new_rot_all(t_list **a, t_list **b, int *seq, int count);
 //void    push_a(t_list **a, t_list **b, t_list *comm);
+
+t_list  *push_one_ab(t_list **a, t_list **b);
+t_list  *push_one_ba(t_list **a, t_list **b);
 
 void    print_comm(t_list *comm);
 void	print_stacks(t_list *a, t_list *b);

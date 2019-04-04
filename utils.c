@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/03 09:00:42 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/04 22:33:59 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,4 +233,22 @@ t_list	*lst_copy(t_list *lst)
 		lst = lst->next;
 	}
 	return (new);
+}
+
+t_list	*get_to_push(int *seq, t_list *st)
+{
+	int		i;
+	int		count;
+	t_list	*to_push;
+
+	count = ft_lstlen(st);
+	to_push = NULL;
+	i = -1;
+	while (++i < count)
+	{
+		if (seq[i] == 0)
+			ft_lstadd_back(&to_push,ft_lstnew(st->cont, sizeof(int)));
+		st = st->next;
+	}
+	return (to_push);
 }
