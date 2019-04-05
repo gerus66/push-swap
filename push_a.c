@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 04:25:27 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 07:55:22 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ t_list	*push_one_ba(t_list **a, t_list **b)
 	comm = NULL;
 	cp = *a;
 	rot = 0;
-	while (!can_insert(ICONT(*b), cp) && cp->next && ++rot)
+	while (!can_insert(ICONT(*b), ICONT(cp), last_elem(cp)) &&
+			cp->next && ++rot)
 		cp = cp->next;
 	reverse = rot > ft_lstlen(*a) / 2 ? 1 : 0;
 	if (reverse)
@@ -113,7 +114,7 @@ static int	get_rot(t_list *st, int to_push, int i, int len_b, char *fl)
 	cp = lst_copy(st);
 	len_a = ft_lstlen(st);
 	rot = 0;
-	while (!can_insert(to_push, cp))
+	while (!can_insert(to_push, ICONT(cp), last_elem(cp)))
 	{
 		rot++;
 		do_one_comm(&cp, NULL, ft_lstnew("ra", 3));
@@ -137,20 +138,39 @@ static t_list	*try_to_return(t_list **a, t_list **b, int val, int **seq,
 	t_list	*comm;
 
 	comm = NULL;
-	if (can_insert(val, *a))
+	if (can_insert(val, ICONT(*a), last_elem(*a)))
 	{
 		add_and_do(&comm, a, b, "pa");
 		(*seq)++;
 		(*count)--;
 //		printf(" +%d ", val);
 	}
-	else if (can_insert(val, (*a)->next))
+	else if (can_insert(val, ICONT((*a)->next), last_elem((*a)->next)))
 	{
 		add_and_do(&comm, a, b, "pa");
 		add_and_do(&comm, a, b, "sa");
 		(*seq)++;
 		(*count)--;
 //		printf(" s%d ", val);
+	}
+	else if (can_insert(val, last_elem(*a), prelast_elem(*a)))
+	{
+		add_and_do(&comm, a, b, "rra");
+		add_and_do(&comm, a, b, "pa");
+		add_and_do(&comm, a, b, "ra");
+		add_and_do(&comm, a, b, "ra");
+		(*seq)++;
+		(*count)--;
+//		printf(" s%d ", val);
+	}
+	else if (can_insert(val, ICONT((*a)->next->next), ICONT((*a)->next)))
+	{
+		add_and_do(&comm, a, b, "ra");
+		add_and_do(&comm, a, b, "pa");
+		add_and_do(&comm, a, b, "sa");
+		add_and_do(&comm, a, b, "rra");
+		(*seq)++;
+		(*count)--;
 	}
 	return (comm);
 }
@@ -164,7 +184,8 @@ static t_list	*perform_rot(t_list **a, t_list **b, int to_push, char fl,
 	comm = NULL;
 	if (fl / 10 == fl % 10)
 	{
-		while (ICONT(*b) != to_push && !can_insert(to_push, *a))
+		while (ICONT(*b) != to_push && !can_insert(to_push, ICONT(*a),
+					last_elem(*a)))
 		{
 			new = try_to_return(a, b, ICONT(*b), seq, count);
 			if (new)
@@ -181,7 +202,7 @@ static t_list	*perform_rot(t_list **a, t_list **b, int to_push, char fl,
 			if (new)
 			{
 				add_comm(&comm, new);
-				if (!can_insert(to_push, *a))
+				if (!can_insert(to_push, ICONT(*a), last_elem(*a)))
 					add_and_do(&comm, a, b, "ra");
 			}
 			else
@@ -190,7 +211,7 @@ static t_list	*perform_rot(t_list **a, t_list **b, int to_push, char fl,
 				rotate_seq(*seq, *count, fl / 10 == 1 ? 1 : -1);
 			}
 		}
-		while (!can_insert(to_push, *a))
+		while (!can_insert(to_push, ICONT(*a), last_elem(*a)))
 			add_and_do(&comm, a, b, fl / 10 == 1 ? "ra" : "rra");
 	}
 	else
@@ -206,7 +227,7 @@ static t_list	*perform_rot(t_list **a, t_list **b, int to_push, char fl,
 				rotate_seq(*seq, *count, fl / 10 == 1 ? 1 : -1);
 			}
 		}
-		while (!can_insert(to_push, *a))
+		while (!can_insert(to_push, ICONT(*a), last_elem(*a)))
 			add_and_do(&comm, a, b, fl % 10 == 1 ? "ra" : "rra");
 	}
 	return (comm);
@@ -412,3 +433,40 @@ t_list	*new_rot_all(t_list **a, t_list **b, int *seq, int count)
 	}
 //	return (comm);
 }
+/*
+int		push_a(int *standing, t_list **a, t_list **b, t_list **comm)
+{
+	int		i;
+	int		count;
+	t_list	*tmp;
+	t_list	*new_comm;
+	int		ret;
+
+	new_comm = NULL;
+	count = ft_lstlen(*b);
+	i = -1;
+	tmp = *b;
+	ret = 0;
+	while (++i < count)
+	{
+		if (standing[i] == 0 && (ret = ret + 1))
+			ft_lstadd_back(&new_comm, ft_lstnew("pa", 3));
+		else if (standing[i] == -1)
+		{
+			ft_lstadd_back(&new_comm, ft_lstnew("rrb", 4));
+			ft_lstadd_back(&new_comm, ft_lstnew("sb", 3));
+			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
+			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
+		}
+		else
+			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
+		tmp = tmp->next;
+	}
+	cut_tail(&new_comm, "rb");
+	improve_comm(&new_comm);
+	//	b++;
+	//	print_comm(new_comm);
+	do_all_comm(a, b, new_comm, 0);
+	add_comm(comm, new_comm);
+	return (ret);
+}*/

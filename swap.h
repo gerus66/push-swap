@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 04:17:42 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 08:02:30 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,10 @@ void	choose_sequence(int *razn, int **standing, int count, char fl);
 ** push to B (one time, the first)
 */
 
-void	push_b(int *standing, t_list **a, t_list **b, t_list **comm);
+t_list	*push_b(int *standing, t_list **a, t_list **b);
 int		push_a(int *standing, t_list **a, t_list **b, t_list **comm);
-void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push);
+//void	clever_push_b(t_list *comm, t_list **a, t_list **b, t_list *to_push);
+void    improve_comm_dub(t_list **comm);
 
 /*
 ** push to A (in cycle)
@@ -75,13 +76,14 @@ void    print_comm(t_list *comm);
 void	print_stacks(t_list *a, t_list *b);
 void	print_stack(t_list *a);
 int     last_elem(t_list *stack);
+int     prelast_elem(t_list *stack);
 void    do_one_comm(t_list **a, t_list **b, t_list *comm);
 void    do_one_chaos_comm(t_list **a, t_list **b, t_list *comm);
 void    do_all_comm(t_list **a, t_list **b, t_list *comm, char chaos);
 void        add_comm(t_list **comm, t_list *add);
 void    add_and_do(t_list **comm, t_list **a, t_list **b, char *name);
 int	    cut_tail(t_list **comm, char *name);
-char	can_insert(int val, t_list *st);
+char	can_insert(int val, int first, int last);
 char	can_insert_rev(int val, t_list *st);
 t_list	*lst_copy(t_list *lst);
 

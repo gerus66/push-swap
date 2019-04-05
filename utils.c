@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 04:56:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 08:03:55 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@ int clean(char *msg)
 {
 	ft_putstr(msg);
 	return (0);
+}
+
+int     prelast_elem(t_list *stack)
+{
+	while (stack->next->next)
+		stack = stack->next;
+	return (ICONT(stack));
 }
 
 int     last_elem(t_list *stack)
@@ -105,10 +112,10 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s ", (char *)comm->cont);
+		printf("%s\n", (char *)comm->cont);
 		comm = comm->next;
 	}
-	printf(" // count: %d\n", ft_lstlen(tmp));
+//	printf(" // count: %d\n", ft_lstlen(tmp));
 }
 
 void	do_one_comm(t_list **a, t_list **b, t_list *comm)
@@ -213,11 +220,11 @@ int	cut_tail(t_list **comm, char *name)
 	return (1 + cut_tail(comm, name));
 }
 
-char    can_insert(int val, t_list *st)
+char    can_insert(int val, int first, int last)
 {
-	if ((val < ICONT(st) && val > last_elem(st)) ||
-			(val > ICONT(st) && val > last_elem(st) && ICONT(st) < last_elem(st))
-			|| (val < ICONT(st) && ICONT(st) < last_elem(st)))
+	if ((val < first && val > last) ||
+			(val > first && val > last && first < last)
+			|| (val < first && first < last))
 		return (1);
 	return (0);
 }

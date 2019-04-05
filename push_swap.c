@@ -6,18 +6,28 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 05:03:23 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 08:05:24 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-static char	need_improve(t_list	*cur)
+static char	need_improve_a(t_list	*cur)
 {
 	if (cur && cur->next && cur->next->next &&
 			(!ft_strcmp(CCONT(cur), "ra") &&
 			  !ft_strcmp(CCONT(cur->next), "pa") &&
 			  !ft_strcmp(CCONT(cur->next->next), "rra")))
+		return (1);
+	return (0);
+}
+
+static char	need_improve_b(t_list	*cur)
+{
+	if (cur && cur->next && cur->next->next &&
+			(!ft_strcmp(CCONT(cur), "rb") &&
+			  !ft_strcmp(CCONT(cur->next), "pb") &&
+			  !ft_strcmp(CCONT(cur->next->next), "rrb")))
 		return (1);
 	return (0);
 }
@@ -30,13 +40,26 @@ static void	improve_comm(t_list **comm)
 	cur = *comm;
 	while (cur && cur->next && cur->next->next && cur->next->next->next)
 	{
-		if (need_improve(cur->next))
+		if (need_improve_a(cur->next))
 		{
 			tmp = cur->next;
 			cur->next = cur->next->next;
 			ft_lstdelone(&tmp, NULL);
 			cur = cur->next;
 			ft_memcpy(cur->cont, (void *)"sa", sizeof(char *));
+		}
+		cur = cur->next;
+	}
+	cur = *comm;
+	while (cur && cur->next && cur->next->next && cur->next->next->next)
+	{
+		if (need_improve_b(cur->next))
+		{
+			tmp = cur->next;
+			cur->next = cur->next->next;
+			ft_lstdelone(&tmp, NULL);
+			cur = cur->next;
+			ft_memcpy(cur->cont, (void *)"sb", sizeof(char *));
 		}
 		cur = cur->next;
 	}
@@ -465,56 +488,59 @@ int			main(int argc, char **argv)
 	int		len;
 	//	int		i;
 	t_list	*comm;
-	t_list	*to_push;
+//	t_list	*to_push;
 	t_list	*new_comm;
 
-	comm = NULL;
+//	comm = NULL;
 	if (argc < 2)
 		return (clean("Error\n"));
 	a = NULL;
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
+//	print_stack(a);
 	choose_sequence(get_diff(a, 1, 0), &standing, len, 1);
 //	improve_seq(a, standing);
-	to_push = get_to_push(standing, a);
-	push_b(standing, &a, &b, &comm);
-	clever_push_b(comm, &a, &b, to_push);
-	printf("first push to B:   ");//
-	print_comm(comm);//
+//	to_push = get_to_push(standing, a);
+	comm = push_b(standing, &a, &b);
+//	clever_push_b(comm, &a, &b, to_push);
+//	printf("first push to B:   ");//
+//	print_comm(comm);//
 	while (ft_lstlen(b) > 5)
 	{
 	//	print_stacks(a, b);
-		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));
+//		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));
 		choose_sequence(get_diff(b, 1, 0), &standing, ft_lstlen(b), 1);
 	//	print_seq(standing, ft_lstlen(b));
 	//	print_stack(b);
 //		improve_seq(b, standing);
 		new_comm = new_rot_all(&a, &b, standing, ft_lstlen(b));
 	//	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 0);
-		printf("cycle:   ");//
-		print_comm(new_comm);//
+//		printf("cycle:   ");//
+//		print_comm(new_comm);//
 		add_comm(&comm, new_comm);
 		if (ft_lstlen(b) < len / 2 && ft_lstlen(last(b)) < 2 * len)
 			break ;
 	}
 
 	new_comm = last(b);
-	printf("INSERT (%d):   ", ft_lstlen(b));//
-	print_comm(new_comm);//
+//	printf("INSERT (%d):   ", ft_lstlen(b));//
+//	print_comm(new_comm);//
 	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
 	choose_sequence(get_diff(b, 1, 1), &standing, ft_lstlen(b), 0);
 //	improve_seq(b, standing);
 	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 1);
-	printf("final push to A:   ");//
-	print_comm(new_comm);//
+//	printf("final push to A:   ");//
+//	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
 	new_comm = final_rotation(&a);
-	printf("final rotation:   ");//
-	print_comm(new_comm);//
+//	printf("final rotation:   ");//
+//	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
+//	print_comm(comm);
 	improve_comm(&comm);
-	printf("FINAL:   ");//
+	improve_comm_dub(&comm);
+//	printf("FINAL:   ");//
 	print_comm(comm);
 //	print_stack(a);//
 	return (0);
