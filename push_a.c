@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 07:55:22 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 08:53:06 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,18 @@ t_list	*push_one_last(t_list **a, t_list **b, int *i)
 	{
 		if (*i > 0 && can_insert_rev(ICONT((*a)->next), *b))
 		{
-	//		printf(" s%d ", ICONT((*a)->next));
 			add_and_do(&comm, a, b, "sa");
 			add_and_do(&comm, a, b, "pb");
+			(*i)--;
+			if (!reverse)
+				add_and_do(&comm, a, b, "rb");
+		}
+		if (*i > 1 && can_insert_rev(ICONT((*a)->next->next), *b))
+		{
+			add_and_do(&comm, a, b, "ra");
+			add_and_do(&comm, a, b, "sa");
+			add_and_do(&comm, a, b, "pb");
+			add_and_do(&comm, a, b, "rra");
 			(*i)--;
 			if (!reverse)
 				add_and_do(&comm, a, b, "rb");
@@ -265,6 +274,8 @@ t_list	*adjust_stacks(t_list **a, t_list **b, int **seq, int *count)
 		cp = cp->next;
 	}
 	comm = perform_rot(a, b, to_push, min_fl, seq, count);
+//	printf("adjust stacks:	");
+//	print_comm(comm);
 //	print_stacks(*a, *b);
 	return (comm);
 }

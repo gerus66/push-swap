@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 08:05:24 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 08:52:44 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -527,6 +527,7 @@ int			main(int argc, char **argv)
 //	print_comm(new_comm);//
 	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
+//	print_stacks(a, b);
 	choose_sequence(get_diff(b, 1, 1), &standing, ft_lstlen(b), 0);
 //	improve_seq(b, standing);
 	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 1);
