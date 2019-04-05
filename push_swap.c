@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/04 22:33:33 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 05:03:23 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,7 @@ static void		improve_seq(t_list *st, int *seq)
 	}
 }
 */
-
+/*
 static t_list   *to_push(t_list *st, int *seq)
 {
 	t_list  *push;
@@ -254,7 +254,8 @@ static t_list   *to_push(t_list *st, int *seq)
 	//      print_stacks(st, push);
 	return (push);
 }
-
+*/
+/*
 static void             improve_seq(t_list *st, int *seq)
 {
 	int     len;
@@ -306,22 +307,22 @@ static void             improve_seq(t_list *st, int *seq)
 				prev = last;
 				last = ICONT(st);
 			}
-			/*                      else if (push && ICONT(st) > ICONT(push) &&
-									((push->next && ICONT(st) < ICONT(push->next)) ||
-									(!(push->next) && ICONT(st) < first)))
-									{
-									printf("-/%d/-", ICONT(st));
-									seq[i] = 1;
-									prev = last;
-									last = ICONT(st);
-									}*/
+			//                      else if (push && ICONT(st) > ICONT(push) &&
+			//						((push->next && ICONT(st) < ICONT(push->next)) ||
+			//						(!(push->next) && ICONT(st) < first)))
+			//						{
+			//						printf("-/%d/-", ICONT(st));
+			//						seq[i] = 1;
+			//						prev = last;
+			//						last = ICONT(st);
+			//						}
 		}
-		st = st->next;
-	}
+//		st = st->next;
+//	}
 	//      if (!in_prev && !in_last)
 	//              improve_seq(cp, seq, prev, last);
 }
-
+*/
 static void	simplify(t_list *in)
 {
 	int	*sorted;
@@ -329,7 +330,7 @@ static void	simplify(t_list *in)
 	int	count;
 
 	count = ft_lstlen(in);
-	sorted = get_diff(in, 0);
+	sorted = get_diff(in, 0, 0);
 	while (in)
 	{
 		i = -1;
@@ -440,11 +441,17 @@ static t_list	*last(t_list *b)
 	a = NULL;
 	cp = lst_copy(b);
 	comm = NULL;
-	choose_sequence(get_diff(cp, 1), &standing, ft_lstlen(cp), 1);
+//	print_stack(cp);
+	choose_sequence(get_diff(cp, 1, 1), &standing, ft_lstlen(cp), 1);
+//	print_seq(standing, ft_lstlen(cp));
 	i = push_a(standing, &a, &cp, &comm);
+//	print_stacks(a, b);
 	//	printf(">> %d %d\n", i, ft_lstlen(a));
 	while (--i >= 0)
-		add_comm(&comm, push_one_ab(&a, &cp));
+	{
+//		if ()
+		add_comm(&comm, push_one_last(&a, &cp, &i));
+	}
 //	printf("TRY INSERT (%d) - %d\n", ft_lstlen(b), ft_lstlen(comm));//
 	return (comm);
 }
@@ -467,46 +474,47 @@ int			main(int argc, char **argv)
 	a = NULL;
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
-	choose_sequence(get_diff(a, 1), &standing, len, 1);
+	choose_sequence(get_diff(a, 1, 0), &standing, len, 1);
 //	improve_seq(a, standing);
 	to_push = get_to_push(standing, a);
 	push_b(standing, &a, &b, &comm);
 	clever_push_b(comm, &a, &b, to_push);
-//	printf("first push to B:   ");//
-//4	print_comm(comm);//
+	printf("first push to B:   ");//
+	print_comm(comm);//
 	while (ft_lstlen(b) > 5)
 	{
-//		print_stacks(a, b);
-//		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));
-		choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 1);
+	//	print_stacks(a, b);
+		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));
+		choose_sequence(get_diff(b, 1, 0), &standing, ft_lstlen(b), 1);
+	//	print_seq(standing, ft_lstlen(b));
+	//	print_stack(b);
 //		improve_seq(b, standing);
 		new_comm = new_rot_all(&a, &b, standing, ft_lstlen(b));
 	//	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 0);
-//		printf("cycle:   ");//
-//		print_comm(new_comm);//
+		printf("cycle:   ");//
+		print_comm(new_comm);//
 		add_comm(&comm, new_comm);
 		if (ft_lstlen(b) < len / 2 && ft_lstlen(last(b)) < 2 * len)
 			break ;
 	}
 
 	new_comm = last(b);
-//	printf("INSERT (%d):   ", ft_lstlen(b));//
-//	print_comm(new_comm);//
-
+	printf("INSERT (%d):   ", ft_lstlen(b));//
+	print_comm(new_comm);//
 	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
-	choose_sequence(get_diff(b, 1), &standing, ft_lstlen(b), 0);
-	improve_seq(b, standing);
+	choose_sequence(get_diff(b, 1, 1), &standing, ft_lstlen(b), 0);
+//	improve_seq(b, standing);
 	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 1);
-//	printf("final push to A:   ");//
-//	print_comm(new_comm);//
+	printf("final push to A:   ");//
+	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
 	new_comm = final_rotation(&a);
-//	printf("final rotation:   ");//
-//	print_comm(new_comm);//
+	printf("final rotation:   ");//
+	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
 	improve_comm(&comm);
-//	printf("FINAL:   ");//
+	printf("FINAL:   ");//
 	print_comm(comm);
 //	print_stack(a);//
 	return (0);

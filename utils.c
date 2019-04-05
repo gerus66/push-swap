@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/04 22:33:59 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 04:56:10 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void		print_stack(t_list *a)
 {
 	while (a)
 	{
-		printf("%d ", ICONT(a));
+		printf("%2d ", ICONT(a));
 			a = a->next;
 	}
 	printf("\n");
@@ -105,10 +105,10 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s\n", (char *)comm->cont);
+		printf("%s ", (char *)comm->cont);
 		comm = comm->next;
 	}
-//	printf(" // count: %d\n", ft_lstlen(tmp));
+	printf(" // count: %d\n", ft_lstlen(tmp));
 }
 
 void	do_one_comm(t_list **a, t_list **b, t_list *comm)
@@ -218,6 +218,15 @@ char    can_insert(int val, t_list *st)
 	if ((val < ICONT(st) && val > last_elem(st)) ||
 			(val > ICONT(st) && val > last_elem(st) && ICONT(st) < last_elem(st))
 			|| (val < ICONT(st) && ICONT(st) < last_elem(st)))
+		return (1);
+	return (0);
+}
+
+char    can_insert_rev(int val, t_list *st)
+{
+	if ((val > ICONT(st) && val < last_elem(st)) ||
+			(val < ICONT(st) && val < last_elem(st) && ICONT(st) > last_elem(st))
+			|| (val > ICONT(st) && ICONT(st) > last_elem(st)))
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/04 20:41:17 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/05 04:17:42 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	r_rotate_stack(t_list **st);
 ** get sequence of diffs for current stack
 */
 
-int		*get_diff(t_list *in, char fl);
+int		*get_diff(t_list *in, char fl, char reverse);
 
 /*
 ** choose sorted sequence
@@ -67,9 +67,10 @@ t_list  *rot_all(t_list **a, t_list **b, int *seq, int count, char fl);
 t_list  *new_rot_all(t_list **a, t_list **b, int *seq, int count);
 //void    push_a(t_list **a, t_list **b, t_list *comm);
 
-t_list  *push_one_ab(t_list **a, t_list **b);
+t_list  *push_one_last(t_list **a, t_list **b, int *i);
 t_list  *push_one_ba(t_list **a, t_list **b);
 
+void    print_seq(int *seq, int count);
 void    print_comm(t_list *comm);
 void	print_stacks(t_list *a, t_list *b);
 void	print_stack(t_list *a);
@@ -81,6 +82,7 @@ void        add_comm(t_list **comm, t_list *add);
 void    add_and_do(t_list **comm, t_list **a, t_list **b, char *name);
 int	    cut_tail(t_list **comm, char *name);
 char	can_insert(int val, t_list *st);
+char	can_insert_rev(int val, t_list *st);
 t_list	*lst_copy(t_list *lst);
 
 //void    lst_to_array(t_list *st, int *ar, int count);
