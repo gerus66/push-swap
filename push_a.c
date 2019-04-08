@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 08:53:06 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/08 11:59:40 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,35 @@
 /*
 ** push one top element from stack A to somewhere in stack B (optimised)
 */
+
+static void	one_last_rec(int *i, t_list **a, t_list **b, t_list **comm,
+		char reverse)
+{
+		if (*i > 0 && can_insert_rev(ICONT((*a)->next), *b))
+		{
+			add_and_do(comm, a, b, "sa");
+			add_and_do(comm, a, b, "pb");
+//			printf(" S ");
+			(*i)--;
+			if (!reverse)
+				add_and_do(comm, a, b, "rb");
+		}
+		if (*i > 1 && can_insert_rev(ICONT((*a)->next->next), *b))
+		{
+			add_and_do(comm, a, b, "ra");
+			add_and_do(comm, a, b, "sa");
+			add_and_do(comm, a, b, "pb");
+//			printf(" SS ");
+			one_last_rec(i, a, b, comm, reverse);
+			if (!reverse)
+			{
+				add_and_do(comm, a, b, "rb");
+				one_last_rec(i, a, b, comm, reverse);
+			}
+			add_and_do(comm, a, b, "rra");
+			(*i)--;
+		}
+}
 
 t_list	*push_one_last(t_list **a, t_list **b, int *i)
 {
@@ -33,7 +62,7 @@ t_list	*push_one_last(t_list **a, t_list **b, int *i)
 		rot = ft_lstlen(*b) - rot;
 	while (--rot >= 0)
 	{
-		if (*i > 0 && can_insert_rev(ICONT((*a)->next), *b))
+	/*	if (*i > 0 && can_insert_rev(ICONT((*a)->next), *b))
 		{
 			add_and_do(&comm, a, b, "sa");
 			add_and_do(&comm, a, b, "pb");
@@ -50,7 +79,8 @@ t_list	*push_one_last(t_list **a, t_list **b, int *i)
 			(*i)--;
 			if (!reverse)
 				add_and_do(&comm, a, b, "rb");
-		}
+		}*/
+		one_last_rec(i, a, b, &comm, reverse);
 		add_and_do(&comm, a, b, reverse ? "rrb" : "rb");
 	}
 	add_and_do(&comm, a, b, "pb");
