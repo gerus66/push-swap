@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/08 11:59:40 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/08 12:11:42 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ static void	one_last_rec(int *i, t_list **a, t_list **b, t_list **comm,
 			add_and_do(comm, a, b, "sa");
 			add_and_do(comm, a, b, "pb");
 //			printf(" SS ");
-			one_last_rec(i, a, b, comm, reverse);
+//			one_last_rec(i, a, b, comm, reverse);
 			if (!reverse)
 			{
 				add_and_do(comm, a, b, "rb");
-				one_last_rec(i, a, b, comm, reverse);
+//				one_last_rec(i, a, b, comm, reverse);
 			}
 			add_and_do(comm, a, b, "rra");
 			(*i)--;
