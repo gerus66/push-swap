@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/24 20:34:22 by mbartole          #+#    #+#             */
-/*   Updated: 2018/11/27 11:21:18 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 18:03:13 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char		**ft_strsplit(char const *s, char c)
 	int		j;
 
 	count = count_words(s, c);
-	if (!s || !(ar = (char**)malloc(sizeof(char*) * count + 1)))
+	if (!s || !(ar = (char**)malloc(sizeof(char*) * (count + 1))))
 		return (NULL);
 	i = -1;
 	while (++i < count)
