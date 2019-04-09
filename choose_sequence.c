@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/01 19:55:20 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 20:57:35 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ static void	improve_razn(int *razn, int len, char fl)
 {
 	int	i;
 
+//	printf("len = %d\n", len);
+//	print_seq(razn, len);
+//	printf("ping!\n");
 	i = -1;
 	while (++i < len)
 	{
@@ -23,6 +26,8 @@ static void	improve_razn(int *razn, int len, char fl)
 			(fl == -1 && razn[i] * 2 == len))
 			razn[i] = -razn[i];
 	}
+//	printf("ping!\n");
+//	print_seq(razn, len);
 }
 
 static int	*positive_seq(int *razn, int start, int count, char fll)
@@ -151,6 +156,7 @@ void		choose_sequence(int *razn, int **standing, int count, char fl)
 //	while (++i < count)
 //		printf("/%d/", razn[i]);
 //	printf("\n");
+//	printf("count %d\n", count);
 	if (count == 1 || count == 2)
 	{
 		if (!(*standing = (int *)malloc(sizeof(int) * count)))

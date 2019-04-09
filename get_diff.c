@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 00:23:51 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 18:59:28 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,15 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 {
 	int	i;
 	int	j;
+	int	k;
 	int	tmp;
 	int	*razn;
 
 
 	razn = (int *)ft_memalloc(sizeof(int) * count);
 	j = 0;
-	while (in)
+	k = -1;
+	while (in && ++k < count)
 	{
 		i = -1;
 		while (++i < count)
@@ -59,20 +61,23 @@ static int	*init_razn(int *sorted, t_list *in, int count)
 		j++;
 	}
 	free(sorted);
+//	print_seq(razn, count);//
 	return (razn);
 }
 
-int		*get_diff(t_list *in, char fl, char reverse)
+int		*get_diff(t_list *in, char fl, char reverse, int number)
 {
 	t_avltree *tr;
 	t_list	*cp;
 	int		*sorted_ar;
 	int		len;
+	int		i;
 
-	len = ft_lstlen(in);
+	len = MIN(ft_lstlen(in), number);
 	tr = NULL;
 	cp = in;
-	while (cp)	
+	i = -1;
+	while (cp && ++i < len)	
 	{
 		ft_tree_insert(&tr, ICONT(cp), NULL, 0);
 		cp = cp->next;
@@ -86,7 +91,7 @@ int		*get_diff(t_list *in, char fl, char reverse)
 //	print_seq(sorted_ar, len);
 	if (reverse)
 	{
-		int i = -1;
+		i = -1;
 		int	tmp;
 		while (++i < len / 2)
 		{

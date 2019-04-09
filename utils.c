@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/08 12:12:15 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 22:26:16 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s\n", (char *)comm->cont);
+		printf("%s\n", CCONT(comm));
 		comm = comm->next;
 	}
 //	printf(" // count: %d\n", ft_lstlen(tmp));

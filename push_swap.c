@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/08 12:00:53 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 22:25:45 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,154 +64,6 @@ static void	improve_comm(t_list **comm)
 		cur = cur->next;
 	}
 }
-
-/*
-   static int	return_to_a(t_list **a, t_list **b, t_list *to_stand, t_list **comm, t_list **prev, int count)
-   {
-   t_list	*tmp;
-
-   if (!(*b) || !to_stand)
-   return(0);
-   tmp = to_stand;
-   while (tmp->next)
-   tmp = tmp->next;
-   printf("\n");
-   print_stacks(to_stand, NULL);
-   print_stacks(*a, *b);
-   printf(" try to return %d between %d and %d ", ICONT(*b), ICONT(tmp), ICONT(to_stand));
-   if ((ICONT(*b) < ICONT(to_stand) && ICONT(*b) > ICONT(tmp)) ||
-   (ICONT(to_stand) < ICONT(tmp) &&
-   ICONT(*b) > ICONT(to_stand) && ICONT(*b) < ICONT(tmp)))
-   {
-   printf(" - yes \n");
-//		print_stacks(*a, *b);
-//		print_comm(*comm);
-tmp = ft_lstnew("pa", 3);
-(*prev)->next = tmp;
-tmp->next = *comm;
- *comm = tmp;
- one_comm_stacks(a, b, *comm);
- *prev = *comm;
- *comm = (*comm)->next;
- count++;
-
- if (!(return_to_a(a, b, *a, comm, prev, count)))
- {
- while (count--)
- {
- tmp = ft_lstnew("ra", 3);
- (*prev)->next = tmp;
- tmp->next = *comm;
- *comm = tmp;
- one_comm_stacks(a, b, *comm);
- *prev = *comm;
- i				*comm = (*comm)->next;
- }
-//		print_stacks(*a, *b);
-//		print_comm(*comm);
-return (1);
-}
-//		printf("get   a: %d   b: %d   comm: %s \n",
-//				ICONT(*a), ICONT(*b), CCONT(*comm));
-}
-printf(" - no \n");
-return (0);
-}*/
-/*
-   static void	rot_to_comm(int rot_a, int rot_b, t_list *comm)
-   {
-   int	i;
-
-   if (rot_a > 0 && rot_b > 0)
-   {
-   while (rot_a && rot_b)
-   {
-   ft_lstadd_back(&comm, ft_lstnew("rr", 3));
-   rot_a--;
-   rot_b--;
-   }
-//		printf("rot a: %d rot b: %d\n", rot_a, rot_b);
-i = rot_a ? rot_a : rot_b;
-while (i-- > 0)
-ft_lstadd_back(&comm, ft_lstnew(rot_a? "ra" : "rb", 3));
-}
-else if (rot_a < 0 && rot_b < 0)
-{
-while (rot_a && rot_b)
-{
-ft_lstadd_back(&comm, ft_lstnew("rrr", 4));
-rot_a++;
-rot_b++;
-}
-i = rot_a ? rot_a : rot_b;
-while (i++ < 0)
-ft_lstadd_back(&comm, ft_lstnew((rot_a ? "rra" : "rrb"), 4));
-}
-else
-{
-while (rot_a)
-{
-ft_lstadd_back(&comm, ft_lstnew((rot_a > 0 ? "ra" : "rra"), 3));
-rot_a = rot_a > 0 ? rot_a - 1 : rot_a + 1;
-}
-while (rot_b)
-{
-ft_lstadd_back(&comm, ft_lstnew((rot_b > 0 ? "rb" : "rrb"), 3));
-rot_b = rot_b > 0 ? rot_b - 1 : rot_b + 1;
-}
-}
-}*/
-/*
-   static void	rotate_all(t_list **a, t_list **b, t_list *comm)
-   {
-   t_list	*tmp;
-   int		rot_a;
-   int		rot_b;
-   int		len;
-   int		max;
-
-   tmp = *a;
-   rot_a = 0;
-   while (tmp && tmp->next)
-   {
-   if (ICONT(tmp) > ICONT(tmp->next))
-   break ;
-   rot_a++;
-   tmp = tmp->next;
-   }
-   max = ICONT(tmp);
-   len = ft_lstlen(*a);
-   rot_a = rot_a < len / 2 ? rot_a : rot_a - len;
-   tmp = *b;
-   rot_b = 0;
-   while (tmp && tmp->next)
-   {
-   if (ICONT(tmp) < ICONT(tmp->next))
-   break ;
-   rot_b++;
-   tmp = tmp->next;
-   }
-   rot_b++;
-   if (max < ICONT(tmp->next))
-   rot_a++;
-//	printf("rot a: %d rot b: %d\n", rot_a, rot_b);
-len = ft_lstlen(*b);
-if (rot_a > 0)
-if (len - rot_b < rot_b - rot_a)
-rot_b = rot_b - len;
-if (rot_a < 0)
-if (rot_b > len - rot_b + rot_a)
-rot_b = rot_b - len;
-rot_b = rot_b < len / 2 ? rot_b : rot_b - len;
-//	printf("rot a: %d rot b: %d\n", rot_a, rot_b);
-len = ft_lstlen(comm);
-printf("len of comm: %d\n", len);
-rot_to_comm(rot_a, rot_b, comm);
-printf("len of comm: %d\n", ft_lstlen(comm));
-while (len--)
-comm = comm->next;
-do_all_comm(a, b, comm);
-}*/
 
 /*
 static void		improve_seq(t_list *st, int *seq)
@@ -353,7 +205,7 @@ static void	simplify(t_list *in)
 	int	count;
 
 	count = ft_lstlen(in);
-	sorted = get_diff(in, 0, 0);
+	sorted = get_diff(in, 0, 0, ft_lstlen(in));
 	while (in)
 	{
 		i = -1;
@@ -416,21 +268,28 @@ static int	argv_to_list(t_list **in, char **argv, int count)
 {
 	int		i;
 	char	**ar;
+	char	**cp;
 	int		tmp;
+	int		len;
 
 	i = 0;
+	len = 0;
 	while (++i <= count)
 	{
 		ar = ft_strsplit(argv[i], ' ');
+		cp = ar;
 		while (*ar)
 		{
 			tmp = atoi_check(*ar);
+			free(*ar);
 			ft_lstadd_back(in, ft_lstnew((void *)&tmp, sizeof(int)));
+			len++;
 			ar++;
 		}
+		free(cp);
 	}
 	simplify(*in);
-	return (ft_lstlen(*in));
+	return (len);
 }
 
 /*
@@ -465,7 +324,7 @@ static t_list	*last(t_list *b)
 	cp = lst_copy(b);
 	comm = NULL;
 //	print_stack(cp);
-	choose_sequence(get_diff(cp, 1, 1), &standing, ft_lstlen(cp), 1);
+	choose_sequence(get_diff(cp, 1, 1, ft_lstlen(cp)), &standing, ft_lstlen(cp), 1);
 //	print_seq(standing, ft_lstlen(cp));
 	i = push_a(standing, &a, &cp, &comm);
 //	print_stacks(a, b);
@@ -479,6 +338,17 @@ static t_list	*last(t_list *b)
 	return (comm);
 }
 
+static void		add_seq(int **seq, int count, int len)
+{
+	int	*new;
+
+	if (count >= len)
+		return ;
+	new = (int *)ft_memalloc(sizeof(int) * len);
+	ft_memcpy(new, *seq, sizeof(int) * count);
+	*seq = new;
+}
+
 int			main(int argc, char **argv)
 {
 	t_list	*a;
@@ -486,7 +356,7 @@ int			main(int argc, char **argv)
 	//	t_list	*cp;
 	int		*standing;
 	int		len;
-	//	int		i;
+	int		subseq;
 	t_list	*comm;
 //	t_list	*to_push;
 	t_list	*new_comm;
@@ -498,7 +368,7 @@ int			main(int argc, char **argv)
 	b = NULL;
 	len = argv_to_list(&a, argv, argc - 1);
 //	print_stack(a);
-	choose_sequence(get_diff(a, 1, 0), &standing, len, 1);
+	choose_sequence(get_diff(a, 1, 0, ft_lstlen(a)), &standing, len, 1);
 //	improve_seq(a, standing);
 //	to_push = get_to_push(standing, a);
 	comm = push_b(standing, &a, &b);
@@ -507,9 +377,13 @@ int			main(int argc, char **argv)
 //	print_comm(comm);//
 	while (ft_lstlen(b) > 5)
 	{
-	//	print_stacks(a, b);
+//		print_stacks(a, b);//
 //		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));
-		choose_sequence(get_diff(b, 1, 0), &standing, ft_lstlen(b), 1);
+		subseq = MIN(2 * ft_lstlen(a), ft_lstlen(b));
+		choose_sequence(get_diff(b, 1, 0, subseq),
+				&standing, subseq, 1);
+		if (subseq < ft_lstlen(b))
+			add_seq(&standing, subseq, ft_lstlen(b));
 	//	print_seq(standing, ft_lstlen(b));
 	//	print_stack(b);
 //		improve_seq(b, standing);
@@ -520,7 +394,9 @@ int			main(int argc, char **argv)
 		add_comm(&comm, new_comm);
 		if (ft_lstlen(b) < len / 2 && ft_lstlen(last(b)) < 2 * len)
 			break ;
+//		sleep(5);
 	}
+//		print_stacks(a, b);//
 
 	new_comm = last(b);
 //	printf("INSERT (%d):   ", ft_lstlen(b));//
@@ -528,7 +404,7 @@ int			main(int argc, char **argv)
 	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
 //	print_stacks(a, b);
-	choose_sequence(get_diff(b, 1, 1), &standing, ft_lstlen(b), 0);
+	choose_sequence(get_diff(b, 1, 1, ft_lstlen(b)), &standing, ft_lstlen(b), 0);
 //	improve_seq(b, standing);
 	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 1);
 //	printf("final push to A:   ");//

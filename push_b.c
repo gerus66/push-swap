@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 08:07:46 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 08:02:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 20:52:25 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,16 @@ t_list	*push_b(int *standing, t_list **a, t_list **b)
 	while (++i < count)
 	{
 		if (standing[i] == 0)
-			ft_lstadd_back(&comm, ft_lstnew("pb", 3));
+			ft_lstadd_back(&comm, ft_lstnew("pb", sizeof(char *)));
 		else if (standing[i] == -1)
 		{
-			ft_lstadd_back(&comm, ft_lstnew("rra", 4));
-			ft_lstadd_back(&comm, ft_lstnew("sa", 3));
-			ft_lstadd_back(&comm, ft_lstnew("ra", 3));
-			ft_lstadd_back(&comm, ft_lstnew("ra", 3));
+			ft_lstadd_back(&comm, ft_lstnew("rra", sizeof(char *)));
+			ft_lstadd_back(&comm, ft_lstnew("sa", sizeof(char *)));
+			ft_lstadd_back(&comm, ft_lstnew("ra", sizeof(char *)));
+			ft_lstadd_back(&comm, ft_lstnew("ra", sizeof(char *)));
 		}
 		else
-			ft_lstadd_back(&comm, ft_lstnew("ra", 3));
+			ft_lstadd_back(&comm, ft_lstnew("ra", sizeof(char *)));
 		tmp = tmp->next;
 	}
 	cut_tail(&comm, "ra");
@@ -89,7 +89,7 @@ t_list	*push_b(int *standing, t_list **a, t_list **b)
 	while (tmp)
 	{
 		do_one_chaos_comm(a, b, tmp);
-		add_comm(&comm, ft_lstnew(CCONT(tmp), 3));
+		add_comm(&comm, ft_lstnew(CCONT(tmp), sizeof(char *)));
 		tmp = tmp->next;
 	}
 	return (comm);

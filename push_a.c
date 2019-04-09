@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/13 15:50:11 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/08 12:11:42 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 22:05:03 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,17 +283,19 @@ t_list	*adjust_stacks(t_list **a, t_list **b, int **seq, int *count)
 	char	fl;
 	char	min_fl;
 
+//			print_seq(*seq, ft_lstlen(*b));
 	comm = NULL;
-	min_rot = MAX(*count, ft_lstlen(*a));
+	min_rot = MAX(ft_lstlen(*b), ft_lstlen(*a));
 	to_push = 0;
 	min_fl = 0;
 	cp = *b;
-	i = -1;
-	while (++i < *count)
+	i = 0;
+	while (cp)
 	{
 		if ((*seq)[i])
 		{
-			rot = get_rot(*a, ICONT(cp), i, *count, &fl);
+			rot = get_rot(*a, ICONT(cp), i, ft_lstlen(*b), &fl);
+	//		printf("/%d/ ", rot);
 			if (rot < min_rot)
 			{
 				min_rot = rot;
@@ -302,7 +304,9 @@ t_list	*adjust_stacks(t_list **a, t_list **b, int **seq, int *count)
 			}
 		}
 		cp = cp->next;
+		i++;
 	}
+//	printf("to push %d |", to_push);
 	comm = perform_rot(a, b, to_push, min_fl, seq, count);
 //	printf("adjust stacks:	");
 //	print_comm(comm);
@@ -447,67 +451,17 @@ t_list	*new_rot_all(t_list **a, t_list **b, int *seq, int count)
 	t_list	*comm;
 	t_list	*new;
 
+//	print_seq(seq, ft_lstlen(*b));
 	comm = NULL;
 	while (1)
 	{
-	//	print_seq(seq, count);
 		new = adjust_stacks(a, b, &seq, &count);
-//		print_seq(seq, count);
-//		printf("-- adjust: ");
-//		print_comm(new);
+//		print_comm(new);//
 		add_comm(&comm, new);
-//		new = push_one_ba(a, b);
-//		printf("-- push one: ");
-//		print_comm(new);
 		add_and_do(&comm, a, b, "pa");
 		seq++;
 		count--;
 		if (empty_seq(seq, count))
 			return (comm);
-//		while ((*seq) == 0 && count > 0)
-//		{
-//			seq++;
-//			count--;
-//		}
-//		if (count == 0)
-//			break ;
 	}
-//	return (comm);
 }
-/*
-int		push_a(int *standing, t_list **a, t_list **b, t_list **comm)
-{
-	int		i;
-	int		count;
-	t_list	*tmp;
-	t_list	*new_comm;
-	int		ret;
-
-	new_comm = NULL;
-	count = ft_lstlen(*b);
-	i = -1;
-	tmp = *b;
-	ret = 0;
-	while (++i < count)
-	{
-		if (standing[i] == 0 && (ret = ret + 1))
-			ft_lstadd_back(&new_comm, ft_lstnew("pa", 3));
-		else if (standing[i] == -1)
-		{
-			ft_lstadd_back(&new_comm, ft_lstnew("rrb", 4));
-			ft_lstadd_back(&new_comm, ft_lstnew("sb", 3));
-			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
-			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
-		}
-		else
-			ft_lstadd_back(&new_comm, ft_lstnew("rb", 3));
-		tmp = tmp->next;
-	}
-	cut_tail(&new_comm, "rb");
-	improve_comm(&new_comm);
-	//	b++;
-	//	print_comm(new_comm);
-	do_all_comm(a, b, new_comm, 0);
-	add_comm(comm, new_comm);
-	return (ret);
-}*/

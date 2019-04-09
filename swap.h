@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/05 08:02:30 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/09 12:47:42 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	r_rotate_stack(t_list **st);
 ** get sequence of diffs for current stack
 */
 
-int		*get_diff(t_list *in, char fl, char reverse);
+int		*get_diff(t_list *in, char fl, char reverse, int number);
 
 /*
 ** choose sorted sequence
