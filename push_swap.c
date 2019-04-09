@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/09 22:25:45 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 02:19:14 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,6 +320,7 @@ static t_list	*last(t_list *b)
 	int		*standing;
 	int		i;
 
+	printf("last --->\n");
 	a = NULL;
 	cp = lst_copy(b);
 	comm = NULL;
@@ -335,6 +336,7 @@ static t_list	*last(t_list *b)
 		add_comm(&comm, push_one_last(&a, &cp, &i));
 	}
 //	printf("TRY INSERT (%d) - %d\n", ft_lstlen(b), ft_lstlen(comm));//
+	printf("--->last\n");
 	return (comm);
 }
 
@@ -373,51 +375,35 @@ int			main(int argc, char **argv)
 //	to_push = get_to_push(standing, a);
 	comm = push_b(standing, &a, &b);
 //	clever_push_b(comm, &a, &b, to_push);
-//	printf("first push to B:   ");//
-//	print_comm(comm);//
+	printf("first push to B:   ");//
+	print_comm(comm);//
 	while (ft_lstlen(b) > 5)
 	{
-//		print_stacks(a, b);//
-//		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));
-		subseq = MIN(2 * ft_lstlen(a), ft_lstlen(b));
-		choose_sequence(get_diff(b, 1, 0, subseq),
-				&standing, subseq, 1);
-		if (subseq < ft_lstlen(b))
-			add_seq(&standing, subseq, ft_lstlen(b));
-	//	print_seq(standing, ft_lstlen(b));
-	//	print_stack(b);
-//		improve_seq(b, standing);
-		new_comm = new_rot_all(&a, &b, standing, ft_lstlen(b));
-	//	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 0);
-//		printf("cycle:   ");//
-//		print_comm(new_comm);//
+		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));//
+		new_comm = back_to_a(&a, &b);
+		printf("cycle:   ");//
+		print_comm(new_comm);//
 		add_comm(&comm, new_comm);
-		if (ft_lstlen(b) < len / 2 && ft_lstlen(last(b)) < 2 * len)
+		if (ft_lstlen(last(b)) < len)
 			break ;
-//		sleep(5);
 	}
-//		print_stacks(a, b);//
-
 	new_comm = last(b);
-//	printf("INSERT (%d):   ", ft_lstlen(b));//
-//	print_comm(new_comm);//
+	printf("INSERT (%d):   ", ft_lstlen(b));//
+	print_comm(new_comm);//
 	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
 //	print_stacks(a, b);
-	choose_sequence(get_diff(b, 1, 1, ft_lstlen(b)), &standing, ft_lstlen(b), 0);
-//	improve_seq(b, standing);
-	new_comm = rot_all(&a, &b, standing, ft_lstlen(b), 1);
-//	printf("final push to A:   ");//
-//	print_comm(new_comm);//
+	new_comm = back_to_a_last(&a, &b);
+	printf("final push to A:   ");//
+	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
 	new_comm = final_rotation(&a);
-//	printf("final rotation:   ");//
-//	print_comm(new_comm);//
+	printf("final rotation:   ");//
+	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
-//	print_comm(comm);
 	improve_comm(&comm);
 	improve_comm_dub(&comm);
-//	printf("FINAL:   ");//
+	printf("FINAL:   ");//
 	print_comm(comm);
 //	print_stack(a);//
 	return (0);

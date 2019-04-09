@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/09 22:26:16 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 01:58:30 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,18 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s\n", CCONT(comm));
+//		printf("%s\n", CCONT(comm));
 		comm = comm->next;
 	}
-//	printf(" // count: %d\n", ft_lstlen(tmp));
+	printf(" // count: %d\n", ft_lstlen(tmp));
+}
+
+void	print_seq(int *seq, int count)
+{
+	int i = -1;
+	while (++i < count)
+		printf("%2d ", seq[i]);
+	printf("\n");
 }
 
 void	do_one_comm(t_list **a, t_list **b, t_list *comm)
@@ -216,7 +224,7 @@ int	cut_tail(t_list **comm, char *name)
 	del = tmp->next;
 	tmp->next = NULL;
 	ft_lstdelone(&del, NULL);
-//	print_comm(*comm);
+	//	print_comm(*comm);
 	return (1 + cut_tail(comm, name));
 }
 

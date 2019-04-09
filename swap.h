@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/09 12:47:42 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 01:39:38 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,25 @@ int		push_a(int *standing, t_list **a, t_list **b, t_list **comm);
 void    improve_comm_dub(t_list **comm);
 
 /*
-** push to A (in cycle)
+** push back to A (in cycle)
 */
 
-t_list  *get_to_push(int *seq, t_list *st);
-t_list  *rot_all(t_list **a, t_list **b, int *seq, int count, char fl);
-t_list  *new_rot_all(t_list **a, t_list **b, int *seq, int count);
-//void    push_a(t_list **a, t_list **b, t_list *comm);
+t_list		*back_to_a(t_list **a, t_list **b);
+int			get_rot(t_list *st, int to_push, int i, int len_b, char *fl);
+t_list		*perform_rot(t_list **a, t_list **b, int to_push, char fl);
+t_list		*push_one_last(t_list **a, t_list **b, int *i);
 
-t_list  *push_one_last(t_list **a, t_list **b, int *i);
-t_list  *push_one_ba(t_list **a, t_list **b);
+/*
+** push back to A reversed sorted B
+*/
+
+t_list  *back_to_a_last(t_list **a, t_list **b);
+
+
+//t_list  *adjust_stacks_last(t_list **a, t_list **b, int *seq, int count, char fl);
+
+t_list  *get_to_push(int *seq, t_list *st);
+//t_list  *push_one_ba(t_list **a, t_list **b);
 
 void    print_seq(int *seq, int count);
 void    print_comm(t_list *comm);
