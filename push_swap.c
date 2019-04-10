@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 04:06:44 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 05:18:14 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,55 +65,6 @@ static void	improve_comm(t_list **comm)
 	}
 }
 
-static void	simplify(t_list *in)
-{
-	int	*sorted;
-	int	i;
-	int	count;
-
-	count = ft_lstlen(in);
-	sorted = get_diff(in, 0, 0, ft_lstlen(in));
-	while (in)
-	{
-		i = -1;
-		while (++i < count)
-			if (ICONT(in) == sorted[i])
-			{
-				ft_memcpy(in->cont, (void *)&i, sizeof(int));
-				break ;
-			}
-		in = in->next;
-	}
-}
-
-static int	argv_to_list(t_list **in, char **argv, int count)
-{
-	int		i;
-	char	**ar;
-	char	**cp;
-	int		tmp;
-	int		len;
-
-	i = 0;
-	len = 0;
-	while (++i <= count)
-	{
-		ar = ft_strsplit(argv[i], ' ');
-		cp = ar;
-		while (*ar)
-		{
-			tmp = atoi_check(*ar);
-			free(*ar);
-			ft_lstadd_back(in, ft_lstnew((void *)&tmp, sizeof(int)));
-			len++;
-			ar++;
-		}
-		free(cp);
-	}
-	simplify(*in);
-	return (len);
-}
-
 /*
  ** rotate sorted stack to the start [ < N / 2]
  */
@@ -151,15 +102,15 @@ int			main(int argc, char **argv)
 		return (clean("Error\n"));
 	a = NULL;
 	b = NULL;
-	len = argv_to_list(&a, argv, argc - 1);
+	len = argv_to_list(&a, argv, argc - 1, 1);
 //	print_stack(a);
 	choose_sequence(get_diff(a, 1, 0, ft_lstlen(a)), &standing, len, 1);
 //	improve_seq(a, standing);
 //	to_push = get_to_push(standing, a);
 	comm = push_b(standing, &a, &b);
 //	clever_push_b(comm, &a, &b, to_push);
-	printf("first push to B:   ");//
-	print_comm(comm);//
+//	printf("first push to B:   ");//
+//	print_comm(comm);//
 	while (ft_lstlen(b) > 5)
 	{
 //		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));//
@@ -171,25 +122,25 @@ int			main(int argc, char **argv)
 			break ;
 	}
 	new_comm = last(b);
-	printf("INSERT (%d):   ", ft_lstlen(b));//
-	print_comm(new_comm);//
+//	printf("INSERT (%d):   ", ft_lstlen(b));//
+//	print_comm(new_comm);//
 	do_all_comm(&a, &b, new_comm, 0);
 	add_comm(&comm, new_comm);
 //	print_stacks(a, b);
 	new_comm = back_to_a_last(&a, &b);
-	printf("final push to A:   ");//
-	print_comm(new_comm);//
+//	printf("final push to A:   ");//
+//	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
 	new_comm = final_rotation(&a);
-	printf("final rotation:   ");//
-	print_comm(new_comm);//
+//	printf("final rotation:   ");//
+//	print_comm(new_comm);//
 	add_comm(&comm, new_comm);
-	printf("before improve:   ");//
-	print_comm(comm);
+//	printf("before improve:   ");//
+//	print_comm(comm);
 	improve_comm(&comm);
 	improve_comm_dub(&comm);
-	printf("FINAL:   ");//
+//	printf("FINAL:   ");//
 	print_comm(comm);
-	print_stack(a);//
+//	print_stack(a);//
 	return (0);
 }

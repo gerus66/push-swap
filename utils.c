@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 04:02:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 04:58:23 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,6 @@ int clean(char *msg)
 	ft_putstr(msg);
 	return (0);
 }
-/*
-int     prelast_elem(t_list *stack)
-{
-	while (stack->next->next)
-		stack = stack->next;
-	return (ICONT(stack));
-}*/
 
 int     last_elem(t_list *stack)
 {
@@ -32,29 +25,6 @@ int     last_elem(t_list *stack)
 	while (stack->next)
 		stack = stack->next;
 	return (ICONT(stack));
-}
-
-int		atoi_check(char *s)
-{
-	ssize_t	res;
-	char	sign;
-
-	res = 0;
-	sign = (*s == '-' ? -1 : 1);
-	if (*s == '-' || *s == '+')
-		s++;
-	while (*s)
-	{
-		if (*s >= '0' && *s <= '9')
-			res = res * 10 + *s - 48;
-		else
-			exit(clean(ERR_M));//TODO
-		s++;
-	}
-	res *= sign;
-	if (res > I_MAX || res < I_MIN)
-		exit(clean(ERR_M));//TODO
-	return ((int)res);
 }
 
 t_list		*atoi_stack(t_list *stack)
@@ -114,10 +84,10 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-		printf("%s ", CCONT(comm));
+		printf("%s\n", CCONT(comm));
 		comm = comm->next;
 	}
-	printf(" // count: %d\n", ft_lstlen(tmp));
+//	printf(" // count: %d\n", ft_lstlen(tmp));
 }
 
 void	print_seq(int *seq, int count)

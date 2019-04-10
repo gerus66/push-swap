@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 02:35:17 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 04:42:07 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ void	swap_stack(t_list **st);
 void	push_stack(t_list **src, t_list **dst);
 void	rotate_stack(t_list **st);
 void	r_rotate_stack(t_list **st);
+
+/*
+** read stack A from argv, check validity
+** initialize [in], return length of [in]
+** if [simplify] replace numbers by its order
+*/
+
+int argv_to_list(t_list **in, char **argv, int count, char simplify);
 
 /*
 ** get sequence of diffs for current stack
@@ -101,9 +109,8 @@ int	    cut_tail(t_list **comm, char *name);
 char	can_insert(int val, int first, int last);
 char	can_insert_rev(int val, t_list *st);
 t_list	*lst_copy(t_list *lst);
-
 //void    lst_to_array(t_list *st, int *ar, int count);
-int     atoi_check(char *s);
+//int     atoi_check(char *s);
 int		clean(char *msg);
 t_list	*atoi_stack(t_list *stack);
 
