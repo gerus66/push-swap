@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 01:39:38 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 02:35:17 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,19 @@ void    improve_comm_dub(t_list **comm);
 t_list		*back_to_a(t_list **a, t_list **b);
 int			get_rot(t_list *st, int to_push, int i, int len_b, char *fl);
 t_list		*perform_rot(t_list **a, t_list **b, int to_push, char fl);
-t_list		*push_one_last(t_list **a, t_list **b, int *i);
+//t_list		*push_one_last(t_list **a, t_list **b, int *i);
 
 /*
 ** push back to A reversed sorted B
 */
 
 t_list  *back_to_a_last(t_list **a, t_list **b);
+
+/*
+** sort remains in B
+*/
+
+t_list		*last(t_list *b);
 
 
 //t_list  *adjust_stacks_last(t_list **a, t_list **b, int *seq, int count, char fl);

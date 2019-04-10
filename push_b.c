@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 08:07:46 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/09 20:52:25 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 03:48:26 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ t_list	*push_b(int *standing, t_list **a, t_list **b)
 	int		count;
 	t_list	*comm;
 	t_list	*tmp;
-	char	fl;
 
 	comm = NULL;
 	count = ft_lstlen(*a);
@@ -84,12 +83,10 @@ t_list	*push_b(int *standing, t_list **a, t_list **b)
 	cut_tail(&comm, "ra");
 	improve_comm_dub(&comm);
 	tmp = comm;
-	comm = NULL;
-	fl = 0;
 	while (tmp)
 	{
 		do_one_chaos_comm(a, b, tmp);
-		add_comm(&comm, ft_lstnew(CCONT(tmp), sizeof(char *)));
+	//	add_comm(&comm, ft_lstnew(CCONT(tmp), sizeof(char *)));
 		tmp = tmp->next;
 	}
 	return (comm);

@@ -5,95 +5,84 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/10 01:21:07 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 01:34:02 by mbartole         ###   ########.fr       */
+/*   Created: 2019/04/10 02:29:38 by mbartole          #+#    #+#             */
+/*   Updated: 2019/04/10 02:54:08 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
 /*
-** push one top element from stack B to somewhere in stack A (optimised)
-*/
+ * ** push one top element from stack A to somewhere in stack B (optimised)
+ * */
 
-static t_list	*push_one_ba(t_list **a, t_list **b)
+static void	one_last_rec(int *i, t_list **a, t_list **b, t_list **comm,
+		char reverse)
+{
+	if (*i > 0 && can_insert_rev(ICONT((*a)->next), *b))
+	{
+		add_and_do(comm, a, b, "sa");
+		add_and_do(comm, a, b, "pb");
+		(*i)--;
+		if (!reverse)
+			add_and_do(comm, a, b, "rb");
+	}
+	if (*i > 1 && can_insert_rev(ICONT((*a)->next->next), *b))
+	{
+		add_and_do(comm, a, b, "ra");
+		add_and_do(comm, a, b, "sa");
+		add_and_do(comm, a, b, "pb");
+		/*			one_last_rec(i, a, b, comm, reverse);*/
+		if (!reverse)
+		{
+			add_and_do(comm, a, b, "rb");
+			/*				one_last_rec(i, a, b, comm, reverse);*/
+		}
+		add_and_do(comm, a, b, "rra");
+		(*i)--;
+	}
+}
+
+static t_list	*push_one_last(t_list **a, t_list **b, int *i)
 {
 	t_list	*comm;
 	t_list	*cp;
 	int		rot;
 	char	reverse;
-
-	comm = NULL;
-	cp = *a;
-	rot = 0;
-	while (!can_insert(ICONT(*b), ICONT(cp), last_elem(cp)) &&
-			cp->next && ++rot)
-		cp = cp->next;
-	reverse = rot > ft_lstlen(*a) / 2 ? 1 : 0;
-	if (reverse)
-		rot = ft_lstlen(*a) - rot;
-	while (--rot >= 0)
-		add_and_do(&comm, a, b, reverse ? "rra" : "ra");
-	add_and_do(&comm, a, b, "pa");
-	return (comm);
-}
-
-static t_list	*adjust_stacks_last(t_list **a, t_list **b)
-{
-	t_list	*comm;
-	t_list	*cp;
-	int		i;
-	int		rot;
-	int		min_rot;
-	int		to_push;
-	int		last_to_push;
 	int		len_b;
-	char	fl;
-	char	min_fl;
 
-	len_b = ft_lstlen(*b);
 	comm = NULL;
-	min_rot = 2 * (ft_lstlen(*b) + ft_lstlen(*a));
-	to_push = 0;
-	last_to_push = last_elem(*b);
-	min_fl = 0;
+	len_b = ft_lstlen(*b);
 	cp = *b;
-	i = -1;
-	while (++i < len_b)
-	{
-		/*adjust stacks to each other*/
-		rot = get_rot(*a, ICONT(cp), i, len_b, &fl);
-		/*last rotation of stack A to 0*/
-		rot += MIN(last_to_push, (len_b + ft_lstlen(*a) - last_to_push));
-		/*rotation of stack A during push*/
-		rot += (ICONT(cp) > last_to_push) ?
-			len_b + ft_lstlen(*a) - ICONT(cp) + last_to_push :
-			last_to_push - ICONT(cp);
-		if (rot < min_rot)
-		{
-			min_rot = rot;
-			to_push = ICONT(cp);
-			min_fl = fl;
-		}
-		last_to_push = ICONT(cp);
+	rot = 0;
+	while (!can_insert_rev(ICONT(*a), cp) && cp->next && ++rot)
 		cp = cp->next;
+	reverse = rot > len_b / 2 ? 1 : 0;
+	if (reverse)
+		rot = len_b - rot;
+	while (--rot >= 0)
+	{
+		one_last_rec(i, a, b, &comm, reverse);
+		add_and_do(&comm, a, b, reverse ? "rrb" : "rb");
 	}
-	comm = perform_rot(a, b, to_push, min_fl);
+	add_and_do(&comm, a, b, "pb");
 	return (comm);
 }
 
-/*
-** push elements back to sorted A from reverse sorted B (until the end)
-*/
-
-t_list	*back_to_a_last(t_list **a, t_list **b)
+t_list	*last(t_list *b)
 {
 	t_list	*comm;
-	int		len_b;
+	t_list	*a;
+	t_list	*cp;
+	int		*standing;
+	int		i;
 
-	comm = adjust_stacks_last(a, b);
-	len_b = ft_lstlen(*b);
-	while (--len_b >= 0)
-		add_comm(&comm, push_one_ba(a, b));
+	a = NULL;
+	cp = lst_copy(b);
+	comm = NULL;
+	choose_sequence(get_diff(cp, 1, 1, ft_lstlen(cp)), &standing, ft_lstlen(cp), 1);
+	i = push_a(standing, &a, &cp, &comm);
+	while (--i >= 0)
+		add_comm(&comm, push_one_last(&a, &cp, &i));
 	return (comm);
 }

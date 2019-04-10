@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 01:58:30 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/10 04:02:10 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,18 @@ int clean(char *msg)
 	ft_putstr(msg);
 	return (0);
 }
-
+/*
 int     prelast_elem(t_list *stack)
 {
 	while (stack->next->next)
 		stack = stack->next;
 	return (ICONT(stack));
-}
+}*/
 
 int     last_elem(t_list *stack)
 {
+	if (!stack)
+		return (0);
 	while (stack->next)
 		stack = stack->next;
 	return (ICONT(stack));
@@ -112,7 +114,7 @@ void	print_comm(t_list *comm)
 	tmp = comm;
 	while (comm)
 	{
-//		printf("%s\n", CCONT(comm));
+		printf("%s ", CCONT(comm));
 		comm = comm->next;
 	}
 	printf(" // count: %d\n", ft_lstlen(tmp));
@@ -208,23 +210,29 @@ int	cut_tail(t_list **comm, char *name)
 	t_list	*tmp;
 	t_list	*del;
 
-	if (!(*comm))
-		return(0) ;
+	if (!comm || !(*comm))
+		return(0);
+//	printf("ping 1 !\n");
 	if (!(*comm)->next && !ft_strcmp(CCONT(*comm), name))
 	{
 		free(*comm);
 		*comm = NULL;
 		return(0) ;
 	}
+//	printf("ping 2 !\n");
 	tmp = *comm;
 	while (tmp->next && tmp->next->next)
 		tmp = tmp->next;
-	if (ft_strcmp(CCONT(tmp->next), name))
+//	printf("ping 3 !\n");
+	if (ft_strcmp(CCONT(tmp), name) || ft_strcmp(CCONT(tmp->next), name))
 		return(0) ;
+//	printf("ping 4 !\n");
 	del = tmp->next;
 	tmp->next = NULL;
+//	printf("ping 5 !\n");
 	ft_lstdelone(&del, NULL);
-	//	print_comm(*comm);
+//	printf("ping 6 !\n");
+//	print_comm(*comm);
 	return (1 + cut_tail(comm, name));
 }
 
