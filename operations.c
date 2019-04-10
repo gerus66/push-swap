@@ -6,14 +6,11 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 18:51:58 by mbartole          #+#    #+#             */
-/*   Updated: 2019/02/25 20:06:39 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/11 02:33:24 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
-
-#define I_MAX 2147483647
-#define I_MIN -2147483648
 
 void	swap_stack(t_list **st)
 {
