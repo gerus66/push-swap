@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/11 03:57:50 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/11 04:06:58 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,8 @@ static void		init_razn(int *sorted, t_list *in, int count)
 	int	i;
 	int	j;
 	int	tmp;
-	int	*razn;
+	int	razn[count];
 
-	razn = (int *)ft_memalloc(sizeof(int) * count);
 	j = -1;
 	while (in)
 	{
@@ -74,7 +73,6 @@ static void		init_razn(int *sorted, t_list *in, int count)
 	i = -1;
 	while (++i < count)
 		sorted[i] = razn[i];
-	free(razn);
 }
 
 void			get_diff(t_list *in, int *sorted_ar, char razn, char reverse)
