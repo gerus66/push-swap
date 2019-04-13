@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 20:35:30 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/11 04:06:58 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/13 14:53:45 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void		tree_to_lst(t_avltree *root, t_list **lst)
 	tree_to_lst(root->left, lst);
 	ft_lstadd_back(lst, ft_lstnew((void *)&root->key, sizeof(int)));
 	tree_to_lst(root->right, lst);
+	free(root->item);
 	free(root);
 }
 

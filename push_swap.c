@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 05:18:14 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/13 17:11:13 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,78 +69,70 @@ static void	improve_comm(t_list **comm)
  ** rotate sorted stack to the start [ < N / 2]
  */
 
-static t_list	*final_rotation(t_list **st)
+static t_list	*final_rotation(t_stacks *all)
 {
 	t_list	*comm;
 	int		len;
 
 	comm = NULL;
-	len = ft_lstlen(*st);
-	if (len - ICONT(*st) < len / 2)
-		while (ICONT(*st) != 0)
-			add_and_do(&comm, st, NULL, "ra");
+	len = ft_lstlen(all->a);
+	if (len - ICONT(all->a) < len / 2)
+		while (ICONT(all->a) != 0)
+			add_and_do(all, &comm, "ra");
 	else
-		while (ICONT(*st) != 0)
-			add_and_do(&comm, st, NULL, "rra");
+		while (ICONT(all->a) != 0)
+			add_and_do(all, &comm, "rra");
 	return (comm);
 }
 
 int			main(int argc, char **argv)
 {
-	t_list	*a;
-	t_list	*b;
-	//	t_list	*cp;
-	int		*standing;
-	int		len;
-	int		subseq;
-	t_list	*comm;
-//	t_list	*to_push;
+	int		*sorted;
+	t_stacks all;
 	t_list	*new_comm;
 
-//	comm = NULL;
 	if (argc < 2)
-		return (clean("Error\n"));
-	a = NULL;
-	b = NULL;
-	len = argv_to_list(&a, argv, argc - 1, 1);
-//	print_stack(a);
-	choose_sequence(get_diff(a, 1, 0, ft_lstlen(a)), &standing, len, 1);
-//	improve_seq(a, standing);
-//	to_push = get_to_push(standing, a);
-	comm = push_b(standing, &a, &b);
-//	clever_push_b(comm, &a, &b, to_push);
-//	printf("first push to B:   ");//
-//	print_comm(comm);//
-	while (ft_lstlen(b) > 5)
+		return (0);
+	init_all(&all, argv, argc - 1, 1);
+	if (all.len_a == 1)
+		return (clean("", &all));
+	if (all.len_a == 2)
 	{
-//		printf("A: %d	B: %d\n", ft_lstlen(a), ft_lstlen(b));//
-		new_comm = back_to_a(&a, &b);
-//		printf("cycle:   ");//
-//		print_comm(new_comm);//
-		add_comm(&comm, new_comm);
-		if (ft_lstlen(last(b)) < len)
+		if (ICONT(all.a) > ICONT(all.a->next))
+			return (clean("sa\n", &all));
+		return (clean("", &all));
+	}
+	if (!(sorted = (int *)malloc(all.len_a * sizeof(int))))
+		return (clean("ERM_M", &all));
+	get_diff(all.a, sorted, 1, 0);
+	choose_sequence(sorted, all.len_a);
+	push_b(sorted, &all);
+	free(sorted);
+	new_comm = NULL;
+	while (ft_lstlen(all.b) > 5)
+	{
+		back_to_a(&all);
+		if (ft_lstlen((new_comm = last(&all, ft_lstlen(all.b)))) < all.len_a)
 			break ;
 	}
-	new_comm = last(b);
-//	printf("INSERT (%d):   ", ft_lstlen(b));//
-//	print_comm(new_comm);//
-	do_all_comm(&a, &b, new_comm, 0);
-	add_comm(&comm, new_comm);
-//	print_stacks(a, b);
-	new_comm = back_to_a_last(&a, &b);
+	if (!new_comm)
+		new_comm = last(&all, ft_lstlen(all.b));
+	do_all_comm(&all, new_comm);
+	ft_lstadd_back(&all.comm, new_comm);
+	last_push(&all);
 //	printf("final push to A:   ");//
 //	print_comm(new_comm);//
-	add_comm(&comm, new_comm);
-	new_comm = final_rotation(&a);
+//	ft_lstadd_back(&all.comm, new_comm);
+	new_comm = final_rotation(&all);
 //	printf("final rotation:   ");//
 //	print_comm(new_comm);//
-	add_comm(&comm, new_comm);
+	ft_lstadd_back(&all.comm, new_comm);
 //	printf("before improve:   ");//
 //	print_comm(comm);
-	improve_comm(&comm);
-	improve_comm_dub(&comm);
+	improve_comm(&all.comm);
+	improve_comm_dub(&all.comm);
 //	printf("FINAL:   ");//
-	print_comm(comm);
-//	print_stack(a);//
-	return (0);
+	print_comm(all.comm);
+//	print_stack(all.a);//
+	return (clean("", &all));
 }

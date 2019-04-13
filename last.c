@@ -6,43 +6,43 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 02:29:38 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/12 16:50:15 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/13 16:59:01 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-/*
-** push one top element from stack A to somewhere in stack B (optimised)
-*/
-
-static t_list	*one_last_rec(int *i, t_list **a, t_list **b, char reverse)
+static t_list	*one_last_rec(int *i, t_stacks *copy, char reverse)
 {
 	t_list	*comm;
 
 	comm = NULL;
-	if (*i > 0 && can_insert_rev(ICONT((*a)->next), *b))
+	if (*i > 0 && can_insert_rev(ICONT(copy->a->next), copy->b))
 	{
-		add_and_do(&comm, a, b, "sa");
-		add_and_do(&comm, a, b, "pb");
+		add_and_do(copy, &comm, "sa");
+		add_and_do(copy, &comm, "pb");
 		(*i)--;
 		if (!reverse)
-			add_and_do(&comm, a, b, "rb");
+			add_and_do(copy, &comm, "rb");
 	}
-	if (*i > 1 && can_insert_rev(ICONT((*a)->next->next), *b))
+	if (*i > 1 && can_insert_rev(ICONT(copy->a->next->next), copy->b))
 	{
-		add_and_do(&comm, a, b, "ra");
-		add_and_do(&comm, a, b, "sa");
-		add_and_do(&comm, a, b, "pb");
+		add_and_do(copy, &comm, "ra");
+		add_and_do(copy, &comm, "sa");
+		add_and_do(copy, &comm, "pb");
 		if (!reverse)
-			add_and_do(&comm, a, b, "rb");
-		add_and_do(&comm, a, b, "rra");
+			add_and_do(copy, &comm, "rb");
+		add_and_do(copy, &comm, "rra");
 		(*i)--;
 	}
 	return (comm);
 }
 
-static t_list	*push_one_last(t_list **a, t_list **b, int *i)
+/*
+** push one top element from stack A to sorted stack B (optimised)
+*/
+
+static t_list	*push_one_last(t_stacks *copy, int *i)
 {
 	t_list	*comm;
 	t_list	*cp;
@@ -51,20 +51,54 @@ static t_list	*push_one_last(t_list **a, t_list **b, int *i)
 	int		len_b;
 
 	comm = NULL;
-	len_b = ft_lstlen(*b);
-	cp = *b;
+	len_b = ft_lstlen(copy->b);
+	cp = copy->b;
 	rot = 0;
-	while (!can_insert_rev(ICONT(*a), cp) && cp->next && ++rot)
+	while (!can_insert_rev(ICONT(copy->a), cp) && cp->next && ++rot)
 		cp = cp->next;
 	reverse = rot > len_b / 2 ? 1 : 0;
 	if (reverse)
 		rot = len_b - rot;
 	while (--rot >= 0)
 	{
-		add_comm(&comm, one_last_rec(i, a, b, reverse));
-		add_and_do(&comm, a, b, reverse ? "rrb" : "rb");
+		ft_lstadd_back(&comm, one_last_rec(i, copy, reverse));
+		add_and_do(copy, &comm, reverse ? "rrb" : "rb");
 	}
-	add_and_do(&comm, a, b, "pb");
+	add_and_do(copy, &comm, "pb");
+	return (comm);
+}
+
+/*
+** remain sorted part in stack B, others push to stack A
+** return number of pushed to A elems
+*/
+
+static t_list	*push_a(int *standing, t_stacks *copy)
+{
+	int		i;
+	int		count;
+	t_list	*tmp;
+	t_list	*comm;
+
+	comm = NULL;
+	count = ft_lstlen(copy->b);
+	i = -1;
+	tmp = copy->b;
+	while (++i < count)
+	{
+		if (standing[i] == 0)
+			add_comm(copy, &comm, "pa");
+		else if (standing[i] == -1)
+		{
+			add_comm(copy, &comm, "rrb");
+			add_comm(copy, &comm, "sb");
+			add_comm(copy, &comm, "rb");
+			add_comm(copy, &comm, "rb");
+		}
+		else
+			add_comm(copy, &comm, "rb");
+		tmp = tmp->next;
+	}
 	return (comm);
 }
 
@@ -74,23 +108,26 @@ static t_list	*push_one_last(t_list **a, t_list **b, int *i)
 ** as result, B became reverse sorted
 */
 
-t_list			*last(t_list *b, int count, t_list *origin_a)
+t_list			*last(t_stacks *origin, int count)
 {
-	t_list	*comm;
-	t_list	*a;
-	t_list	*cp;
-	int		sorted[count];
-	int		i;
+	t_list		*comm;
+	int			sorted[count];
+	int			i;
+	t_stacks	copy;
 
-	if (!(cp = ft_lstcopy(b)))
-		exit(clean(ERM_M, (t_list *[]){origin_a, b}, 2));
-	get_diff(cp, sorted, 1, 1);
-	choose_sequence(sorted, ft_lstlen(cp));
-	a = NULL;
-	comm = NULL;
-	i = push_a(sorted, &a, &cp, &comm);
+	if (!(copy.b = ft_lstcopy(origin->b)))
+		exit(clean(ERM_M, origin));
+	get_diff(copy.b, sorted, 1, 1);
+	choose_sequence(sorted, ft_lstlen(copy.b));
+	copy.a = NULL;
+	copy.comm = NULL;
+	comm = push_a(sorted, &copy);
+	cut_tail(&comm, "rb");
+	improve_comm_dub(&comm);
+	do_all_comm(&copy, comm);
+	i = ft_lstlen(copy.a);
 	while (--i >= 0)
-		add_comm(&comm, push_one_last(&a, &cp, &i));
-	ft_lstdel(&cp, NULL);
+		ft_lstadd_back(&comm, push_one_last(&copy, &i));
+	clean("", &copy);
 	return (comm);
 }

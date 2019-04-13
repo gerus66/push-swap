@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 01:21:07 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 03:02:31 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/13 17:35:06 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,86 +16,82 @@
 ** push one top element from stack B to somewhere in stack A (optimised)
 */
 
-static t_list	*push_one_ba(t_list **a, t_list **b)
+static void		push_one_ba(t_stacks *all)
 {
-	t_list	*comm;
 	t_list	*cp;
 	int		rot;
 	char	reverse;
 
-	comm = NULL;
-	cp = *a;
+	cp = all->a;
 	rot = 0;
-	while (!can_insert(ICONT(*b), ICONT(cp), last_elem(cp)) &&
+	while (!can_insert(ICONT(all->b), ICONT(cp), last_elem(cp)) &&
 			cp->next && ++rot)
 		cp = cp->next;
-	reverse = rot > ft_lstlen(*a) / 2 ? 1 : 0;
+	reverse = rot > ft_lstlen(all->a) / 2 ? 1 : 0;
 	if (reverse)
-		rot = ft_lstlen(*a) - rot;
+		rot = ft_lstlen(all->a) - rot;
 	while (--rot >= 0)
-		add_and_do(&comm, a, b, reverse ? "rra" : "ra");
-	add_and_do(&comm, a, b, "pa");
-	return (comm);
+		add_and_do(all, &all->local_comm, reverse ? "rra" : "ra");
+	add_and_do(all, &all->local_comm, "pa");
+	all->len_a++;
+	all->len_b--;
 }
 
-static t_list	*adjust_stacks_last(t_list **a, t_list **b)
+/*
+** adjust stacks to each other +
+** last rotation of stack A to 0 +
+** rotation of stack A during push
+** rot[0] rot
+** rot[1] min_rot
+** fl[0] fl
+** fl[1] min_fl
+*/
+
+static void		adjust_stacks_last(t_stacks *all)
 {
-	t_list	*comm;
 	t_list	*cp;
 	int		i;
 	int		rot;
 	int		min_rot;
 	int		to_push;
-	int		last_to_push;
-	int		len_b;
+	int		last;
 	char	fl;
 	char	min_fl;
 
-	len_b = ft_lstlen(*b);
-	if (len_b == 0)
-		return (NULL);
-	comm = NULL;
-	min_rot = 2 * (ft_lstlen(*b) + ft_lstlen(*a));
+	rot = 2 * (ft_lstlen(all->b) + ft_lstlen(all->a));
 	to_push = 0;
-	last_to_push = last_elem(*b);
+	last = last_elem(all->b);
 	min_fl = 0;
-	cp = *b;
+	cp = all->b;
 	i = -1;
-	while (++i < len_b)
+	while (++i < all->len_b)
 	{
-		/*adjust stacks to each other*/
-		rot = get_rot(*a, ICONT(cp), i, len_b, &fl);
-		/*last rotation of stack A to 0*/
-		rot += MIN(last_to_push, (len_b + ft_lstlen(*a) - last_to_push));
-		/*rotation of stack A during push*/
-		rot += (ICONT(cp) > last_to_push) ?
-			len_b + ft_lstlen(*a) - ICONT(cp) + last_to_push :
-			last_to_push - ICONT(cp);
+		rot = get_rot(all->a, (int[]){ICONT(cp), i, all->len_b}, &fl) +
+		MIN(last, (all->len_b + ft_lstlen(all->a) - last)) + (ICONT(cp) > last)
+		? all->len_b + ft_lstlen(all->a) - ICONT(cp) + last : last - ICONT(cp);
 		if (rot < min_rot)
 		{
 			min_rot = rot;
 			to_push = ICONT(cp);
 			min_fl = fl;
 		}
-		last_to_push = ICONT(cp);
+		last = ICONT(cp);
 		cp = cp->next;
 	}
-	comm = perform_rot(a, b, to_push, min_fl);
-	return (comm);
+	perform_rot(all, to_push, min_fl);
 }
 
 /*
 ** push elements back to sorted A from reverse sorted B (until the end)
 */
 
-t_list	*back_to_a_last(t_list **a, t_list **b)
+void			last_push(t_stacks *all)
 {
-	t_list	*comm;
-	int		len_b;
-
-	comm = adjust_stacks_last(a, b);
-	len_b = ft_lstlen(*b);
-	while (--len_b >= 0)
-		add_comm(&comm, push_one_ba(a, b));
-	return (comm);
+	if (!all->len_b)
+		return ;
+	adjust_stacks_last(all);
+	while (all->len_b)
+		push_one_ba(all);
+	ft_lstadd_back(&all->comm, all->local_comm);
+	all->local_comm = NULL;
 }

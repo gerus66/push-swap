@@ -6,14 +6,21 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/10 04:58:23 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/13 14:22:56 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-int clean(char *msg)
+/*
+** clean [count] lists, print message
+*/
+
+int clean(char *msg, t_stacks *all)
 {
+	ft_lstdel(&all->a, NULL);
+	ft_lstdel(&all->b, NULL);
+	ft_lstdel(&all->comm, NULL);
 	ft_putstr(msg);
 	return (0);
 }
@@ -98,83 +105,6 @@ void	print_seq(int *seq, int count)
 	printf("\n");
 }
 
-void	do_one_comm(t_list **a, t_list **b, t_list *comm)
-{
-	char	*line;
-	int		fl;
-
-	fl = 0;
-	line = (char *)comm->cont;
-	if ((!ft_strcmp(line, "sa") || !ft_strcmp(line, "ss")) && (fl = 1))
-		swap_stack(a);
-	if ((!ft_strcmp(line, "sb") || !ft_strcmp(line, "ss")) && (fl = 1))
-		swap_stack(b);
-	if ((!ft_strcmp(line, "ra") || !ft_strcmp(line, "rr")) && (fl = 1))
-		rotate_stack(a);
-	if ((!ft_strcmp(line, "rb") || !ft_strcmp(line, "rr")) && (fl = 1))
-		rotate_stack(b);
-	if ((!ft_strcmp(line, "rra") || !ft_strcmp(line, "rrr")) && (fl = 1))
-		r_rotate_stack(a);
-	if ((!ft_strcmp(line, "rrb") || !ft_strcmp(line, "rrr")) && (fl = 1))
-		r_rotate_stack(b);
-	if (!ft_strcmp(line, "pa") && (fl = 1))
-		push_stack(b, a);
-	else if (!ft_strcmp(line, "pb") && (fl = 1))
-		push_stack(a, b);
-	if (!fl)
-		exit(clean(ERR_M));//TODO
-}
-
-void	do_one_chaos_comm(t_list **a, t_list **b, t_list *comm)
-{
-	if (*b && (*b)->next)
-	{
-		if (!(ft_strcmp(CCONT(comm), "sa")))
-			ft_memcpy(comm->cont, (void *)"ss", sizeof(char *));
-		else if (!(ft_strcmp(CCONT(comm), "ra")))
-			ft_memcpy(comm->cont, (void *)"rr", sizeof(char *));
-		else if (!(ft_strcmp(CCONT(comm), "rra")))
-			ft_memcpy(comm->cont, (void *)"rrr", sizeof(char *));
-	}
-	do_one_comm(a, b, comm);
-}
-
-void	do_all_comm(t_list **a, t_list **b, t_list *comm, char chaos)
-{
-	while (comm)
-	{
-		if (chaos)
-			do_one_chaos_comm(a, b, comm);
-		else
-			do_one_comm(a, b, comm);
-		comm = comm->next;
-	}
-}
-
-void		add_comm(t_list **comm, t_list *add)
-{
-	t_list	*tmp;
-
-	if (!(*comm))
-		*comm = add;
-	else
-	{
-		tmp = *comm;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = add;
-	}
-}
-
-void	add_and_do(t_list **comm, t_list **a, t_list **b, char *name)
-{
-	t_list	*tmp;
-
-	tmp = ft_lstnew(name, ft_strlen(name) + 1);
-	ft_lstadd_back(comm, tmp);
-	do_one_comm(a, b, tmp);
-}
-
 int	cut_tail(t_list **comm, char *name)
 {
 	t_list	*tmp;
@@ -182,27 +112,20 @@ int	cut_tail(t_list **comm, char *name)
 
 	if (!comm || !(*comm))
 		return(0);
-//	printf("ping 1 !\n");
 	if (!(*comm)->next && !ft_strcmp(CCONT(*comm), name))
 	{
 		free(*comm);
 		*comm = NULL;
 		return(0) ;
 	}
-//	printf("ping 2 !\n");
 	tmp = *comm;
 	while (tmp->next && tmp->next->next)
 		tmp = tmp->next;
-//	printf("ping 3 !\n");
 	if (ft_strcmp(CCONT(tmp), name) || ft_strcmp(CCONT(tmp->next), name))
 		return(0) ;
-//	printf("ping 4 !\n");
 	del = tmp->next;
 	tmp->next = NULL;
-//	printf("ping 5 !\n");
 	ft_lstdelone(&del, NULL);
-//	printf("ping 6 !\n");
-//	print_comm(*comm);
 	return (1 + cut_tail(comm, name));
 }
 
@@ -222,19 +145,6 @@ char    can_insert_rev(int val, t_list *st)
 			|| (val > ICONT(st) && ICONT(st) > last_elem(st)))
 		return (1);
 	return (0);
-}
-
-t_list	*lst_copy(t_list *lst)
-{
-	t_list	*new;
-
-	new = NULL;
-	while (lst)
-	{
-		ft_lstadd_back(&new, ft_lstnew(lst->cont, sizeof(int)));
-		lst = lst->next;
-	}
-	return (new);
 }
 
 t_list	*get_to_push(int *seq, t_list *st)

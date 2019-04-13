@@ -6,7 +6,7 @@ OBJ1 = ${SRC1:.c=.o}
 SRC2 = $(filter-out $(NAME1).c generator.c, $(wildcard *.c))
 OBJ2 = ${SRC2:.c=.o}
 HDR = swap.h
-FLAGS = #-fsanitize=address #-Wextra -Wall -Werror
+FLAGS = -Wextra -Wall -Werror #-fsanitize=address
 LIBDIR = libft
 LIB = $(LIBDIR)/libft.a
 
