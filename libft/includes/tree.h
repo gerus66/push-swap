@@ -6,14 +6,14 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 13:39:08 by mbartole          #+#    #+#             */
-/*   Updated: 2019/01/26 13:44:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 15:36:18 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TREE_H
 # define TREE_H
 
-# include "../libft.h"
+# include "libft.h"
 
 typedef struct	s_avltree
 {

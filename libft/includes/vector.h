@@ -6,14 +6,14 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 19:28:54 by mbartole          #+#    #+#             */
-/*   Updated: 2019/01/26 13:35:46 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 15:36:28 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_H
 # define VECTOR_H
 
-# include "../libft.h"
+# include "libft.h"
 
 typedef struct	s_vector
 {

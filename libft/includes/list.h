@@ -6,14 +6,14 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 13:51:55 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/12 16:15:31 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 15:42:15 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIST_H
 # define LIST_H
 
-# include "../libft.h"
+# include "libft.h"
 
 typedef struct	s_list
 {
@@ -29,7 +29,7 @@ typedef struct	s_list
 
 t_list			*ft_lstnew(void const *content, size_t content_size);
 
-/* 
+/*
 ** just hook new element on the top of list (or push it to the back)
 */
 
