@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 20:07:45 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 21:15:22 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 /*
 ** param[0] last
-** param[1] i
-** param[2] first
+** param[1] prev - no matter
+** param[2] i
+** param[3] first
 */
 
 static int		*init_st(int *razn, int len, int k, int **param)
@@ -36,8 +37,9 @@ static int		*init_st(int *razn, int len, int k, int **param)
 			razn[i] = -razn[i];
 	}
 	*param[0] = razn[k];
-	*param[1] = k;
-	*param[2] = 1;
+	*param[1] = 0;
+	*param[2] = k;
+	*param[3] = 1;
 	return (st);
 }
 
@@ -53,7 +55,7 @@ static int		*general_seq(int *r, int k, int count)
 	int		lst[2];
 	int		first;
 
-	if (!(st = init_st(r, count, k, (int*[]){&lst[0], &i, &first})))
+	if (!(st = init_st(r, count, k, (int*[]){&lst[0], &lst[1], &i, &first})))
 		return (NULL);
 	while (++i < count)
 	{
