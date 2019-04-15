@@ -6,11 +6,20 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 17:11:13 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/13 13:55:24 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 23:39:47 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
+
+static int	helper(t_stacks *all, char *l, char free_line, char f)
+{
+	if (free_line)
+		free(l);
+	if (!f)
+		exit(clean(ERR_M, all));
+	return (f);
+}
 
 /*
 ** do one command [line] on stacks [all.a] ans [all.b]
@@ -18,42 +27,42 @@
 ** if [comm] is illegal - exit with cleaning [all]
 */
 
-void	do_one_comm(t_stacks *all, char *line, char free_line)
+int			do_one_comm(t_stacks *all, char *l, char free_line, char f)
 {
-	char	fl;
-
-	fl = 0;
-	if ((!ft_strcmp(line, "sa") || !ft_strcmp(line, "ss")) && (fl = 1))
+	if ((!ft_strcmp(l, "sa") && (f = 11)) ||
+			(!ft_strcmp(l, "ss") && (f = 13)))
 		swap_stack(&all->a);
-	if ((!ft_strcmp(line, "sb") || !ft_strcmp(line, "ss")) && (fl = 1))
+	if ((!ft_strcmp(l, "sb") && (f = 12)) ||
+			(!ft_strcmp(l, "ss") && (f = 13)))
 		swap_stack(&all->b);
-	if ((!ft_strcmp(line, "ra") || !ft_strcmp(line, "rr")) && (fl = 1))
+	if ((!ft_strcmp(l, "ra") && (f = 31)) ||
+			(!ft_strcmp(l, "rr") && (f = 33)))
 		rotate_stack(&all->a);
-	if ((!ft_strcmp(line, "rb") || !ft_strcmp(line, "rr")) && (fl = 1))
+	if ((!ft_strcmp(l, "rb") && (f = 32)) ||
+			(!ft_strcmp(l, "rr") && (f = 33)))
 		rotate_stack(&all->b);
-	if ((!ft_strcmp(line, "rra") || !ft_strcmp(line, "rrr")) && (fl = 1))
+	if ((!ft_strcmp(l, "rra") && (f = 41)) ||
+			(!ft_strcmp(l, "rrr") && (f = 43)))
 		r_rotate_stack(&all->a);
-	if ((!ft_strcmp(line, "rrb") || !ft_strcmp(line, "rrr")) && (fl = 1))
+	if ((!ft_strcmp(l, "rrb") && (f = 42)) ||
+			(!ft_strcmp(l, "rrr") && (f = 43)))
 		r_rotate_stack(&all->b);
-	if (!ft_strcmp(line, "pa") && (fl = 1))
+	if (!ft_strcmp(l, "pa") && (f = 21))
 		push_stack(&all->b, &all->a);
-	else if (!ft_strcmp(line, "pb") && (fl = 1))
+	else if (!ft_strcmp(l, "pb") && (f = 22))
 		push_stack(&all->a, &all->b);
-	if (free_line)
-		free(line);
-	if (!fl)
-		exit(clean(ERR_M, all));
+	return (helper(all, l, free_line, f));
 }
 
 /*
 ** just cycle for do_one_comm
 */
 
-void	do_all_comm(t_stacks *all, t_list *comm)
+void		do_all_comm(t_stacks *all, t_list *comm)
 {
 	while (comm)
 	{
-		do_one_comm(all, CCONT(comm), 0);
+		do_one_comm(all, CCONT(comm), 0, 0);
 		comm = comm->next;
 	}
 }
@@ -63,7 +72,7 @@ void	do_all_comm(t_stacks *all, t_list *comm)
 ** if smth wrong, exit with clean
 */
 
-void	add_comm(t_stacks *all, t_list **comm, char *name)
+void		add_comm(t_stacks *all, t_list **comm, char *name)
 {
 	t_list	*tmp;
 
@@ -76,8 +85,8 @@ void	add_comm(t_stacks *all, t_list **comm, char *name)
 ** do one command [name] and add it to list [comm]
 */
 
-void	add_and_do(t_stacks *all, t_list **comm, char *name)
+void		add_and_do(t_stacks *all, t_list **comm, char *name)
 {
 	add_comm(all, comm, name);
-	do_one_comm(all, name, 0);
+	do_one_comm(all, name, 0, 0);
 }

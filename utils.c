@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 12:41:17 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 14:19:11 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/16 00:04:50 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ int		cut_tail(t_list **comm, char *name)
 		return (0);
 	if (!(*comm)->next && !ft_strcmp(CCONT(*comm), name))
 	{
-		free(*comm);
-		*comm = NULL;
+		ft_lstdelone(comm, NULL);
 		return (0);
 	}
 	tmp = *comm;

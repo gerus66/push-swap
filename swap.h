@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 16:43:20 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 23:37:49 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void			r_rotate_stack(t_list **st);
 ** operations with commands /utils_comm.c (4)/
 */
 
-void			do_one_comm(t_stacks *all, char *line, char free_line);
+int				do_one_comm(t_stacks *all, char *line, char free_line, char fl);
 void			do_all_comm(t_stacks *all, t_list *comm);
 void			add_comm(t_stacks *all, t_list **comm, char *name);
 void			add_and_do(t_stacks *all, t_list **comm, char *name);
