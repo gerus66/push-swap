@@ -6,11 +6,26 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/13 14:50:46 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 15:00:46 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
+
+static void	print_stacks(t_list *a, t_list *b)
+{
+	while (a || b)
+	{
+		ft_printf("%6d %6d\n", (a ? ICONT(a) : 0),
+				(b ? ICONT(b) : 0));
+		if (a)
+			a = a->next;
+		if (b)
+			b = b->next;
+	}
+	ft_printf("%6c %6c\n", '_', '_');
+	ft_printf("%6c %6c\n\n", 'a', 'b');
+}
 
 static int	check_stacks(t_list *st, int count)
 {

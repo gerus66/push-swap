@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/12 16:27:21 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 18:25:11 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,13 @@ static void		improve_razn(int *razn, int len, char fl)
 	}
 }
 
-static int		stand_count(int *ar, int count)
-{
-	int	stand;
-	int	i;
-
-	stand = 0;
-	i = -1;
-	while (++i < count)
-		if (ar[i])
-			stand++;
-	return (stand);
-}
-
 static int		*general_seq(int *razn, int start, int count, char pos)
 {
-	int	*standing;
-	int	i;
-	int	last;
-	int	prev;
+	int		*standing;
+	int		i;
+	int		last;
+	int		prev;
+	char	first;
 
 	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
 		return (NULL);
@@ -51,19 +39,24 @@ static int		*general_seq(int *razn, int start, int count, char pos)
 	last = razn[start];
 	prev = pos ? count : 0;
 	i = start;
+	first = 1;
 	while (++i < count)
 	{
 		if (razn[i] <= last && ((razn[i] >= 0 && pos) || !pos) &&
 				razn[i] >= razn[start] - start - (count - i - 1))
 		{
 			standing[i] = 1;
-			prev = last;
-			last = razn[i];
+			prev = last + 1;
+			last = razn[i] + 1;
+			first = 0;
 		}
 		else if (razn[i] > last && razn[i] <= prev)
 		{
-			if (stand_count(standing, count) == 1)
+			if (first)
+			{
+				first = 0;
 				start = i;
+			}
 			prev = razn[i];
 			standing[i] = -1;
 			last++;
@@ -77,28 +70,55 @@ static int		*general_seq(int *razn, int start, int count, char pos)
 	return (standing);
 }
 
-static void		add_array(int *ar, int *add, int count)
+static void		fill_it(int *ar, int *add, int count, char copy)
 {
 	int	i;
 
 	i = -1;
+	if (!add)
+	{
+		while (++i < count)
+			ar[i] = 0;
+		return ;
+	}
+	if (copy)
+	{
+		while (++i < count)
+			ar[i] = add[i];
+		return ;
+	}
 	while (++i < count)
 		if (add[i])
 			ar[i] = 1;
 }
 
-void			choose_sequence(int *razn, int count)
+static int		swap_it(int **new, int **old, int count, int stand)
 {
-	int *standing;
-	int	*standing_tmp;
+	int	new_stand;
 	int	i;
-	int stand;
-	int	stand_tmp;
-	int	fill[count];
 
+	new_stand = 0;
 	i = -1;
 	while (++i < count)
-		fill[i] = 0;
+		if ((*new)[i])
+			new_stand++;
+	if (new_stand >= stand)
+	{
+		ft_swap_p((void **)new, (void **)old);
+		return (new_stand);
+	}
+	return (stand);
+}
+
+void			choose_sequence(int *razn, int count, t_stacks *all)
+{
+	int *standing;
+	int	*st_tmp;
+	int	i;
+	int stand;
+	int	fill[count];
+
+	fill_it(fill, NULL, count, 0);
 	standing = NULL;
 	stand = 0;
 	i = -1;
@@ -106,17 +126,15 @@ void			choose_sequence(int *razn, int count)
 		if (!fill[i])
 		{
 			improve_razn(razn, count, razn[i] <= 0 ? 0 : 1);
-			standing_tmp = general_seq(razn, i, count, razn[i] <= 0 ? 0 : 1);
-			stand_tmp = stand_count(standing_tmp, count);
-			add_array(fill, standing_tmp, count);
-			if (stand_tmp >= stand && (stand = stand_tmp))
+			if (!(st_tmp = general_seq(razn, i, count, razn[i] <= 0 ? 0 : 1)))
 			{
 				free(standing);
-				standing = standing_tmp;
+				exit(clean(ERM_M, all));
 			}
+			stand = swap_it(&st_tmp, &standing, count, stand);
+			fill_it(fill, st_tmp, count, 0);
+			free(st_tmp);
 		}
-	i = -1;
-	while (++i < count)
-		razn[i] = standing[i];
+	fill_it(razn, standing, count, 1);
 	free(standing);
 }

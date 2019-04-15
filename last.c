@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 02:29:38 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/13 16:59:01 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 18:14:08 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,12 @@ t_list			*last(t_stacks *origin, int count)
 	int			i;
 	t_stacks	copy;
 
+	if (!origin->b)
+		return (NULL);
 	if (!(copy.b = ft_lstcopy(origin->b)))
 		exit(clean(ERM_M, origin));
 	get_diff(copy.b, sorted, 1, 1);
-	choose_sequence(sorted, ft_lstlen(copy.b));
+	choose_sequence(sorted, ft_lstlen(copy.b), origin);
 	copy.a = NULL;
 	copy.comm = NULL;
 	comm = push_a(sorted, &copy);

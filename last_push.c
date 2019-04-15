@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 01:21:07 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/13 17:35:06 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 13:55:09 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,51 +47,53 @@ static void		push_one_ba(t_stacks *all)
 ** fl[1] min_fl
 */
 
-static void		adjust_stacks_last(t_stacks *all)
+static void		adjust_stacks_last(t_stacks *all, int last)
 {
 	t_list	*cp;
 	int		i;
-	int		rot;
-	int		min_rot;
+	int		rot[2];
 	int		to_push;
-	int		last;
-	char	fl;
-	char	min_fl;
+	char	fl[2];
 
-	rot = 2 * (ft_lstlen(all->b) + ft_lstlen(all->a));
+	rot[1] = 2 * (all->len_b + all->len_a);
 	to_push = 0;
-	last = last_elem(all->b);
-	min_fl = 0;
+	fl[1] = 0;
 	cp = all->b;
 	i = -1;
 	while (++i < all->len_b)
 	{
-		rot = get_rot(all->a, (int[]){ICONT(cp), i, all->len_b}, &fl) +
-		MIN(last, (all->len_b + ft_lstlen(all->a) - last)) + (ICONT(cp) > last)
-		? all->len_b + ft_lstlen(all->a) - ICONT(cp) + last : last - ICONT(cp);
-		if (rot < min_rot)
+		rot[0] = get_rot(all->a, (int[]){ICONT(cp), i, all->len_b}, &fl[0]) +
+		MIN(last, (all->len_b + ft_lstlen(all->a) - last)) + (ICONT(cp) > last
+		? all->len_b + ft_lstlen(all->a) - ICONT(cp) + last : last - ICONT(cp));
+		if (rot[0] < rot[1] && (fl[1] = fl[0]))
 		{
-			min_rot = rot;
+			rot[1] = rot[0];
 			to_push = ICONT(cp);
-			min_fl = fl;
 		}
 		last = ICONT(cp);
 		cp = cp->next;
 	}
-	perform_rot(all, to_push, min_fl);
+	perform_rot(all, to_push, fl[1]);
 }
 
 /*
 ** push elements back to sorted A from reverse sorted B (until the end)
+** then rotate sorted stack A to the start
 */
 
 void			last_push(t_stacks *all)
 {
 	if (!all->len_b)
 		return ;
-	adjust_stacks_last(all);
+	adjust_stacks_last(all, last_elem(all->b));
 	while (all->len_b)
 		push_one_ba(all);
+	if (all->len_a - ICONT(all->a) < all->len_a / 2)
+		while (ICONT(all->a) != 0)
+			add_and_do(all, &all->local_comm, "ra");
+	else
+		while (ICONT(all->a) != 0)
+			add_and_do(all, &all->local_comm, "rra");
 	ft_lstadd_back(&all->comm, all->local_comm);
 	all->local_comm = NULL;
 }
