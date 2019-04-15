@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 18:15:10 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 19:20:20 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,6 @@ static int		first_check(t_stacks *all)
 	return (0);
 }
 
-static t_list	*add_chaos(t_list *comm)
-{
-	t_list	*cp;
-
-	cp = comm;
-	while (comm)
-	{
-		if (!(ft_strcmp(CCONT(comm), "sa")))
-			ft_memcpy(comm->cont, (void *)"ss", sizeof(char) * 2);
-		else if (!(ft_strcmp(CCONT(comm), "ra")))
-			ft_memcpy(comm->cont, (void *)"rr", sizeof(char) * 2);
-		else if (!(ft_strcmp(CCONT(comm), "rra")))
-			ft_memcpy(comm->cont, (void *)"rrr", sizeof(char) * 2);
-		comm = comm->next;
-	}
-	return (cp);
-}
-
 static void		push_b(t_stacks *all, int count)
 {
 	int		i;
@@ -84,7 +66,7 @@ static void		push_b(t_stacks *all, int count)
 	}
 	cut_tail(&all->comm, "ra");
 	improve_comm_dub(&all->comm);
-	do_all_comm(all, add_chaos(all->comm));
+	do_all_comm(all, all->comm);
 }
 
 int				main(int argc, char **argv)

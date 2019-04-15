@@ -6,16 +6,28 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 18:25:11 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 20:07:45 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-static void		improve_razn(int *razn, int len, char fl)
-{
-	int	i;
+/*
+** param[0] last
+** param[1] i
+** param[2] first
+*/
 
+static int		*init_st(int *razn, int len, int k, int **param)
+{
+	int		*st;
+	int		i;
+	char	fl;
+
+	if (!(st = (int *)ft_memalloc(sizeof(int) * len)))
+		return (NULL);
+	st[k] = 1;
+	fl = razn[k] <= 0 ? 0 : 1;
 	i = -1;
 	while (++i < len)
 	{
@@ -23,51 +35,44 @@ static void		improve_razn(int *razn, int len, char fl)
 			(fl == -1 && razn[i] * 2 == len))
 			razn[i] = -razn[i];
 	}
+	*param[0] = razn[k];
+	*param[1] = k;
+	*param[2] = 1;
+	return (st);
 }
 
-static int		*general_seq(int *razn, int start, int count, char pos)
-{
-	int		*standing;
-	int		i;
-	int		last;
-	int		prev;
-	char	first;
+/*
+** lst[0] last
+** lst[1] prev
+*/
 
-	if (!(standing = (int *)ft_memalloc(sizeof(int) * count)))
+static int		*general_seq(int *r, int k, int count)
+{
+	int		*st;
+	int		i;
+	int		lst[2];
+	int		first;
+
+	if (!(st = init_st(r, count, k, (int*[]){&lst[0], &i, &first})))
 		return (NULL);
-	standing[start] = 1;
-	last = razn[start];
-	prev = pos ? count : 0;
-	i = start;
-	first = 1;
 	while (++i < count)
 	{
-		if (razn[i] <= last && ((razn[i] >= 0 && pos) || !pos) &&
-				razn[i] >= razn[start] - start - (count - i - 1))
+		lst[0]++;
+		lst[1]++;
+		if (r[i] <= lst[0] && r[i] >= r[k] - k - (count - i - 1) && (st[i] = 1))
 		{
-			standing[i] = 1;
-			prev = last + 1;
-			last = razn[i] + 1;
+			lst[1] = lst[0];
+			lst[0] = r[i];
 			first = 0;
 		}
-		else if (razn[i] > last && razn[i] <= prev)
+		else if (r[i] > lst[0] && (r[i] <= lst[1] || first) && (st[i] = -1))
 		{
-			if (first)
-			{
-				first = 0;
-				start = i;
-			}
-			prev = razn[i];
-			standing[i] = -1;
-			last++;
-		}
-		else
-		{
-			last++;
-			prev++;
+			lst[1] = r[i];
+			k = first ? i : k;
+			first = 0;
 		}
 	}
-	return (standing);
+	return (st);
 }
 
 static void		fill_it(int *ar, int *add, int count, char copy)
@@ -125,8 +130,7 @@ void			choose_sequence(int *razn, int count, t_stacks *all)
 	while (++i < count - stand)
 		if (!fill[i])
 		{
-			improve_razn(razn, count, razn[i] <= 0 ? 0 : 1);
-			if (!(st_tmp = general_seq(razn, i, count, razn[i] <= 0 ? 0 : 1)))
+			if (!(st_tmp = general_seq(razn, i, count)))
 			{
 				free(standing);
 				exit(clean(ERM_M, all));

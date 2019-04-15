@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 01:21:07 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 13:55:09 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/15 19:14:10 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,12 @@ static void		adjust_stacks_last(t_stacks *all, int last)
 
 void			last_push(t_stacks *all)
 {
-	if (!all->len_b)
-		return ;
-	adjust_stacks_last(all, last_elem(all->b));
-	while (all->len_b)
-		push_one_ba(all);
+	if (all->len_b)
+	{
+		adjust_stacks_last(all, last_elem(all->b));
+		while (all->len_b)
+			push_one_ba(all);
+	}
 	if (all->len_a - ICONT(all->a) < all->len_a / 2)
 		while (ICONT(all->a) != 0)
 			add_and_do(all, &all->local_comm, "ra");
