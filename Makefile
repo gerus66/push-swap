@@ -10,6 +10,9 @@ FLAGS = -Wextra -Wall -Werror #-fsanitize=address
 LIBDIR = libft
 LIB = $(LIBDIR)/libft.a
 LIBH = $(LIBDIR)/includes
+MFL = -lmlx -framework OpenGL -framework AppKit -framework OpenCL
+MLX = /usr/local/lib/
+MLXH = /usr/local/include
 
 all: lib $(NAME1) $(NAME2)
 
@@ -17,10 +20,10 @@ lib:
 	make -C $(LIBDIR)
 
 $(NAME1): $(OBJ1)
-	gcc $(FLAGS) -I $(LIBH) $(LIB) $(OBJ1) -o $(NAME1)
+	gcc $(FLAGS) -I $(MLXH) -L $(MLX) $(MFL) -I $(LIBH) $(LIB) $(OBJ1) -o $(NAME1)
 
 $(NAME2): $(OBJ2)
-	gcc $(FLAGS) -I $(LIBH) $(LIB) $(OBJ2) -o $(NAME2)
+	gcc $(FLAGS) -I $(MLXH) -L $(MLX) $(MFL) -I $(LIBH) $(LIB) $(OBJ2) -o $(NAME2)
 
 %.o: %.c $(HDR) $(LIB)
 	gcc $(FLAGS) -I $(LIBH) -c $< -o $@

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 04:26:20 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/13 14:47:19 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/16 17:43:17 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void		double_check(int val, t_stacks *all)
 	}
 }
 
-static void		simplify(t_list *in, int count)
+void			simplify(t_list *in, int count)
 {
 	int	sorted[count];
 	int	i;

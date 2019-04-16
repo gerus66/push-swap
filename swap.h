@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 23:37:49 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 00:18:02 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define SWAP_H
 
 # include "libft.h"
+# include "mlx.h"
+# include <time.h>
 
 # define I_MAX 2147483647
 # define I_MIN -2147483648
@@ -30,6 +32,13 @@
 # define MIN(x, y) ((x) < (y) ? (x) : (y))
 # define ABS(x) ((x) < 0 ? -(x) : (x))
 
+# define WND_W 1200
+# define WND_H 1100
+# define IMG_SIZE 1000
+# define ERG_M "Smth wrong with graphics, cant do it:(\n"
+# define ERU_M "User close the window\n"
+# define IBOX(x) ((t_imgbox *)x)
+
 typedef struct	s_stacks
 {
 	t_list	*a;
@@ -39,6 +48,20 @@ typedef struct	s_stacks
 	int		len_a;
 	int		len_b;
 }				t_stacks;
+
+typedef struct	s_imgbox
+{
+	void		*mlx;
+	void		*wnd;
+	t_stacks	*st;
+	int			count;
+	char		opt;
+	int			*data;
+	int			h;
+	int			w_step;
+	long		sleep;
+	char		pause;
+}				t_imgbox;
 
 /*
 ** operations with stack /operations.c (4)/
@@ -72,6 +95,7 @@ void			improve_comm_dub(t_list **comm);
 */
 
 void			init_all(t_stacks *all, char **argv, int count, char simplify);
+void			simplify(t_list *in, int count);
 
 /*
 ** get sequence of diffs for current stack, or just sort it
@@ -115,5 +139,19 @@ int				last_elem(t_list *stack);
 int				cut_tail(t_list **comm, char *name);
 char			can_insert(int val, int first, int last);
 char			can_insert_rev(int val, t_list *st);
+
+/*
+** checker utils - for checker and for graphic /utils_checker.c (2)/
+*/
+
+int				check_stacks(t_list *st, int count);
+void			print_stacks(t_list *a, t_list *b, int comm, int first);
+void			paint(t_imgbox ibox, void **elems, void **curs, int code);
+
+/*
+** graphic visualisation
+*/
+
+void			init_graph(t_stacks *all, char opt, int count);
 
 #endif

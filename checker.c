@@ -6,73 +6,19 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 23:37:36 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/16 23:50:47 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-static void	print_stacks(t_list *a, t_list *b, int comm, int first)
-{
-	int		div;
-
-	div = ft_lstlen(a) - ft_lstlen(b);
-	while (a || b)
-	{
-		if (div >= 0 && ft_printf((comm && comm % 10 != 2 && ((first / 10 &&
-			comm / 10 != 3) || (!a->next && comm / 10 == 3))) ?
-			"{bgn}{fgr}%6d{eoc} " : "%6d ", ICONT(a), first =
-			(first / 10 == 2 && comm / 10 == 1) ? first - 10 : first % 10))
-			a = a->next;
-		else
-			ft_printf("%6c ", ' ');
-		if (div <= 0 && ft_printf((comm && comm % 10 != 1 && ((first % 10 &&
-			comm / 10 != 3) || (!b->next && comm / 10 == 3))) ?
-			"{bgn}{fgr}%6d{eoc}\n" : "%6d\n", ICONT(b),
-			first -= (first % 10 == 2 && comm / 10 == 1) ? 1 : first % 10))
-			b = b->next;
-		else
-			ft_printf("%6c\n", ' ');
-		if (div > 0)
-			div--;
-		if (div < 0)
-			div++;
-	}
-	ft_printf("%6c %6c\n%6c %6c\n\n", '_', '_', 'a', 'b');
-}
-
-static int	check_stacks(t_list *st, int count)
-{
-	int	prev;
-
-	if (!st)
-		return (0);
-	if (!st->next && count == 1)
-		return (1);
-	prev = *((int *)st->cont);
-	st = st->next;
-	count--;
-	while (st && count--)
-	{
-		if (*((int *)st->cont) < prev)
-			return (0);
-		else if (*((int *)st->cont) == prev)
-			return (2);
-		prev = *((int *)st->cont);
-		st = st->next;
-	}
-	if (count == 0)
-		return (1);
-	return (0);
-}
-
-static void	handle_stacks(t_stacks *st, int count, char print)
+static void		handle_stacks(t_stacks *st, int count, char print)
 {
 	char	*line;
 	int		ret;
 
-	if (print)
-		print_stacks(st->a, st->b, 0, 22);
+	if (print & 1)
+		print_stacks(st->a, st->b, print & 2 ? 12 : 0, 22);
 	while (get_next_line(0, &line))
 	{
 		if (!ft_strcmp(line, ""))
@@ -80,11 +26,11 @@ static void	handle_stacks(t_stacks *st, int count, char print)
 			free(line);
 			return ;
 		}
-		if (print)
-			ft_printf("{fma}%s{eoc}\n", line);
+		if (print & 1)
+			ft_printf(print & 2 ? "{fma}%s{eoc}\n" : "%s\n", line);
 		ret = do_one_comm(st, line, 1, 0);
-		if (print)
-			print_stacks(st->a, st->b, print % 10 ? ret : 0, 22);
+		if (print & 1)
+			print_stacks(st->a, st->b, print & 2 ? ret : 0, 22);
 		ret = check_stacks(st->a, count);
 		if (ret == 1)
 			exit(clean(OK_M, st));
@@ -93,17 +39,43 @@ static void	handle_stacks(t_stacks *st, int count, char print)
 	}
 }
 
-int			main(int argc, char **argv)
+static void		no_graph(t_stacks *st, int count, char opt)
+{
+	handle_stacks(st, count, opt);
+	if (check_stacks(st->a, count) == 1)
+		exit(clean(OK_M, st));
+}
+
+/*
+** bits of [print]:
+** [-g(raphics)|-c(olor)|-v(izual)]
+*/
+
+int				main(int argc, char **argv)
 {
 	t_stacks	st;
 	int			count;
+	char		opt;
 
+	opt = 0;
+	while (argc > 1 && (!ft_strcmp("-v", *(argv + 1)) ||
+			!ft_strcmp("-c", *(argv + 1)) || !ft_strcmp("-g", *(argv + 1))))
+	{
+		if (!ft_strcmp("-v", *(argv + 1)))
+			opt = opt | 1;
+		if (!ft_strcmp("-c", *(argv + 1)))
+			opt = opt | 2;
+		if (!ft_strcmp("-g", *(argv + 1)))
+			opt = opt | 4;
+		argv++;
+		argc--;
+	}
 	if (argc < 2)
 		return (0);
 	init_all(&st, argv, argc - 1, 0);
 	count = st.len_a;
-	handle_stacks(&st, count, 11);
-	if (check_stacks(st.a, count) == 1)
-		return (clean(OK_M, &st));
+	if (opt & 4)
+		init_graph(&st, opt, count);
+	no_graph(&st, count, opt);
 	return (clean(KO_M, &st));
 }
