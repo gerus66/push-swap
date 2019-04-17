@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 18:29:13 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 19:00:04 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,15 @@ static int		*init_st(int *razn, int len, int k, int **param)
 {
 	int		*st;
 	int		i;
-	char	fl;
 
 	if (!(st = (int *)ft_memalloc(sizeof(int) * len)))
 		return (NULL);
 	st[k] = 1;
-	fl = razn[k] <= 0 ? 0 : 1;
-	i = -1;
+	i = k;
 	while (++i < len)
 	{
-		if ((fl == 1 && razn[i] * (-2) == len) ||
-			(fl == -1 && razn[i] * 2 == len))
+		if ((razn[k] > 0 && razn[i] * (-2) == len) ||
+			(razn[k] <= 0 && razn[i] * 2 == len))
 			razn[i] = -razn[i];
 	}
 	*param[0] = razn[k];
