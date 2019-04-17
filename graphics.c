@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 13:12:35 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 13:38:28 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 14:37:29 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,31 @@
 
 static int	xclose(void *p)
 {
-	exit(clean(ERU_M, IBOX(p)->st));
+	int	ret;
+
+	ret = check_stacks(IBOX(p)->st->a, IBOX(p)->count);
+	if (ret == 1)
+		exit(clean(OK_M, IBOX(p)->st));
+	if (ret == 2)
+		exit(clean(KO_M, IBOX(p)->st));
+	else
+		exit(clean(ERR_M, IBOX(p)->st));
 }
 
 static int	keyboard(int key, void *p)
 {
+	int	ret;
+
 	if (key == 53)
-		exit(clean(ERU_M, IBOX(p)->st));
+	{
+		ret = check_stacks(IBOX(p)->st->a, IBOX(p)->count);
+		if (ret == 1)
+			exit(clean(OK_M, IBOX(p)->st));
+		if (ret == 2)
+			exit(clean(KO_M, IBOX(p)->st));
+		else
+			exit(clean(ERR_M, IBOX(p)->st));
+	}
 	if (key == 124)
 		IBOX(p)->sleep /= 2;
 	if (key == 123)
@@ -33,33 +51,31 @@ static int	keyboard(int key, void *p)
 
 static int	handle_stacks(void *p)
 {
-	char		*line;
-	int			ret;
-	static int	end = 0;
-	t_imgbox	*ibox;
+	static char	*line = NULL;
+	int			r;
+	static int	counter = 1;
+	t_imgbox	*ib;
 
-	if (end || (ibox = (t_imgbox *)(((int **)p)[2]))->pause)
+	if (!counter || (ib = (t_imgbox *)(((int **)p)[2]))->pause)
 		return (0);
-	get_next_line(0, &line);
-	if (ft_strcmp(line, "") || !(end = 1))
+	if (counter % 2 && get_next_line(0, &line) &&
+			(ft_strcmp(line, "") || (counter = 0)))
 	{
-		if (ibox->opt & 1)
-			ft_printf(ibox->opt & 2 ? "{fma}%s{eoc}\n" : "%s\n", line);
-		ret = code_comm(line, 1, 0);
-		paint(*ibox, (void **)(((int **)(p))[0]), (void **)(((int **)(p))[1]),
-				ret);
-		ret = code_comm(line, 0, 0);
-		do_one_comm(ibox->st, line, 1, 0);
-		if (ibox->opt & 1)
-			print_stacks(ibox->st->a, ibox->st->b,
-					ibox->opt & 2 ? ret : 0, 22);
-		paint(*ibox, (void **)(((int **)(p))[0]), (void **)(((int **)(p))[1]),
-				ret);
+		if (counter++ && ib->opt & 1)
+			ft_printf(ib->opt & 2 ? "{fma}%s{eoc}\n" : "%s\n", line);
+		paint(*ib, (void **)(((int **)(p))[0]), (void **)(((int **)(p))[1]),
+				code_comm(line, 1, 0));
 	}
-	if ((ret = check_stacks(ibox->st->a, ibox->count)) == 2 || end == 1)
-		exit(clean(KO_M, ibox->st));
-	end = ret == 1 ? 1 : end;
-	return (0);
+	else if (counter && (r = code_comm(line, 0, 0)))
+	{
+		do_one_comm(ib->st, line, 1, 0);
+		if (counter-- && ib->opt & 1)
+			print_stacks(ib->st->a, ib->st->b, ib->opt & 2 ? r : 0, 22);
+		paint(*ib, (void **)(((int **)(p))[0]), (void **)(((int **)(p))[1]), r);
+	}
+	if ((r = check_stacks(ib->st->a, ib->count)) == 2 || counter == 0)
+		exit(clean(KO_M, ib->st));
+	return ((counter = r == 1 ? 0 : counter));
 }
 
 static void	create_elems(void **elems, t_imgbox ibox, char current)

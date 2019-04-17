@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 13:38:48 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 14:27:45 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define WND_H 1100
 # define IMG_SIZE 1000
 # define ERG_M "Smth wrong with graphics, cant do it:(\n"
-# define ERU_M "User close the window\n"
+# define ERU_M ""
 # define IBOX(x) ((t_imgbox *)x)
 
 typedef struct	s_stacks
@@ -56,7 +56,6 @@ typedef struct	s_imgbox
 	t_stacks	*st;
 	int			count;
 	char		opt;
-	int			*data;
 	int			h;
 	int			w_step;
 	long		sleep;
