@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 13:12:35 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 00:18:00 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:38:28 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,11 @@ static int	handle_stacks(void *p)
 	{
 		if (ibox->opt & 1)
 			ft_printf(ibox->opt & 2 ? "{fma}%s{eoc}\n" : "%s\n", line);
+		ret = code_comm(line, 1, 0);
 		paint(*ibox, (void **)(((int **)(p))[0]), (void **)(((int **)(p))[1]),
-				0);
-		ret = do_one_comm(ibox->st, line, 1, 0);
+				ret);
+		ret = code_comm(line, 0, 0);
+		do_one_comm(ibox->st, line, 1, 0);
 		if (ibox->opt & 1)
 			print_stacks(ibox->st->a, ibox->st->b,
 					ibox->opt & 2 ? ret : 0, 22);

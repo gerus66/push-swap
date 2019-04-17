@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 00:17:58 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:37:06 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void		print_stacks(t_list *a, t_list *b, int comm, int first)
 	while (a || b)
 	{
 		if (div >= 0 && ft_printf(color_a(&comm, &first, a) ?
-					"{bgn}{fgr}%6d{eoc}" : "%6d ", ICONT(a)))
+					"{bgn}{fgr}%6d{eoc} " : "%6d ", ICONT(a)))
 			a = a->next;
 		else
 			ft_printf("%6c ", ' ');

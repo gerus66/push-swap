@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/16 23:50:47 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:39:09 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ static void		handle_stacks(t_stacks *st, int count, char print)
 		}
 		if (print & 1)
 			ft_printf(print & 2 ? "{fma}%s{eoc}\n" : "%s\n", line);
-		ret = do_one_comm(st, line, 1, 0);
+		ret = code_comm(line, 0, 0);
+		do_one_comm(st, line, 1, 0);
 		if (print & 1)
 			print_stacks(st->a, st->b, print & 2 ? ret : 0, 22);
 		ret = check_stacks(st->a, count);

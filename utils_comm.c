@@ -6,19 +6,37 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 17:11:13 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 23:39:47 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:39:37 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-static int	helper(t_stacks *all, char *l, char free_line, char f)
+int			code_comm(char *l, char bef, char fl)
 {
-	if (free_line)
-		free(l);
-	if (!f)
-		exit(clean(ERR_M, all));
-	return (f);
+	if (!ft_strcmp(l, "sa"))
+		fl = 11;
+	else if (!ft_strcmp(l, "ss"))
+		fl = 13;
+	else if (!ft_strcmp(l, "sb"))
+		fl = 12;
+	else if ((!ft_strcmp(l, "ra") && !bef) || (!ft_strcmp(l, "rra") && bef))
+		fl = 31;
+	else if ((!ft_strcmp(l, "rr") && !bef) || (!ft_strcmp(l, "rrr") && bef))
+		fl = 33;
+	else if ((!ft_strcmp(l, "rb") && !bef) || (!ft_strcmp(l, "rrb") && bef))
+		fl = 32;
+	else if ((!ft_strcmp(l, "rra") && !bef) || (!ft_strcmp(l, "ra") && bef))
+		fl = 41;
+	else if ((!ft_strcmp(l, "rrr") && !bef) || (!ft_strcmp(l, "rr") && bef))
+		fl = 43;
+	else if ((!ft_strcmp(l, "rrb") && !bef) || (!ft_strcmp(l, "rb") && bef))
+		fl = 42;
+	else if ((!ft_strcmp(l, "pa") && !bef) || (!ft_strcmp(l, "pb") && bef))
+		fl = 21;
+	else if ((!ft_strcmp(l, "pb") && !bef) || (!ft_strcmp(l, "pa") && bef))
+		fl = 22;
+	return (fl);
 }
 
 /*
@@ -27,31 +45,28 @@ static int	helper(t_stacks *all, char *l, char free_line, char f)
 ** if [comm] is illegal - exit with cleaning [all]
 */
 
-int			do_one_comm(t_stacks *all, char *l, char free_line, char f)
+void		do_one_comm(t_stacks *all, char *l, char free_line, char f)
 {
-	if ((!ft_strcmp(l, "sa") && (f = 11)) ||
-			(!ft_strcmp(l, "ss") && (f = 13)))
+	if ((!ft_strcmp(l, "sa") || !ft_strcmp(l, "ss")) && (f = 1))
 		swap_stack(&all->a);
-	if ((!ft_strcmp(l, "sb") && (f = 12)) ||
-			(!ft_strcmp(l, "ss") && (f = 13)))
+	if ((!ft_strcmp(l, "sb") || !ft_strcmp(l, "ss")) && (f = 1))
 		swap_stack(&all->b);
-	if ((!ft_strcmp(l, "ra") && (f = 31)) ||
-			(!ft_strcmp(l, "rr") && (f = 33)))
+	if ((!ft_strcmp(l, "ra") || !ft_strcmp(l, "rr")) && (f = 1))
 		rotate_stack(&all->a);
-	if ((!ft_strcmp(l, "rb") && (f = 32)) ||
-			(!ft_strcmp(l, "rr") && (f = 33)))
+	if ((!ft_strcmp(l, "rb") || !ft_strcmp(l, "rr")) && (f = 1))
 		rotate_stack(&all->b);
-	if ((!ft_strcmp(l, "rra") && (f = 41)) ||
-			(!ft_strcmp(l, "rrr") && (f = 43)))
+	if ((!ft_strcmp(l, "rra") || !ft_strcmp(l, "rrr")) && (f = 1))
 		r_rotate_stack(&all->a);
-	if ((!ft_strcmp(l, "rrb") && (f = 42)) ||
-			(!ft_strcmp(l, "rrr") && (f = 43)))
+	if ((!ft_strcmp(l, "rrb") || !ft_strcmp(l, "rrr")) && (f = 1))
 		r_rotate_stack(&all->b);
-	if (!ft_strcmp(l, "pa") && (f = 21))
+	if (!ft_strcmp(l, "pa") && (f = 1))
 		push_stack(&all->b, &all->a);
-	else if (!ft_strcmp(l, "pb") && (f = 22))
+	else if (!ft_strcmp(l, "pb") && (f = 1))
 		push_stack(&all->a, &all->b);
-	return (helper(all, l, free_line, f));
+	if (free_line)
+		free(l);
+	if (!f)
+		exit(clean(ERR_M, all));
 }
 
 /*

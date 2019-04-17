@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 00:18:02 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:38:48 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ void			r_rotate_stack(t_list **st);
 ** operations with commands /utils_comm.c (4)/
 */
 
-int				do_one_comm(t_stacks *all, char *line, char free_line, char fl);
+int				code_comm(char *name, char before, char fl);
+void			do_one_comm(t_stacks *all, char *line, char free_line, char fl);
 void			do_all_comm(t_stacks *all, t_list *comm);
 void			add_comm(t_stacks *all, t_list **comm, char *name);
 void			add_and_do(t_stacks *all, t_list **comm, char *name);
@@ -141,7 +142,7 @@ char			can_insert(int val, int first, int last);
 char			can_insert_rev(int val, t_list *st);
 
 /*
-** checker utils - for checker and for graphic /utils_checker.c (2)/
+** checker utils - for checker and for graphic /utils_checker.c (5)/
 */
 
 int				check_stacks(t_list *st, int count);
@@ -149,7 +150,7 @@ void			print_stacks(t_list *a, t_list *b, int comm, int first);
 void			paint(t_imgbox ibox, void **elems, void **curs, int code);
 
 /*
-** graphic visualisation
+** graphic visualisation /graphics.c (5)/
 */
 
 void			init_graph(t_stacks *all, char opt, int count);
