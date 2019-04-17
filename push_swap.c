@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/31 14:28:39 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/16 00:00:54 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 15:29:45 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ static void		print_comm(t_list *comm)
 static int		first_check(t_stacks *all)
 {
 	if (all->len_a == 1)
-		return (clean("", all));
+		exit(clean("", all));
 	if (all->len_a == 2)
 	{
 		if (ICONT(all->a) > ICONT(all->a->next))
-			return (clean("sa\n", all));
-		return (clean("", all));
+			exit(clean("sa\n", all));
+		exit(clean("", all));
 	}
 	return (0);
 }
