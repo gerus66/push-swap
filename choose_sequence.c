@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/25 22:24:24 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/15 21:15:22 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:29:13 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,11 @@ static int		*init_st(int *razn, int len, int k, int **param)
 ** lst[1] prev
 */
 
-static int		*general_seq(int *r, int k, int count)
+static int		*general_seq(int *r, int k, int count, int first)
 {
 	int		*st;
 	int		i;
 	int		lst[2];
-	int		first;
 
 	if (!(st = init_st(r, count, k, (int*[]){&lst[0], &lst[1], &i, &first})))
 		return (NULL);
@@ -67,7 +66,8 @@ static int		*general_seq(int *r, int k, int count)
 			lst[0] = r[i];
 			first = 0;
 		}
-		else if (r[i] > lst[0] && (r[i] <= lst[1] || first) && (st[i] = -1))
+		else if (((r[i] > lst[0] && (r[i] <= lst[1] || first)) || count == 3)
+					&& (st[i] = -1))
 		{
 			lst[1] = r[i];
 			k = first ? i : k;
@@ -109,7 +109,7 @@ static int		swap_it(int **new, int **old, int count, int stand)
 	while (++i < count)
 		if ((*new)[i])
 			new_stand++;
-	if (new_stand >= stand)
+	if (new_stand > stand)
 	{
 		ft_swap_p((void **)new, (void **)old);
 		return (new_stand);
@@ -132,7 +132,7 @@ void			choose_sequence(int *razn, int count, t_stacks *all)
 	while (++i < count - stand)
 		if (!fill[i])
 		{
-			if (!(st_tmp = general_seq(razn, i, count)))
+			if (!(st_tmp = general_seq(razn, i, count, 0)))
 			{
 				free(standing);
 				exit(clean(ERM_M, all));
