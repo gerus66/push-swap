@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/22 12:39:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/22 16:15:18 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ static void		handle_stacks(t_stacks *st, int count, char print)
 		if (print & 1)
 			print_stacks(st->a, st->b, print & 2 ? ret : 0, 22);
 		ret = check_stacks(st->a, count);
-		if (ret == 1)
-			exit(clean(OK_M, st));
 		if (ret == 2)
 			exit(clean(KO_M, st));
 	}

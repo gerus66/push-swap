@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 04:26:20 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 15:29:20 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/22 17:55:25 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ void			init_all(t_stacks *all, char **argv, int count, char simple)
 	all->len_a = 0;
 	all->len_b = 0;
 	read_argv(all, argv, count);
+	if (!all->len_a)
+		exit(clean(ERR_M, all));
 	if (simple)
 		simplify(all->a, ft_lstlen(all->a));
 }

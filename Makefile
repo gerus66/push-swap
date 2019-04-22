@@ -39,7 +39,7 @@ v: fclean lib $(NAME1)_G $(NAME2)
 
 clean:
 	make clean -C $(LIBDIR)
-	rm -f $(OBJ1) $(OBJ2)
+	rm -f $(OBJ1) $(OBJ2) $(OBJ1G)
 
 fclean: clean
 	make fclean -C $(LIBDIR)
