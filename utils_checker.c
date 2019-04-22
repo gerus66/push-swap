@@ -6,13 +6,13 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 13:37:06 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/22 12:13:08 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "swap.h"
 
-static int	color_a(int *comm, int *first, t_list *st)
+int			color_a(int *comm, int *first, t_list *st)
 {
 	int	ret;
 
@@ -24,7 +24,7 @@ static int	color_a(int *comm, int *first, t_list *st)
 	return (ret);
 }
 
-static int	color_b(int *comm, int *first, t_list *st)
+int			color_b(int *comm, int *first, t_list *st)
 {
 	int	ret;
 
@@ -84,33 +84,4 @@ int			check_stacks(t_list *st, int count)
 	if (count == 0)
 		return (1);
 	return (0);
-}
-
-void		paint(t_imgbox ibox, void **elems, void **curs, int comm)
-{
-	int		y;
-	t_list	*cp;
-	int		first;
-
-	first = 22;
-	usleep(ibox.sleep);
-	mlx_clear_window(ibox.mlx, ibox.wnd);
-	cp = ibox.st->a;
-	y = WND_H - IMG_SIZE + (ibox.count - ft_lstlen(ibox.st->a) - 1) * ibox.h;
-	while (cp && (y += ibox.h))
-	{
-		mlx_put_image_to_window(ibox.mlx, ibox.wnd, color_a(&comm, &first, cp)
-			? curs[ICONT(cp)] : elems[ICONT(cp)], (WND_W - IMG_SIZE) / 4 +
-			(ibox.count - ICONT(cp)) * ibox.w_step / 2, y);
-		cp = cp->next;
-	}
-	cp = ibox.st->b;
-	y = WND_H - IMG_SIZE + (ibox.count - ft_lstlen(ibox.st->b) - 1) * ibox.h;
-	while (cp && (y += ibox.h))
-	{
-		mlx_put_image_to_window(ibox.mlx, ibox.wnd, color_b(&comm, &first, cp)
-			? curs[ICONT(cp)] : elems[ICONT(cp)], WND_W / 2 + (WND_W -
-			IMG_SIZE) / 4 + (ibox.count - ICONT(cp)) * ibox.w_step / 2, y);
-		cp = cp->next;
-	}
 }

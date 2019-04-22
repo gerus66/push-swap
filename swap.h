@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:21:02 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/17 14:27:45 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/22 12:05:12 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,14 +144,16 @@ char			can_insert_rev(int val, t_list *st);
 ** checker utils - for checker and for graphic /utils_checker.c (5)/
 */
 
+int				color_a(int *comm, int *first, t_list *st);
+int				color_b(int *comm, int *first, t_list *st);
 int				check_stacks(t_list *st, int count);
 void			print_stacks(t_list *a, t_list *b, int comm, int first);
-void			paint(t_imgbox ibox, void **elems, void **curs, int code);
 
 /*
-** graphic visualisation /graphics.c (5)/
+** graphic visualisation /graphics.c (5) graphics1.c (1)/
 */
 
 void			init_graph(t_stacks *all, char opt, int count);
+void			paint(t_imgbox ibox, void **elems, void **curs, int code);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/22 12:39:35 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:39:09 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ static void		handle_stacks(t_stacks *st, int count, char print)
 		print_stacks(st->a, st->b, print & 2 ? 12 : 0, 22);
 	while (get_next_line(0, &line))
 	{
+		if (!ft_strcmp(line, ""))
+		{
+			free(line);
+			return ;
+		}
 		if (print & 1)
 			ft_printf(print & 2 ? "{fma}%s{eoc}\n" : "%s\n", line);
 		ret = code_comm(line, 0, 0);
@@ -55,12 +60,14 @@ int				main(int argc, char **argv)
 
 	opt = 0;
 	while (argc > 1 && (!ft_strcmp("-v", *(argv + 1)) ||
-			!ft_strcmp("-c", *(argv + 1))))
+			!ft_strcmp("-c", *(argv + 1)) || !ft_strcmp("-g", *(argv + 1))))
 	{
 		if (!ft_strcmp("-v", *(argv + 1)))
 			opt = opt | 1;
 		if (!ft_strcmp("-c", *(argv + 1)))
 			opt = opt | 2;
+		if (!ft_strcmp("-g", *(argv + 1)))
+			opt = opt | 4;
 		argv++;
 		argc--;
 	}
@@ -68,6 +75,8 @@ int				main(int argc, char **argv)
 		return (0);
 	init_all(&st, argv, argc - 1, 0);
 	count = st.len_a;
+	if (opt & 4)
+		init_graph(&st, opt, count);
 	no_graph(&st, count, opt);
 	return (clean(KO_M, &st));
 }
