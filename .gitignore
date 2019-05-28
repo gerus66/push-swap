@@ -1,0 +1,12 @@
+*.o
+libft/*.o
+libft/*/*.o
+checker
+push_swap
+gen
+libft/libft.a
+CH/*
+test.sh
+fail.txt
+*.dSYM
+*.md
