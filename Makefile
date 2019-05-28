@@ -14,10 +14,10 @@ LIBDIR = libft
 LIB = $(LIBDIR)/libft.a
 LIBH = $(LIBDIR)/includes
 MFL = -lmlx -framework OpenGL -framework AppKit -framework OpenCL
-MLX = /usr/local/lib/
-MLXH = /usr/local/include
+MLX = mlx/lib/
+MLXH = mlx/include
 
-all: lib $(NAME1) $(NAME2)
+all: lib $(NAME1)_G $(NAME2)
 
 lib:
 	make -C $(LIBDIR)
@@ -35,7 +35,7 @@ $(NAME2): $(OBJ2)
 %.o: %.c $(HDR) $(LIB)
 	gcc $(FLAGS) -I $(LIBH) -c $< -o $@
 
-v: fclean lib $(NAME1)_G $(NAME2)
+-no-vis: fclean lib $(NAME1) $(NAME2)
 
 clean:
 	make clean -C $(LIBDIR)
