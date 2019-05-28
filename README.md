@@ -1,5 +1,7 @@
 ## Push-Swap
 ### Задача
+([здесь](https://github.com/gerus66/push-swap/blob/master/readme/push_swap.en.pdf) подробнее)
+
 Даны два стека, которые умеют выполнять операции:
 
 `sa` `sb` `ss` __swap__ the first 2 elements at the top of stack _A/B/both_
