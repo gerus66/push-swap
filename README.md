@@ -40,3 +40,6 @@
 ### Визуализация
 ![Alt text](https://github.com/gerus66/push-swap/blob/master/readme/push_swap_vis.png)
 ![Alt text](https://github.com/gerus66/push-swap/blob/master/readme/push_swap_vc.png)
+
+### Codestyle
+Проект написан в строгом соответствии с [Norminette codestyle](https://github.com/gerus66/norme)
