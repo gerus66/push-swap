@@ -8,7 +8,7 @@ SRC1_NOGR = $(filter-out $S$(NAME2).c $Sgraphics.c $Sgraphics1.c, $(wildcard $S*
 OBJ1_NOGR = ${SRC1_NOGR:.c=.o}
 SRC1 = $(filter-out $S$(NAME2).c, $(wildcard $S*.c))
 OBJ1 = ${SRC1:.c=.o}
-SRC2 = $(filter-out $S$(NAME1).c $Sgraphics.c %Sgraphics1.c, $(wildcard $S*.c))
+SRC2 = $(filter-out $S$(NAME1).c $Sgraphics.c $Sgraphics1.c, $(wildcard $S*.c))
 OBJ2 = ${SRC2:.c=.o}
 HDR = $Sswap.h
 
@@ -19,7 +19,7 @@ LIBFT = $(LIB)/libft.a
 ifeq ($(OS), Darwin)
 	LIBMLX = $(LIB)/mlx_macos.a
 	W_FLAGS = -Wall -Wextra -Werror
-	FLAGS = -framework OpenGL -framework AppKit
+#	FLAGS = -framework OpenGL -framework AppKit
 	CFLAGS = -DMAC
 else
 	ifeq ($(OS), Linux)
@@ -35,14 +35,17 @@ endif
 endif
 
 all: $(NAME2) $(OBJ1)
+ifeq ($(OS), Darwin)
+	FLAGS = -framework OpenGL -framework AppKit
+endif
 	gcc -I $(INC) $(LIBFT) $(LIBMLX) $(FLAGS) $(OBJ1) -o $(NAME1)
 
 no-graph: CFLAGS += -DNO_GRAPH
 no-graph: fclean $(NAME2) $(OBJ1_NOGR)
-	gcc -I $(INC) $(LIBFT) $(LIBMLX) $(FLAGS) $(OBJ1_NOGR) -o $(NAME1)
+	gcc -I $(INC) $(LIBFT) $(FLAGS) $(OBJ1_NOGR) -o $(NAME1)
 
 $(NAME2): $(OBJ2)
-	gcc -I $(INC) $(LIBFT) $(LIBMLX) $(FLAGS) $(OBJ2) -o $(NAME2)
+	gcc -I $(INC) $(LIBFT) $(FLAGS) $(OBJ2) -o $(NAME2)
 
 %.o: %.c $(HDR)
 	gcc -I $(INC) $(CFLAGS) $(W_FLAGS) -c $< -o $@
