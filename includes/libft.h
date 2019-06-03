@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 12:14:01 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/26 12:25:41 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/06/03 18:43:48 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,6 @@ void			*ft_memccpy(void *dst, const void *src, int c, size_t n);
 void			*ft_memmove(void *dst, const void *src, size_t len);
 void			*ft_memchr(const void *s, int c, size_t n);
 void			ft_swap(int *a, int *b);
+void			ft_swap_p(void **a, void **b);
 
 #endif

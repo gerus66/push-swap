@@ -1,48 +1,56 @@
+OS = $(shell uname)
+
 NAME1 = checker
 NAME2 = push_swap
-SRC1 = $(filter-out $(NAME2).c $(NAME1)_g.c graphics.c graphics1.c,\
-	   $(wildcard *.c))
+
+S = ./srcs/
+SRC1_NOGR = $(filter-out $S$(NAME2).c $Sgraphics.c $Sgraphics1.c, $(wildcard $S*.c))
+OBJ1_NOGR = ${SRC1_NOGR:.c=.o}
+SRC1 = $(filter-out $S$(NAME2).c, $(wildcard $S*.c))
 OBJ1 = ${SRC1:.c=.o}
-SRC1G = $(filter-out $(NAME2).c $(NAME1).c, $(wildcard *.c))
-OBJ1G = ${SRC1G:.c=.o}
-SRC2 = $(filter-out $(NAME1).c $(NAME1)_g.c graphics.c graphics1.c,\
-	   $(wildcard *.c))
+SRC2 = $(filter-out $S$(NAME1).c $Sgraphics.c %Sgraphics1.c, $(wildcard $S*.c))
 OBJ2 = ${SRC2:.c=.o}
-HDR = swap.h
-FLAGS = -Wextra -Wall -Werror
-LIBDIR = libft
-LIB = $(LIBDIR)/libft.a
-LIBH = $(LIBDIR)/includes
-MFL = -lmlx -framework OpenGL -framework AppKit -framework OpenCL
-MLX = mlx/lib/
-MLXH = mlx/include
+HDR = $Sswap.h
 
-all: lib $(NAME1)_G $(NAME2)
+LIB = ./lib
+INC = ./includes
 
-lib:
-	make -C $(LIBDIR)
+LIBFT = $(LIB)/libft.a
+ifeq ($(OS), Darwin)
+	LIBMLX = $(LIB)/mlx_macos.a
+	W_FLAGS = -Wall -Wextra -Werror
+	FLAGS = -framework OpenGL -framework AppKit
+	CFLAGS = -DMAC
+else
+	ifeq ($(OS), Linux)
+		@echo "Linux version is under development"
+		exit 2
+	# TODO
+	# #	LIBMLX = $(LIB)/mlx_linux.a
+	# #	FLAGS = -lmlx -lXext -lX11
+else
+	@echo "Cant make it on your system, sorry.."
+	exit 3
+endif
+endif
 
-$(NAME1): $(OBJ1)
-	gcc $(FLAGS) -I $(LIBH) $(LIB) $(OBJ1) -o $(NAME1)
+all: $(NAME2) $(OBJ1)
+	gcc -I $(INC) $(LIBFT) $(LIBMLX) $(FLAGS) $(OBJ1) -o $(NAME1)
 
-$(NAME1)_G: $(OBJ1G)
-	gcc $(FLAGS) -I $(MLXH) -L $(MLX) $(MFL) -I $(LIBH) $(LIB) $(OBJ1G)\
-		-o $(NAME1)
+no-graph: CFLAGS += -DNO_GRAPH
+no-graph: fclean $(NAME2) $(OBJ1_NOGR)
+	gcc -I $(INC) $(LIBFT) $(LIBMLX) $(FLAGS) $(OBJ1_NOGR) -o $(NAME1)
 
 $(NAME2): $(OBJ2)
-	gcc $(FLAGS) -I $(LIBH) $(LIB) $(OBJ2) -o $(NAME2)
+	gcc -I $(INC) $(LIBFT) $(LIBMLX) $(FLAGS) $(OBJ2) -o $(NAME2)
 
-%.o: %.c $(HDR) $(LIB)
-	gcc $(FLAGS) -I $(LIBH) -c $< -o $@
-
--no-vis: fclean lib $(NAME1) $(NAME2)
+%.o: %.c $(HDR)
+	gcc -I $(INC) $(CFLAGS) $(W_FLAGS) -c $< -o $@
 
 clean:
-	make clean -C $(LIBDIR)
-	rm -f $(OBJ1) $(OBJ2) $(OBJ1G)
+	rm -f $(OBJ1) $(OBJ2)
 
 fclean: clean
-	make fclean -C $(LIBDIR)
 	rm -f $(NAME1) $(NAME2)
 
 re: fclean all

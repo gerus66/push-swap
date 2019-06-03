@@ -6,7 +6,7 @@
 /*   By: mbartole <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 14:24:19 by mbartole          #+#    #+#             */
-/*   Updated: 2019/04/22 16:15:18 by mbartole         ###   ########.fr       */
+/*   Updated: 2019/06/03 17:49:07 by mbartole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,19 @@ int				main(int argc, char **argv)
 
 	opt = 0;
 	while (argc > 1 && (!ft_strcmp("-v", *(argv + 1)) ||
-			!ft_strcmp("-c", *(argv + 1))))
+#ifndef NO_GRAPH		
+				!ft_strcmp("-g", *(argv + 1)) ||
+#endif
+				!ft_strcmp("-c", *(argv + 1))))
 	{
 		if (!ft_strcmp("-v", *(argv + 1)))
 			opt = opt | 1;
 		if (!ft_strcmp("-c", *(argv + 1)))
 			opt = opt | 2;
+#ifndef NO_GRAPH
+		if (!ft_strcmp("-g", *(argv + 1)))
+			opt = opt | 4;
+#endif
 		argv++;
 		argc--;
 	}
@@ -66,6 +73,10 @@ int				main(int argc, char **argv)
 		return (0);
 	init_all(&st, argv, argc - 1, 0);
 	count = st.len_a;
+#ifndef NO_GRAPH
+	if (opt & 4)
+		init_graph(&st, opt, count);
+#endif
 	no_graph(&st, count, opt);
 	return (clean(KO_M, &st));
 }
