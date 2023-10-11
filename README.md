@@ -31,9 +31,10 @@ _linux: in progress_
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; control keys: `left`/`right` for speed control, `space` for pause, `esc`.
 
 ### ./checker -g 
-![Alt text](https://github.com/gerus66/push-swap/blob/master/readme/push_swap_vis.png)
+![Alt text](https://github.com/gerus66/push-swap/blob/master/readme/push_swap_vis.png) 
 ### ./checker -v -c 
 ![Alt text](https://github.com/gerus66/push-swap/blob/master/readme/push_swap_vc.png)
 
 ### Codestyle
-Project was developed in strict accordance with [Norminette codestyle](https://github.com/gerus66/norme)
+Developed in strict accordance with _[Norminette codestyle](https://github.com/gerus66/norme)_ \
+Based on selfmade _[libft library](https://github.com/gerus66/libft)_
